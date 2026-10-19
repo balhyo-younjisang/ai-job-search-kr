@@ -29,8 +29,10 @@ SKILLS_DIR = REPO / ".agents" / "skills"
 # a BASE_URL / SEARCH_URL constant, so this is where the board's host lives.
 HOST_LITERAL = re.compile(r"https?://([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
 # Hosts a source file may name that are not the portal: schema vocabularies,
-# RFC example domains, loopback. Extend if a CLI ever embeds another one.
-NON_PORTAL_HOSTS = {"schema.org", "www.w3.org", "example.com", "localhost"}
+# RFC example domains, loopback, and the project contact URL a User-Agent
+# carries (freehire-search, jobkorea-search). Extend if a CLI ever embeds
+# another one.
+NON_PORTAL_HOSTS = {"schema.org", "www.w3.org", "example.com", "localhost", "github.com"}
 
 
 def installed_portal_skills() -> list[Path]:

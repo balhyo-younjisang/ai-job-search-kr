@@ -199,6 +199,7 @@ class ApplyHostVerificationSpecTests(unittest.TestCase):
             "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55210151",
             "https://m.saramin.co.kr/job-search/view?rec_idx=55210151",
             "https://linkareer.com/activity/357883",
+            "https://job.incruit.com/jobdb_info/jobpost.asp?job=2610060004924",
             "https://dk.linkedin.com/jobs/view/999999",
             "https://freehire.me/jobs/golang-zensar-2bxu6dxm",
         ]

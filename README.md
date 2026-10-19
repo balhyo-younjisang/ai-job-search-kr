@@ -183,6 +183,7 @@ ai-job-search/
 ├── .agents/skills/                    # Job portal CLI tools
 │   ├── jobkorea-search/               # JobKorea / 잡코리아 (South Korea)
 │   ├── saramin-search/                # Saramin / 사람인 (South Korea)
+│   ├── linkareer-search/              # Linkareer / 링커리어 (South Korea, 신입·인턴)
 │   ├── linkedin-search/               # LinkedIn public job listings (country-agnostic)
 │   └── freehire-search/               # freehire.me tech job aggregator (multi-market, REST API)
 ├── cv/
@@ -290,7 +291,7 @@ If you prefer doing it by hand, the manual route still works: update the guidanc
 
 ### Job search tools
 
-The `jobkorea-search` and `saramin-search` CLIs in `.agents/skills/` (JobKorea / 잡코리아 and Saramin / 사람인, South Korea) demonstrate the pattern for building a job-portal integration for a specific market. If you're in a different country, run:
+The `jobkorea-search`, `saramin-search` and `linkareer-search` CLIs in `.agents/skills/` (JobKorea / 잡코리아, Saramin / 사람인 and Linkareer / 링커리어, South Korea) demonstrate the pattern for building a job-portal integration for a specific market. If you're in a different country, run:
 
 ```
 /add-portal

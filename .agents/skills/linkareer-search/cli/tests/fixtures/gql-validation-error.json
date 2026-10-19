@@ -1,0 +1,1 @@
+{"errors":[{"message":"Cannot query field \"organizationNameX\" on type \"Activity\". Did you mean \"organizationName\", \"organizationType\", or \"organizationTypeID\"?","locations":[{"line":1,"column":206}],"extensions":{"code":"GRAPHQL_VALIDATION_FAILED"}}]}

@@ -60,7 +60,7 @@ def portal_hosts(skill_dir: Path) -> set[str]:
     """The board hosts a portal CLI fetches from, as registrable names.
 
     A leading `www.` is dropped so the classifier's exact-or-subdomain rule
-    accepts both `jobindex.dk` and `www.jobindex.dk` (the CLI builds its URLs
+    accepts both `jobkorea.co.kr` and `www.jobkorea.co.kr` (the CLI builds its URLs
     with the latter; postings link to both).
     """
     hosts: set[str] = set()
@@ -194,9 +194,9 @@ class ApplyHostVerificationSpecTests(unittest.TestCase):
         # A regional subdomain and the bare apex must both pass for every portal;
         # the derived set is what makes this hold for a portal added by /add-portal.
         urls = [
-            "https://www.jobindex.dk/jobannonce/12345",
+            "https://www.jobkorea.co.kr/Recruit/GI_Read/50159061",
+            "https://m.jobkorea.co.kr/Recruit/GI_Read/50159061",
             "https://dk.linkedin.com/jobs/view/999999",
-            "https://jobnet.dk/find-job/8888",
             "https://freehire.me/jobs/golang-zensar-2bxu6dxm",
         ]
         for url in urls:

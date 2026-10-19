@@ -26,7 +26,7 @@ On Windows, `py --version` is often the most reliable check. If your system expo
 
 ### Bun (for job search tools)
 
-The job portal CLIs (four Danish portals plus the country-agnostic `linkedin-search` and `freehire-search` tools) are written in TypeScript and run with Bun.
+The job portal CLIs (`jobkorea-search` for South Korea plus the country-agnostic `linkedin-search` and `freehire-search` tools) are written in TypeScript and run with Bun.
 
 - macOS/Linux:
 
@@ -200,7 +200,7 @@ It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` - discov
 
 For `linkedin-search` and `freehire-search` the install is optional: both have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types.
 
-If you're outside Denmark, you can generate an equivalent search skill for your local job board with `/add-portal` — it scaffolds the same CLI structure for any public portal and test-runs a live query before registering. See the "Job search tools" section in the README.
+If you're outside Korea, you can generate an equivalent search skill for your local job board with `/add-portal` — it scaffolds the same CLI structure for any public portal and test-runs a live query before registering. See the "Job search tools" section in the README.
 
 ## 4. Run the setup interview
 
@@ -267,7 +267,7 @@ This creates `salary_data.json` which the `/apply` workflow uses for salary benc
 Find a job posting you're interested in, then:
 
 ```
-/apply https://jobindex.dk/job/1234567
+/apply https://www.jobkorea.co.kr/Recruit/GI_Read/50159061
 ```
 
 Or paste the job description directly:

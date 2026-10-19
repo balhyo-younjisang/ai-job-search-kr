@@ -30,7 +30,7 @@ SKILLS_DIR = REPO / ".agents" / "skills"
 HOST_LITERAL = re.compile(r"https?://([A-Za-z0-9.-]+\.[A-Za-z]{2,})")
 # Hosts a source file may name that are not the portal: schema vocabularies,
 # RFC example domains, loopback, and the project contact URL a User-Agent
-# carries (freehire-search, jobkorea-search). Extend if a CLI ever embeds
+# carries (freehire-search, jobkorea-search, saramin-search). Extend if a CLI ever embeds
 # another one.
 NON_PORTAL_HOSTS = {"schema.org", "www.w3.org", "example.com", "localhost", "github.com"}
 
@@ -196,6 +196,8 @@ class ApplyHostVerificationSpecTests(unittest.TestCase):
         urls = [
             "https://www.jobkorea.co.kr/Recruit/GI_Read/50159061",
             "https://m.jobkorea.co.kr/Recruit/GI_Read/50159061",
+            "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55210151",
+            "https://m.saramin.co.kr/job-search/view?rec_idx=55210151",
             "https://dk.linkedin.com/jobs/view/999999",
             "https://freehire.me/jobs/golang-zensar-2bxu6dxm",
         ]

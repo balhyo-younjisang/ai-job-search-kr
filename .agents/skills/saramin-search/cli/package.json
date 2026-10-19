@@ -1,0 +1,21 @@
+{
+  "name": "saramin-cli",
+  "version": "1.0.0",
+  "description": "CLI for searching job postings on Saramin (사람인, South Korea) — public pages only, no authentication, zero runtime dependencies. Personal use only.",
+  "type": "module",
+  "main": "src/cli.ts",
+  "bin": {
+    "saramin-search": "src/cli.ts"
+  },
+  "scripts": {
+    "start": "bun run src/cli.ts",
+    "test": "bun test --timeout 30000",
+    "test:live": "SARAMIN_LIVE=1 bun test --timeout 30000 tests/live-smoke.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "@types/bun": "1.3.14"
+  }
+}

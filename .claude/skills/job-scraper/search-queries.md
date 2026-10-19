@@ -4,7 +4,7 @@
 
 ## Installed portal CLIs (primary for `/scrape`)
 
-`/scrape` discovers every portal skill under `.agents/skills/*/SKILL.md` and runs its CLI first. Shipped CLIs are the country-agnostic `linkedin-search` and `freehire-search` plus `jobkorea-search`, `saramin-search` and `linkareer-search` (South Korea); any skill you add with `/add-portal` is included the same way. You do **not** need a matching `site:` line below for those CLIs to run.
+`/scrape` discovers every portal skill under `.agents/skills/*/SKILL.md` and runs its CLI first. Shipped CLIs are the country-agnostic `linkedin-search` and `freehire-search` plus `jobkorea-search`, `saramin-search`, `linkareer-search` and `worknet-search` (South Korea); any skill you add with `/add-portal` is included the same way. You do **not** need a matching `site:` line below for those CLIs to run. Work24 defaults to its own postings; use `--source work,jobkorea,saramin` or `--all-sources` on its CLI when the user requests syndicated providers too (see its SKILL.md).
 
 The `site:` query templates in this file are the **WebSearch fallback** — for portals without a CLI, company career pages, or when a CLI fails.
 

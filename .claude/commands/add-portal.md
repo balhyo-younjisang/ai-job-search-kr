@@ -1,6 +1,6 @@
 # /add-portal - Generate a Job-Portal Search Skill for Your Local Market
 
-You are helping the user build a job-portal search skill for a job board in their market. The repo ships worked examples of the pattern (`jobkorea-search`, `saramin-search` and `linkareer-search` for South Korea plus the country-agnostic `linkedin-search` and `freehire-search`), and the README invites users elsewhere to build equivalents — this command turns that invitation into a guided workflow: investigate the portal, scaffold the skill from the canonical structure, and test-run a live query before registering anything.
+You are helping the user build a job-portal search skill for a job board in their market. The repo ships worked examples of the pattern (`jobkorea-search`, `saramin-search`, `linkareer-search` and `worknet-search` for South Korea plus the country-agnostic `linkedin-search` and `freehire-search`), and the README invites users elsewhere to build equivalents — this command turns that invitation into a guided workflow: investigate the portal, scaffold the skill from the canonical structure, and test-run a live query before registering anything.
 
 The generator is **country-agnostic**: it works for any portal in any market and language. The skills it produces are typically market-specific and live in the user's fork (per repo policy, country-specific portal skills are not merged upstream — the generator is the upstream feature, its output is yours).
 

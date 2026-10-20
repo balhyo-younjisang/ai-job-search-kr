@@ -119,3 +119,8 @@ company_research/*.json
 
 # Brainstorm mockups (superpowers visual companion) - never ship
 .superpowers/
+
+# oh-my-claudecode / OMX agent runtime state (sessions, project memory) - never commit.
+# Matched at any depth: hooks create it in whichever directory the agent is in.
+.omc/
+.omx/

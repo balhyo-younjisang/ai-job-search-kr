@@ -1,6 +1,64 @@
-# Changelog
+# 변경 이력 (Changelog)
 
-All notable changes to this project are documented here. The format is based on
+이 문서는 한국 채용 시장에 특화된 AI Job Search Fork의 주요 변경 사항을 기록합니다.
+형식은 [Keep a Changelog](https://keepachangelog.com/ko/1.1.0/)를 참고하며, 버전은
+[Semantic Versioning](https://semver.org/lang/ko/)을 따릅니다.
+
+- Fork 버전(`v0.x`)은 업스트림 버전(`v1.x`)과 별개로 매깁니다.
+- 미출시(Unreleased) 섹션의 소제목은 Keep a Changelog의 영문 이름(`Added`, `Changed`,
+  `Deprecated`, `Removed`, `Fixed`, `Security`)만 사용하세요. 본문은 한국어로 써도 됩니다
+  (`tests/test_changelog_structure.py`가 검사합니다).
+- 아래 [업스트림 변경 이력](#업스트림-변경-이력-upstream-history)은
+  [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)의 기록을
+  그대로 보존한 것입니다. 업스트림을 병합할 때는 새 항목을 그 아래 업스트림 섹션에 넣으세요.
+
+## [Unreleased]
+
+## [0.1.0] - 2026-10-20
+
+> 날짜는 초안 작성일입니다. 실제 릴리스일이 다르면 태그를 만들 때 함께 고치세요.
+
+업스트림 `v1.7.3` 이후 28개 커밋(`d621ebe`)까지를 기반으로 합니다.
+
+### Added
+
+- 잡코리아 검색 Skill(`jobkorea-search`): 키워드·경력·등록일·정렬 검색과 공고 상세(텍스트·이미지 본문) 조회
+- 사람인 검색 Skill(`saramin-search`): 시·도 및 구 단위 지역 필터, 경력·등록일·정렬 지원
+- 링커리어 검색 Skill(`linkareer-search`): 신입·인턴 중심 채용 공고 검색(공모전·대외활동·교육 제외)
+- 고용24 검색 Skill(`worknet-search`): 기본은 고용24 자체 공고, `--source`·`--all-sources`로 연계 제공처 공고 포함
+- 인크루트 검색 Skill(`incruit-search`): EUC-KR 공개 페이지 직접 검색. **기본 비활성화**(Changed 참고)
+- 한국어 README(`README.md`). 영문 README는 `README-en.md`로 유지
+
+### Changed
+
+- 프로젝트의 주요 대상을 한국 채용 시장으로 확장: `/setup`, `/scrape`, `/add-portal` 안내와 `/apply` 허용 호스트,
+  `.claude/settings.json` 권한 목록에 국내 포털 반영
+- 인크루트 Skill을 `enabled: false`로 배포: 이용약관이 있는 `www.incruit.com`은 robots.txt가 모든 경로를
+  막고 있어 약관을 검토하지 못했고, 공고 호스트는 GPTBot·ClaudeBot을 전면 차단합니다. 위험 안내는 Skill 문서와
+  README에 있으며, 사용자가 약관을 확인한 뒤 직접 활성화할 수 있습니다
+- 잡코리아·사람인 테스트 fixture를 실제 공고 사본에서 합성 데이터로 교체: 페이지 구조는 유지하고 회사명·제목·ID·
+  본문은 모두 가상의 값입니다(각 `tests/fixtures/provenance.md` 참고)
+- 원본 LinkedIn·Freehire 검색 Skill은 그대로 유지
+
+### Removed
+
+- 업스트림의 덴마크 포털 Skill 제거: `jobindex-search`, `jobnet-search`, `jobdanmark-search`, `jobbank-search`
+
+### Security
+
+- `.omc/`, `.omx/` 에이전트 실행 상태(세션, 프로젝트 메모리)를 `.gitignore`에 추가
+
+### 참고
+
+- 각 채용 플랫폼의 접근·수집 가능 범위는 해당 서비스의 정책과 권한에 따릅니다. 각 Skill의 `SKILL.md`와
+  `url-reference.md`에 개인 사용 제한과 접근 조건이 정리되어 있습니다.
+- 국내 Skill의 상세 수집 방식, 지원 명령, 테스트 통과 여부는 실제 구현을 검증한 뒤 README 또는 릴리스 노트에 명시합니다.
+
+---
+
+# 업스트림 변경 이력 (Upstream history)
+
+All notable changes to the upstream project are documented here. The format is based on
 [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this project adheres
 to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -11,7 +69,7 @@ prefer updating to a tagged release over pulling raw `master` (see
 files a release touched; `python3 tools/check_upstream_updates.py` lists them with
 per-file diff commands.
 
-## [Unreleased]
+## [Upstream Unreleased] - v1.7.3 이후, 이 Fork에 `d621ebe`까지 병합됨
 
 ### Added
 

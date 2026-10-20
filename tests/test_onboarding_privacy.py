@@ -14,7 +14,7 @@ import unittest
 from pathlib import Path
 
 REPO = Path(__file__).resolve().parent.parent
-README = REPO / "README.md"
+READMES = (REPO / "README.md", REPO / "README-en.md")
 SETUP_GUIDE = REPO / "SETUP.md"
 SETUP_COMMAND = REPO / ".claude" / "commands" / "setup.md"
 
@@ -33,12 +33,12 @@ class TestForkWarningsAtTheDecisionPoint(unittest.TestCase):
     def assert_warns(self, body: str, where: str):
         self.assertRegex(
             body,
-            re.compile(r"public", re.IGNORECASE),
+            re.compile(r"public|공개", re.IGNORECASE),
             f"{where}'s fork section must say the fork will be public",
         )
-        self.assertIn(
-            "personal data",
+        self.assertRegex(
             body,
+            r"personal data|개인\s*정보",
             f"{where}'s fork section must say /setup writes personal data into tracked files",
         )
         self.assertRegex(
@@ -48,9 +48,14 @@ class TestForkWarningsAtTheDecisionPoint(unittest.TestCase):
         )
 
     def test_readme_quick_start_warns_next_to_the_fork_command(self):
-        body = section(README.read_text(encoding="utf-8"), "### 1. Fork and clone")
-        self.assertIn("gh repo fork", body, "sanity: the fork command lives in this section")
-        self.assert_warns(body, "README")
+        for readme in READMES:
+            with self.subTest(readme=readme.name):
+                text = readme.read_text(encoding="utf-8")
+                heading = re.search(r"^### 1\. .+$", text, re.MULTILINE)
+                self.assertIsNotNone(heading, f"{readme.name} needs its first quick-start step")
+                body = section(text, heading.group(0))
+                self.assertRegex(body, r"gh repo (?:fork|clone)|git clone", "the clone command must live beside its warning")
+                self.assert_warns(body, readme.name)
 
     def test_setup_guide_warns_next_to_the_fork_command(self):
         body = section(SETUP_GUIDE.read_text(encoding="utf-8"), "## 2. Fork and clone")

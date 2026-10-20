@@ -1,379 +1,422 @@
+[한국어](README.md) | [English](README-en.md)
+
 <p align="center">
-  <img src="assets/mascot/pip_flight_loop.gif" alt="Pip, the courier bird" width="200">
+  <img src="assets/mascot/pip_flight_loop.gif" alt="전령새 Pip" width="200">
 </p>
 
 # AI Job Search
 
-*The job search that runs on your machine.*
+*내 컴퓨터에서 실행하는 취업 지원 워크플로.*
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="MadsLorentzen%2Fai-job-search | Trendshift" width="250" height="55"/></a>
+  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="업스트림 MadsLorentzen/ai-job-search의 Trendshift 순위" width="250" height="55"/></a>
 </p>
 
-[![CI](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)
+[![업스트림 CI](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)
 
-An AI-powered job application framework built on [Claude Code](https://claude.com/claude-code). Fork it, fill in your profile, and let Claude evaluate job postings, tailor your CV, write cover letters, and prepare you for interviews.
+[Claude Code](https://claude.com/claude-code)를 기반으로 만든 AI 취업 지원 프레임워크입니다. 저장소를 복제하고 프로필을 채우면 AI 에이전트가 채용 공고 적합도를 평가하고, CV와 자기소개서를 맞춤 작성하며, 면접 준비를 돕습니다. 이 한국 포크에는 국내 채용 포털 검색 스킬 5개와 범용 검색 스킬 2개가 포함되어 있습니다. 위 배지는 이 포크가 아닌 업스트림 프로젝트의 순위와 CI 상태를 나타냅니다.
 
-> Note: This is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or maintained by Anthropic. Anthropic and Claude Code are referenced only to describe the toolchain this workflow uses.
+> 참고: 이 프로젝트는 독립 오픈소스 프로젝트이며 Anthropic과 제휴하거나 Anthropic의 보증·후원·유지보수를 받지 않습니다. Anthropic과 Claude Code는 이 워크플로가 사용하는 도구를 설명하기 위해서만 언급합니다.
 >
-> This project has **no affiliated cryptocurrency, token, or paid sponsorship program**. Anything claiming otherwise is unauthorized and should be treated as a scam. The only ways to support the project are the Ko-fi link below and contributing on GitHub.
+> 이 프로젝트와 연계된 암호화폐, 토큰 또는 유료 후원 프로그램은 없습니다. 그런 주장은 승인되지 않은 것이므로 사기로 간주해야 합니다. 업스트림 프로젝트를 지원하려면 아래 저자의 Ko-fi 링크나 GitHub 기여를 이용하세요.
 
-## Does it actually work?
+<a id="does-it-actually-work"></a>
+## 실제로 효과가 있나요?
 
-I'm a geophysicist by training. When my position was cut in late 2025, I built this framework to run my own job search - the same `/scrape`, `/apply`, and `/interview` workflow in this repo, used weekly, on my own career. I was upfront about it with every employer I spoke to, and instead of counting against me, it usually sparked a genuine technical conversation.
+다음은 **업스트림 저자 Mads Lorentzen의 경험**입니다. 지구물리학자였던 그는 2025년 말 직장을 잃은 뒤 자신의 구직 활동을 위해 이 프레임워크를 만들었습니다. 이 저장소의 `/scrape`, `/apply`, `/interview` 워크플로를 매주 실제 구직에 사용했고, 만난 모든 고용주에게 그 사실을 솔직하게 밝혔습니다. 불이익보다는 진지한 기술 대화로 이어지는 경우가 많았다고 합니다.
 
-Sixty-nine tailored applications, twenty first interviews, and one signed contract later, I started as an AI engineer in June 2026. People kept asking whether this actually works. It got me hired. Now it's yours.
+맞춤 지원서 69건, 1차 면접 20건, 최종 계약 1건을 거쳐 그는 2026년 6월 AI 엔지니어로 일을 시작했습니다. 이는 업스트림 저자의 개인 사례이며 결과를 보장하지 않습니다. 이 저장소는 그가 사용한 절차를 반복 가능한 워크플로 규칙으로 제공합니다.
 
-*The longer version, including the full application funnel, is on [LinkedIn](https://www.linkedin.com/in/mads-lorentzen/).*
+*전체 지원 퍼널을 포함한 자세한 이야기는 업스트림 저자의 [LinkedIn](https://www.linkedin.com/in/mads-lorentzen/)에서 볼 수 있습니다.*
 
 <p align="center">
-  <i>Did this save you a Sunday of cover-letter writing? Consider a coffee.<br>
-  Did it land you the job? Maybe two.</i> ☕
+  <i>일요일 하루를 자기소개서 작성에서 아껴 주었나요? 커피 한 잔을 생각해 주세요.<br>
+  취업으로 이어졌나요? 그럼 두 잔도 좋습니다.</i> ☕
 </p>
 
 <p align="center">
   <a href="https://ko-fi.com/madslorentzen">
-    <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=6" alt="Buy me a coffee at ko-fi.com" height="40">
+    <img src="https://storage.ko-fi.com/cdn/kofi3.png?v=6" alt="ko-fi.com에서 업스트림 저자에게 커피 후원하기" height="40">
   </a>
 </p>
 
-## What this is
+<a id="what-this-is"></a>
+## 프로젝트 소개
 
-A structured workflow that turns Claude Code into a full-stack job application assistant. The core workflow (self-profiling, fit evaluation, and the drafter-reviewer application pipeline) is **language- and country-agnostic**. The job portal search skills are built for the Danish market (Jobindex, Jobnet, Akademikernes Jobbank, etc.), but the pattern is designed to be swapped for your local job boards.
+Claude Code를 종합 취업 지원 도우미로 만드는 구조화된 워크플로입니다. 자기 프로필 작성, 적합도 평가, 작성자-검토자 지원서 파이프라인으로 구성된 핵심 절차는 **언어와 국가에 구애받지 않습니다**. 이 한국 포크는 잡코리아, 사람인, 링커리어, 고용24, 인크루트에 맞춘 검색 스킬을 제공하고 LinkedIn과 freehire.me도 함께 지원합니다.
 
-```
+```text
 /setup          /scrape              /apply <url>
   |                |                     |
   v                v                     v
-Fill in        Search job           Evaluate fit
-your profile   portals              Score & recommend
+프로필 작성     채용 포털 검색        적합도 평가
+                 결과 중복 제거       점수와 추천 제시
   |                |                     |
   v                v                     v
-Profile        Present matches      Draft CV + Cover Letter
-files ready    with fit ratings     (LaTeX, tailored)
+프로필 파일     적합도순 후보 제시     맞춤 CV + 자기소개서 작성
+준비 완료       /rank로 일괄 평가      (LaTeX)
                    |                     |
                    v                     v
-               Pick a match         Reviewer agent critiques
-               -> /apply            -> Revise -> Final output
+               후보 선택            별도 검토 에이전트 평가
+               -> /apply            -> 수정 -> 최종 결과
 ```
 
-The framework encodes career guidance best practices, including structured evaluation criteria, forward-looking cover letter framing, and optional salary benchmarking.
+구조화된 평가 기준, 미래 지향적인 자기소개서 구성, 선택적 급여 벤치마킹 등 경력 관리 모범 사례를 워크플로 규칙으로 제공합니다.
 
-## Prerequisites
+<a id="prerequisites"></a>
+## 준비 사항
 
-- [Claude Code](https://claude.com/claude-code) (CLI). Claude Code has no free tier: you need a Claude Pro/Max/Team subscription or Anthropic API credits (pay-per-token, usually cheaper for occasional use). Using a different agent tool (Codex, Antigravity, Gemini CLI)? Start at [`AGENTS.md`](AGENTS.md) - the portal search skills work there out of the box, and [community forks](https://github.com/MadsLorentzen/ai-job-search/discussions/78) adapt the full workflow.
-- Python 3.10+
-- [Bun](https://bun.sh) (for job search CLI tools)
-- LaTeX distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/). The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter compiles with `xelatex` because `cover.cls` requires `fontspec`. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
-- Optional: `pip install pypdf` for `/apply`'s ATS parseability check (BSD; no Poppler required). Poppler `pdftotext` remains a fallback (macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`). If both are missing, the check degrades to a visual keyword review.
+- [Claude Code](https://claude.com/claude-code) CLI. Claude 구독이나 Anthropic API를 사용하거나, Codex·Antigravity·Gemini CLI 같은 다른 에이전트 도구를 사용할 수 있습니다. 비용과 무료 사용 가능 여부는 선택한 도구, 구독, API 사용량과 실행 환경에 따라 달라집니다. 다른 에이전트에서는 [`AGENTS.md`](AGENTS.md)부터 읽으세요. 이 파일은 `.claude/`의 표준 워크플로와 프로필을 단일 출처로 가리키는 thin-pointer 지침이며, `.agents/skills/`의 포털 CLI는 이식 가능한 Agent Skills 형식입니다. 아래 슬래시 명령 예시는 Claude Code 기준이며 다른 에이전트에서 호출하는 방식은 해당 실행 환경에 따릅니다.
+- Python 3.10 이상
+- 채용 검색 CLI용 [Bun](https://bun.sh)
+- `lualatex`와 `xelatex`를 제공하는 LaTeX 배포판: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/) 또는 [MiKTeX](https://miktex.org/). 일부 MiKTeX 환경에서는 `pdflatex`가 `fontawesome5` 글꼴 확장 오류를 일으킬 수 있어 CV는 `lualatex`로 컴파일합니다. `fontspec`이 필요한 `cover.cls` 자기소개서는 `xelatex`로 컴파일합니다. TinyTeX나 BasicTeX 같은 최소 설치 환경에서는 [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex)의 추가 패키지도 설치하세요.
+- 선택 사항: `/apply`의 ATS 파싱 검사용 `pip install pypdf`(BSD 라이선스, Poppler 불필요). [`tools/verify_pdf.py`](tools/verify_pdf.py)는 `pypdf`를 먼저 사용하고, 실패하거나 설치되지 않았으면 Poppler의 `pdftotext`를 사용합니다(macOS: `brew install poppler`, Debian/Ubuntu: `apt install poppler-utils`, Windows: `choco install poppler`). 둘 다 없으면 시각적 키워드 검토로 축소 실행합니다.
 
-## Quick start
+<a id="quick-start"></a>
+## 빠른 시작
 
-> 🎥 **Prefer to see it in action first?** [The Next New Thing did a hands-on walkthrough](https://www.youtube.com/watch?v=HoVxjMNFYv4) of how the workflow is actually used, from setup to a finished application (recorded August 2026 - commands may have evolved since).
+> 🎥 **먼저 실제 사용 모습을 보고 싶나요?** [The Next New Thing의 실습 영상](https://www.youtube.com/watch?v=HoVxjMNFYv4)에서 설정부터 완성된 지원서까지의 흐름을 볼 수 있습니다. 2026년 8월에 녹화되어 현재 명령과 일부 차이가 있을 수 있습니다.
 
-### 1. Fork and clone
+### 1. 저장소 복제
 
 ```bash
-gh repo fork MadsLorentzen/ai-job-search --clone
-cd ai-job-search
+git clone "<YOUR_REPOSITORY_URL>" ai-job-search-kr
+cd ai-job-search-kr
 ```
 
-> [!IMPORTANT]
-> **A fork of this repo is always public** — GitHub does not allow private forks of
-> public repositories — and `/setup` (step 3 below) writes your personal data (name,
-> contact details, employment history, salary expectations) into **tracked** files.
-> If this copy is for your own job search rather than for contributing changes back,
-> use a **private repository** with this repo as `upstream` instead — the two-minute
-> recipe is in [SETUP.md section 8](SETUP.md#8-pulling-upstream-updates-into-your-fork),
-> and every update workflow works identically. Fork only to contribute.
+`<YOUR_REPOSITORY_URL>`을 현재 한국 포크나 개인 비공개 복사본의 URL로 바꾸세요. 원본 업스트림에 기여할 목적이라면 `gh repo fork MadsLorentzen/ai-job-search --clone`을 사용할 수 있습니다. 업스트림을 새로 복제한 저장소에는 이 한국 포크의 추가 포털이 포함되어 있지 않습니다.
 
-### 2. Install job search tools
+> [!IMPORTANT]
+> `/setup`은 이름, 연락처, 경력, 희망 급여 같은 개인정보를 **Git 추적 대상 파일**에 기록합니다. 공개 저장소나 공개 포크에서 그대로 실행한 뒤 푸시하지 마세요. 개인 구직용이라면 먼저 비공개 저장소를 만들고 원본을 `upstream`으로 연결하는 방식을 권장합니다. [SETUP.md 8절](SETUP.md#8-pulling-upstream-updates-into-your-fork)에 설정 방법이 있으며 업데이트 도구도 같은 방식으로 사용할 수 있습니다. 공개 저장소의 포크는 비공개로 만들 수 없으므로 공개 포크는 기여용으로만 사용하세요.
+
+### 2. 채용 검색 도구 설치
 
 ```bash
 python3 tools/install_portal_clis.py   # Windows: python tools\install_portal_clis.py
 ```
 
-It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` - discovered, not listed, so a portal you add with `/add-portal` or copy from another fork is included on a fresh clone. A CLI whose `package.json` declares an install-time lifecycle script is skipped and reported rather than run. `--dry-run` shows what it would install.
+이 명령은 `.agents/skills/*/cli/` 아래의 모든 포털 CLI를 자동 발견해 `bun install`을 실행합니다. `/add-portal`로 만든 포털이나 다른 포크에서 복사한 포털도 별도 등록 없이 포함됩니다. `package.json`에 설치 시점 생명주기 스크립트가 선언된 CLI는 실행하지 않고 건너뛴 사실을 보고합니다. `--dry-run`으로 설치 대상을 미리 확인할 수 있습니다.
 
-For `linkedin-search` and `freehire-search` the install is optional: both have zero runtime dependencies and run with plain `bun`; `bun install` only pulls TypeScript dev types.
+현재 포함된 7개 포털 CLI는 모두 런타임 의존성이 없어 설치 없이 `bun`으로 실행할 수 있습니다. `bun install`은 테스트와 타입 검사에 쓰는 TypeScript 개발 의존성만 설치합니다.
 
-### 3. Set up your profile
+### 3. 프로필 설정
 
 ```bash
 claude
-# Then inside Claude Code:
+# Claude Code 안에서 실행:
 /setup
 ```
 
-`/setup` offers three paths: read your `documents/` folder if you have one populated (CV PDF, LinkedIn export, diplomas, reference letters, past applications), import a single CV pasted in chat, or walk through an interview. It auto-detects what you have and asks. Documents-folder mode is idempotent and safe to re-run as you add more material; see `documents/README.md` for the layout.
+`/setup`은 세 가지 입력 경로를 제공합니다. 자료가 들어 있는 `documents/` 폴더(CV PDF, LinkedIn 내보내기, 학위·성적 자료, 추천서, 과거 지원서)를 읽거나, 채팅에 CV 하나를 붙여 넣거나, 인터뷰 형식으로 프로필을 작성할 수 있습니다. 보유 자료를 자동으로 감지해 질문하며, 문서 폴더 방식은 같은 자료에 반복 실행해도 안전합니다. 폴더 구성은 `documents/README.md`를 참고하세요.
 
-### 4. Search for jobs
+### 4. 채용 공고 검색
 
 ```bash
 /scrape
 ```
 
-This searches multiple job portals for positions matching your profile, deduplicates results, and presents them sorted by fit. Pick a match to run `/apply` on it directly — or, when a scrape returns more jobs than you want to eyeball, run `/rank` to batch-score them all against the fit framework and get a ranked shortlist first.
+프로필에 맞는 공고를 여러 포털에서 검색하고 중복을 제거한 뒤 적합도순으로 보여 줍니다. 바로 후보 하나를 골라 `/apply`를 실행하거나, 결과가 많으면 `/rank`로 모든 공고를 일괄 평가해 우선순위 목록을 만들 수 있습니다.
 
-### 5. Apply to a job
+### 5. 지원서 작성
 
 ```bash
 /apply https://www.jobkorea.co.kr/Recruit/GI_Read/50159061
 ```
 
-If the URL can't be fetched (some job portals block automated access), you can paste the job description directly instead:
+일부 포털이 자동 접근을 막아 URL을 가져오지 못하면 공고 전문을 직접 붙여 넣을 수 있습니다.
 
 ```bash
-/apply <paste the full job description here>
+/apply <채용 공고 전문을 여기에 붙여 넣으세요>
 ```
 
-This runs the full workflow: evaluate fit, draft CV + cover letter, review with a second agent, revise, and present the final output.
+적합도 평가, CV와 자기소개서 초안 작성, 두 번째 에이전트 검토, 수정, 최종 결과 제시를 차례로 실행합니다.
 
-Postings are treated as untrusted input (the workflow follows no instructions embedded in them and fetches no links from their body), but agentic defenses are instruction-level, not a sandbox - on an unfamiliar job board, skim what was fetched and written before you hit send. Details in [SECURITY.md](SECURITY.md).
+채용 공고는 신뢰할 수 없는 입력으로 처리합니다. 워크플로는 공고 본문에 삽입된 지시를 따르거나 본문의 링크를 자동으로 가져오지 않습니다. 다만 이 방어는 샌드박스가 아닌 지침 수준이므로 처음 보는 채용 사이트에서는 제출 전에 가져온 내용과 생성 파일을 확인하세요. 자세한 내용은 [SECURITY.md](SECURITY.md)를 참고하세요.
 
-## Other commands
+<a id="other-commands"></a>
+## 기타 명령
 
-`/setup`, `/scrape`, and `/apply` form the core workflow. Ten more commands extend it once your profile is in place:
+`/setup`, `/scrape`, `/apply`가 핵심 워크플로를 구성합니다. 프로필을 만든 뒤 다음 10개 명령으로 기능을 확장할 수 있습니다.
 
-- **`/interview`** preps you for a scheduled interview on a tracked application. It builds a stage-specific prep pack from the application's archive (the exact posting, the CV and cover letter the interviewer actually read, feedback recorded from earlier rounds), researches the company and interviewers with a verify-before-use rule, maps likely questions to your STAR examples, and offers a mock interview following the roleplay protocol in `07-interview-prep.md`. Gaps get honest bridge answers, never invented experience.
-- **`/outcome`** records what happened to an application - interview stages, offers, rejections, silence. It archives the submitted CV, cover letter, and posting text into `documents/applications/<company>_<role>/`, keeps `outcome.md` in the format `/setup` Path A parses, and updates the tracker. It also owns the stretch before there is an outcome to record: `/outcome followup` surfaces open applications that have gone quiet (default 10 days), drafts a short channel-appropriate follow-up in your writing style using only claims from the materials you already submitted (drafts only, never sends; at most twice per application), and offers a thank-you note in the same turn an interview stage is recorded. Once a few applications resolve, it points you back to `/setup` to calibrate the fit framework from what actually got interviews.
-- **`/notion-sync`** publishes a one-way, read-only view of the pipeline into a Notion database via the official Notion MCP server (OAuth, no API keys) - one row per ranked job plus every tracked application, with a write-once briefing page per row. The repo files stay the system of record: nothing syncs back, and documents sync as filenames only. Complements `/html-report`: that is the deep offline dashboard you regenerate at your desk; this is the glanceable live view from anywhere Notion runs (desktop, web, phone).
-- **`/gmail-sync`** reads your Gmail (via the Gmail connector) for status signals on your open applications - interview invites, assessment links, offers, rejections - and proposes them as a batch for you to approve before anything is written to the tracker or `outcome.md`, citing the source email on every proposed change. Offers stop short of proposing `hired`/`offer_declined` since that's your call; conflicting or unmatched signals get flagged for a manual `/outcome` pass instead of guessed.
-- **`/rank`** bridges `/scrape` and `/apply`: it batch-scores all newly scraped postings against the fit framework (parallel agents fetch each posting and score the five evaluation dimensions) and returns a ranked shortlist with honest per-job strengths and gaps. Deal-breakers veto, deadlines get urgency flags, dead postings get marked expired. Pick a number and it hands off to the full `/apply` workflow.
-- **`/expand`** enriches your profile by scanning public sources you've already linked in it (GitHub repos, portfolio site, Kaggle, Google Scholar) and looking up syllabi for named courses and certifications. Discovered competencies are added to your profile with a source tag. Useful right after `/setup` to surface skills that documents alone don't make explicit.
-- **`/upskill`** analyzes the gap between your profile, your tracked job postings, and your ranked-but-untracked postings (`/rank`'s recorded gaps in `job_scraper/seen_jobs.json`) — or a single posting via `/upskill <URL>`. Produces a prioritized heatmap of skill gaps and a learning plan with web-searched study resources and time estimates. Useful for career planning between applications.
-- **`/html-report`** generates a self-contained HTML dashboard from `job_search_tracker.csv` and the application archives — stat cards, status/sector/channel/funnel charts (inline SVG, no external dependencies), and a filterable applications table. Opens directly in a browser, fully offline. Re-run it any time after `/apply` or `/outcome` adds new entries.
-- **`/add-template`** registers your own CV or cover letter template (LaTeX, Typst, or another toolchain) in place of the stock ones. It captures the template's instructions (source extension, compile command, fonts, style rules, page limit), runs a mandatory test compile, and wires the template into `/apply`. See [Custom templates](#custom-templates) below.
-- **`/add-portal`** generates a job-portal search skill for a job board in your market. It investigates the portal (search URL pattern, result structure, access rules), scaffolds the CLI skill from the same structure as the shipped ones, and test-runs a live query before registering. See [Job search tools](#job-search-tools) below.
+- **`/interview`**: 추적 중인 지원 건의 예정 면접을 준비합니다. 실제 공고, 면접관이 읽은 CV와 자기소개서, 이전 단계의 피드백을 이용해 단계별 준비 자료를 만들고, 검증 후 사용 규칙에 따라 회사와 면접관을 조사합니다. 예상 질문을 STAR 사례에 연결하고 `07-interview-prep.md`의 역할극 절차로 모의 면접을 진행합니다. 경험이 부족한 부분은 꾸며 내지 않고 솔직한 연결 답변을 만듭니다.
+- **`/outcome`**: 면접 단계, 합격 제안, 불합격, 무응답 등 지원 결과를 기록합니다. 제출한 CV·자기소개서·공고를 `documents/applications/<company>_<role>/`에 보관하고, `/setup` 경로 A가 읽을 수 있는 `outcome.md`와 추적기를 갱신합니다. `/outcome followup`은 기본 10일 동안 답이 없는 지원 건을 찾아, 이미 제출한 자료의 사실만으로 채널에 맞는 후속 연락 초안을 만듭니다. 사용자의 문체를 반영한 초안만 제시하고 직접 발송하지 않으며 지원 건당 최대 두 번만 제안합니다. 면접 단계를 기록하는 시점에는 감사 메모도 제안합니다. 지원 결과가 몇 건 쌓이면 `/setup`으로 돌아가 실제 면접으로 이어진 사례를 바탕으로 평가 기준을 보정하도록 안내합니다.
+- **`/notion-sync`**: 공식 Notion MCP 서버(OAuth, API 키 불필요)를 통해 파이프라인의 단방향 읽기 전용 보기를 Notion 데이터베이스에 게시합니다. 순위가 매겨진 공고와 추적 중인 지원 건을 각각 한 행으로 만들고, 행마다 한 번 작성하는 브리핑 페이지를 제공합니다. 저장소 파일이 계속 기준 데이터이며 역방향 동기화는 하지 않고, 문서는 파일명만 동기화합니다. `/html-report`가 오프라인 상세 대시보드라면 이 명령은 여러 기기에서 빠르게 보는 현재 상태입니다.
+- **`/gmail-sync`**: Gmail 커넥터로 열린 지원 건의 면접 초대, 과제 링크, 합격 제안, 불합격 신호를 읽고, 출처 이메일을 붙인 변경안 묶음을 제시합니다. 사용자가 승인하기 전에는 추적기나 `outcome.md`를 쓰지 않습니다. `hired`와 `offer_declined`는 사용자가 결정하며, 충돌하거나 매칭되지 않는 신호는 추측하지 않고 `/outcome` 수동 검토 대상으로 표시합니다.
+- **`/rank`**: `/scrape`와 `/apply` 사이에서 새로 수집한 공고를 적합도 프레임워크의 다섯 기준으로 일괄 평가합니다. 병렬 에이전트가 공고를 가져와 각 평가 항목을 채웁니다. 강점과 부족한 점을 정직하게 표시하고, 필수 제외 조건·마감 임박·종료 공고를 반영해 순위를 만듭니다. 번호를 고르면 전체 `/apply` 워크플로로 넘깁니다.
+- **`/expand`**: 프로필에 이미 연결한 공개 출처(GitHub 저장소, 포트폴리오, Kaggle, Google Scholar)를 살펴보고 기재된 과정과 자격의 강의계획을 찾아 역량을 보강합니다. 발견한 역량에는 출처 태그를 붙입니다. `/setup` 직후 문서만으로 드러나지 않는 역량을 보완할 때 유용합니다.
+- **`/upskill`**: 프로필, 추적 중인 공고, `/rank`가 `job_scraper/seen_jobs.json`에 기록한 미추적 공고의 역량 차이를 분석합니다. `/upskill <URL>`로 공고 하나만 분석할 수도 있습니다. 우선순위 히트맵과 웹에서 검증한 학습 자료·예상 시간이 포함된 학습 계획을 만듭니다. 지원서 작성 사이에 경력 개발 계획을 세울 때 활용할 수 있습니다.
+- **`/html-report`**: `job_search_tracker.csv`와 지원서 보관 파일로 독립 실행형 HTML 대시보드를 만듭니다. 통계 카드, 상태·직군·채널·퍼널 차트, 필터 가능한 지원 목록을 외부 의존성 없는 인라인 SVG로 생성하며 브라우저에서 오프라인으로 열 수 있습니다. `/apply`나 `/outcome`으로 새 기록을 추가한 뒤 언제든 다시 생성할 수 있습니다.
+- **`/add-template`**: 기본 템플릿 대신 사용할 LaTeX, Typst 또는 다른 CLI 기반 CV·자기소개서 템플릿을 등록합니다. 원본 확장자, 컴파일 명령, 글꼴, 스타일 규칙, 페이지 제한을 저장하고 반드시 테스트 컴파일한 뒤 `/apply`에 연결합니다. 아래 [사용자 정의 템플릿](#custom-templates)을 참고하세요.
+- **`/add-portal`**: 사용하려는 시장의 채용 사이트를 조사해 검색 URL, 결과 구조, 접근 규칙을 확인하고 기존 형식의 포털 CLI 스킬을 생성합니다. 등록 전에 실제 검색을 제한적으로 시험합니다. 아래 [채용 검색 도구](#job-search-tools)를 참고하세요.
 
-`/reset` is also available, see [Starting over](#starting-over) below.
+`/reset`도 사용할 수 있습니다. 아래 [처음부터 다시 시작](#starting-over)을 참고하세요.
 
-## File structure
+<a id="file-structure"></a>
+## 파일 구조
 
-```
-ai-job-search/
-├── CLAUDE.md                          # Main candidate profile + workflow rules
-├── .claude/
+```text
+ai-job-search-kr/
+├── README.md                          # 한국어 기본 안내
+├── README-en.md                       # 영어 안내
+├── CLAUDE.md                          # 기본 후보자 프로필과 워크플로 규칙
+├── AGENTS.md                          # 여러 에이전트용 thin-pointer 안내
+├── .claude/                           # Claude Code의 표준 워크플로 단일 출처
 │   ├── commands/
-│   │   ├── apply.md                   # /apply workflow (drafter-reviewer)
-│   │   ├── setup.md                   # /setup onboarding (documents folder, CV import, or interview)
-│   │   ├── expand.md                  # /expand competency enrichment from documents and online presence
-│   │   ├── add-template.md            # /add-template register custom templates (LaTeX, Typst, ...)
-│   │   ├── add-portal.md              # /add-portal generate a job-portal search skill for your market
-│   │   ├── rank.md                    # /rank triage scraped jobs into a ranked shortlist
-│   │   ├── outcome.md                 # /outcome record application results, archive materials
-│   │   ├── gmail-sync.md              # /gmail-sync auto-detect application status from Gmail
-│   │   ├── interview.md               # /interview stage-specific prep pack + mock interview
-│   │   ├── html-report.md             # /html-report generate application tracker dashboard
-│   │   ├── notion-sync.md             # /notion-sync one-way pipeline view in a Notion database
-│   │   └── reset.md                   # /reset wipe profile data or documents folder
+│   │   ├── apply.md                   # /apply 작성자-검토자 워크플로
+│   │   ├── setup.md                   # /setup 문서·CV·인터뷰 온보딩
+│   │   ├── expand.md                  # /expand 역량 보강
+│   │   ├── add-template.md            # /add-template 사용자 템플릿 등록
+│   │   ├── add-portal.md              # /add-portal 포털 스킬 생성
+│   │   ├── rank.md                    # /rank 공고 일괄 평가
+│   │   ├── outcome.md                 # /outcome 결과 기록과 자료 보관
+│   │   ├── gmail-sync.md              # /gmail-sync 이메일 상태 신호 확인
+│   │   ├── interview.md               # /interview 면접 준비와 모의 면접
+│   │   ├── html-report.md             # /html-report 추적 대시보드 생성
+│   │   ├── notion-sync.md             # /notion-sync Notion 단방향 보기
+│   │   └── reset.md                   # /reset 프로필 또는 문서 초기화
 │   ├── skills/
-│   │   ├── job-application-assistant/  # Core application skill
-│   │   │   ├── SKILL.md               # Skill definition
-│   │   │   ├── 01-candidate-profile.md # Your education, experience, skills
-│   │   │   ├── 02-behavioral-profile.md# PI/DISC/personality assessment
-│   │   │   ├── 03-writing-style.md    # Tone, structure, do's and don'ts
-│   │   │   ├── 04-job-evaluation.md   # Scoring framework for job fit
-│   │   │   ├── 05-cv-templates.md     # LaTeX CV structure + tailoring rules
-│   │   │   ├── 06-cover-letter-templates.md # LaTeX cover letter templates
-│   │   │   └── 07-interview-prep.md   # STAR examples + interview framework
-│   │   ├── job-scraper/               # Job search orchestration
-│   │   └── upskill/                   # /upskill skill gap analysis and learning plan
-│   └── settings.json                  # Claude Code permissions (shared, scoped)
-├── .agents/skills/                    # Job portal CLI tools
-│   ├── jobkorea-search/               # JobKorea / 잡코리아 (South Korea)
-│   ├── saramin-search/                # Saramin / 사람인 (South Korea)
-│   ├── linkareer-search/              # Linkareer / 링커리어 (South Korea, 신입·인턴)
-│   ├── worknet-search/                # Work24 / 고용24 (default own postings; optional syndicated providers)
-│   ├── incruit-search/                # Incruit / 인크루트 (South Korea, direct HTML search)
-│   ├── linkedin-search/               # LinkedIn public job listings (country-agnostic)
-│   └── freehire-search/               # freehire.me tech job aggregator (multi-market, REST API)
+│   │   ├── job-application-assistant/ # 핵심 지원서 스킬
+│   │   │   ├── SKILL.md               # 스킬 정의
+│   │   │   ├── 01-candidate-profile.md # 학력·경력·기술
+│   │   │   ├── 02-behavioral-profile.md # 행동·성향 평가
+│   │   │   ├── 03-writing-style.md    # 문체와 작성 규칙
+│   │   │   ├── 04-job-evaluation.md   # 직무 적합도 평가 기준
+│   │   │   ├── 05-cv-templates.md     # CV 구성과 맞춤 작성 규칙
+│   │   │   ├── 06-cover-letter-templates.md # 자기소개서 템플릿
+│   │   │   └── 07-interview-prep.md   # STAR 사례와 면접 프레임워크
+│   │   ├── job-scraper/               # /scrape 검색 오케스트레이션
+│   │   └── upskill/                   # /upskill 역량 차이 분석
+│   └── settings.json                  # Claude Code의 범위 제한 권한
+├── .agents/skills/                    # 이식 가능한 채용 포털 CLI 스킬
+│   ├── jobkorea-search/               # 잡코리아
+│   ├── saramin-search/                # 사람인
+│   ├── linkareer-search/              # 링커리어(신입·인턴 중심)
+│   ├── worknet-search/                # 고용24(기본 자체 공고, 선택적 연계 제공처)
+│   ├── incruit-search/                # 인크루트(EUC-KR 직접 검색)
+│   ├── linkedin-search/               # LinkedIn 공개 공고(국가 무관)
+│   └── freehire-search/               # freehire.me 기술직 통합 검색
 ├── cv/
-│   └── main_example.tex               # moderncv LaTeX template
+│   └── main_example.tex               # moderncv LaTeX 템플릿
 ├── cover_letters/
-│   ├── cover.cls                      # Custom cover letter LaTeX class
-│   ├── cover_example.tex              # Example cover letter (structural reference + CI smoke test)
-│   └── OpenFonts/                     # Lato + Raleway fonts
-├── templates/                         # Custom templates registered via /add-template
-│   └── README.md                      # Folder layout instructions
-├── documents/                         # Career source materials for /setup Path A and /expand
-│   ├── README.md                      # Folder layout instructions
-│   ├── cv/                            # Master CV (PDF or .tex)
-│   ├── linkedin/                      # LinkedIn profile export (PDF)
-│   ├── diplomas/                      # Degree certificates and transcripts
-│   ├── references/                    # Reference letters
-│   └── applications/                  # Past application records (<company>_<role>/)
-├── .github/workflows/ci.yml           # CI: LaTeX smoke compiles, skill lint, CLI typechecks
-├── salary_lookup.py                   # Salary benchmarking tool (BYO data)
+│   ├── cover.cls                      # 사용자 정의 자기소개서 LaTeX 클래스
+│   ├── cover_example.tex              # 구조 예시와 CI 스모크 테스트
+│   └── OpenFonts/                     # Lato·Raleway 글꼴
+├── templates/
+│   └── README.md                      # /add-template 등록 폴더 안내
+├── documents/                         # /setup 경로 A와 /expand의 경력 자료
+│   ├── README.md                      # 폴더 구성 안내
+│   ├── cv/                            # 마스터 CV
+│   ├── linkedin/                      # LinkedIn 프로필 내보내기
+│   ├── diplomas/                      # 학위증명서와 성적표
+│   ├── references/                    # 추천서
+│   └── applications/                  # 과거 지원 기록(<company>_<role>/)
+├── .github/workflows/ci.yml           # LaTeX·스킬 린트·CLI 타입 검사
+├── salary_lookup.py                   # 사용자 제공 데이터 기반 급여 조회
 ├── tools/
-│   ├── check_framework_version.py     # CI check: framework_version bumped when skill files change
-│   ├── check_upstream_updates.py      # Preview which personalized files an upstream update touches
-│   ├── convert_salary_excel.py        # Convert salary Excel to JSON
-│   ├── install_portal_clis.py         # Install every discovered portal CLI (bun install)
-│   ├── lint_skills.py                 # CI lint for skills, commands, settings.json
-│   ├── robots_check.py                # Gate the browser-header retry against robots.txt
-│   ├── security_guards.py             # CI guards: permission allowlist, gitignore rules, manifests
-│   ├── upstream_triage.py             # Sort upstream commits into worth-reviewing vs probably-skip
-│   ├── verify_layout.py               # Measure a compiled PDF's page layout (holes, orphans, footer collisions)
-│   ├── verify_pdf.py                  # Verify a compiled PDF's page count and extractable text
-│   └── README_SALARY_TOOL.md          # Salary tool setup instructions
-├── job_scraper/                       # Scraper state (seen jobs, results)
-├── gmail_sync/                        # /gmail-sync state (processed message IDs, last sync date)
-├── upskill/                           # /upskill report output (markdown reports per run)
-├── job_search_tracker.csv             # Application tracking spreadsheet
-└── SETUP.md                           # Detailed setup guide
+│   ├── check_framework_version.py     # 스킬 변경 시 버전 증가 검사
+│   ├── check_upstream_updates.py      # 업데이트가 개인화 파일에 미치는 영향 미리보기
+│   ├── convert_salary_excel.py        # 급여 Excel을 JSON으로 변환
+│   ├── install_portal_clis.py         # 발견한 모든 포털 CLI 설치
+│   ├── lint_skills.py                 # 스킬·명령·settings.json 린트
+│   ├── robots_check.py                # robots.txt 기반 재시도 허용 검사
+│   ├── security_guards.py             # 권한·gitignore·매니페스트 보안 검사
+│   ├── upstream_triage.py             # 업스트림 커밋 검토 우선순위 분류
+│   ├── verify_layout.py               # PDF 레이아웃 측정
+│   ├── verify_pdf.py                  # pypdf 우선, pdftotext 대체 PDF 검사
+│   └── README_SALARY_TOOL.md          # 급여 도구 설정 안내
+├── job_scraper/                       # 검색 상태와 결과
+├── gmail_sync/                        # 처리한 이메일 ID와 마지막 동기화 날짜
+├── upskill/                           # 실행별 역량 분석 보고서
+├── job_search_tracker.csv             # 지원 현황 추적표
+└── SETUP.md                           # 상세 설정 안내
 ```
 
-## How `/apply` works
+<a id="how-apply-works"></a>
+## `/apply` 작동 방식
 
-The `/apply` command runs a **drafter-reviewer workflow** with mandatory PDF compilation:
+`/apply`는 PDF 컴파일을 필수로 하는 **작성자-검토자 워크플로**를 실행합니다.
 
-1. **Parse** the job posting (URL or text)
-2. **Evaluate fit** against your profile (skills, experience, culture, location, career alignment)
-3. **Draft** a tailored CV and cover letter in LaTeX
-4. **Spawn a reviewer agent** that researches the company and critiques the drafts
-5. **Revise** based on the reviewer's feedback
-6. **Compile and inspect** both PDFs: lualatex for the CV, xelatex for the cover letter. Claude reads the rendered pages and iterates on the LaTeX until the CV is exactly 2 pages with no orphaned entry titles, and the cover letter is exactly 1 page with the signature visible and fonts consistent.
-7. **ATS-check the CV**: extract the PDF's text layer (`pdftotext`, optional dependency) and verify it the way an ATS parser sees it — contact details present as literal text, no garbled glyphs, sane reading order — then score the posting's keyword coverage against the extraction. Keywords the profile genuinely supports get added; genuine gaps stay visible, never stuffed.
-8. **Present** the final output with a verification checklist
+1. URL 또는 텍스트에서 채용 공고를 **해석**합니다.
+2. 기술, 경험, 문화, 위치, 경력 방향을 기준으로 프로필과의 **적합도를 평가**합니다.
+3. 맞춤 CV와 자기소개서를 LaTeX로 **작성**합니다.
+4. 별도 검토 에이전트를 실행해 회사를 조사하고 초안을 **비평**합니다.
+5. 검토 의견을 반영해 **수정**합니다.
+6. CV는 `lualatex`, 자기소개서는 `xelatex`로 **컴파일하고 렌더링 결과를 검사**합니다. CV가 정확히 2페이지이고 항목 제목이 페이지 끝에 고립되지 않으며, 자기소개서가 서명을 포함한 정확히 1페이지이며 글꼴도 일관될 때까지 LaTeX를 조정합니다.
+7. [`tools/verify_pdf.py`](tools/verify_pdf.py)로 CV를 **ATS 검사**합니다. `pypdf`를 먼저 사용하고 Poppler `pdftotext`를 대체 수단으로 사용해 연락처, 깨진 문자, 읽기 순서와 공고 키워드 포함 여부를 확인합니다. 연락처는 아이콘에만 담기지 않고 실제 텍스트로 추출되어야 합니다. 프로필로 뒷받침되는 키워드만 추가하고 실제 부족한 점은 숨기지 않습니다.
+8. 검증 체크리스트와 함께 최종 결과를 **제시**합니다.
 
-All claims in the CV and cover letter are verified against your actual profile. The system never fabricates skills or experience.
+CV와 자기소개서의 모든 주장은 실제 프로필에 근거해야 한다는 규칙을 적용합니다. 이 규칙은 검증 절차이며 결과의 완전성을 보장하지 않으므로 제출 전 사용자가 최종 확인해야 합니다.
 
-### What makes this workflow different
+<a id="what-makes-this-workflow-different"></a>
+### 이 워크플로의 차별점
 
-- **PDF verification loop.** Most LaTeX-resume templates produce "looks fine in the .tex" output that breaks in the PDF: job titles orphan to the next page, cover letters spill onto page 2, bullet fonts silently fall back to the body font. The `/apply` command compiles and visually inspects every PDF and applies targeted fixes (`\needspace`, `\enlargethispage`, font-matching wrappers for list items) until the layout is clean. This runs automatically on every application.
-- **ATS verification on the PDF text layer.** An ATS reads the PDF's embedded text, not the rendered page — and LaTeX can silently produce PDFs whose text extracts as garbage (icon glyphs where the email should be, interleaved lines from multi-column layouts). `/apply` extracts the compiled CV's text layer with `pdftotext` and verifies contact details, reading order, and the posting's keyword coverage against what a parser actually sees. Honesty rule enforced: a keyword the profile doesn't support is acknowledged as a gap, never stuffed in.
-- **Relevance-weighted CV cutting.** When a CV overflows 2 pages, the workflow does not cut mechanically from the "oldest" section. It scores each candidate line by (a) relevance to the target posting, (b) uniqueness in the document, and (c) whether the cover letter depends on it, and cuts the lowest-total-score line first. An older-role bullet that hits posting keywords survives ahead of a recent-role bullet that does not.
-- **Drafter-reviewer separation.** The drafter writes; a second Claude agent, spawned with a fresh context, researches the company and critiques the drafts. The drafter then revises. This catches missed keywords, weak framing, and generic language that a single pass often leaves in.
-- **Token-efficient reviewer dispatch.** The reviewer agent receives drafts inline rather than re-reading them, and the verification checklist runs once at the end of the workflow rather than being duplicated by both agents. Note: the new compile-and-inspect step in Step 5 spends some of those savings on PDF rendering and layout iteration — the workflow trades some end-to-end token cost for a real reduction in broken PDFs reaching the user.
+- **PDF 검증 반복:** `.tex`에서 멀쩡해 보여도 PDF에서 직책 제목이 다음 페이지로 밀리거나 자기소개서가 2페이지로 넘치고 글머리표 글꼴이 달라질 수 있습니다. `/apply`는 매번 PDF를 컴파일하고 시각적으로 검사하며 `\needspace`, `\enlargethispage`, 목록 글꼴 래퍼 같은 제한된 수정을 적용합니다.
+- **PDF 텍스트 계층 ATS 검증:** ATS는 렌더링 화면이 아니라 PDF의 내장 텍스트를 읽습니다. `verify_pdf.py`가 `pypdf` 우선, `pdftotext` 대체 순서로 텍스트를 추출해 연락처, 읽기 순서, 키워드 포함 여부를 실제 파서 관점에서 확인합니다. 근거 없는 키워드는 채우지 않고 부족한 점으로 남깁니다.
+- **관련도 가중 CV 축약:** CV가 2페이지를 넘으면 단순히 가장 오래된 항목부터 자르지 않습니다. 목표 공고와의 관련성, 문서 내 고유성, 자기소개서 의존도를 평가해 합계가 가장 낮은 문장부터 줄입니다. 오래된 경력이라도 공고의 핵심 키워드와 맞으면 최근 경력의 관련 없는 문장보다 우선해 남깁니다.
+- **작성자와 검토자 분리:** 작성자는 초안을 만들고, 새 컨텍스트의 두 번째 에이전트가 회사 조사와 비평을 맡습니다. 작성자가 이를 반영해 수정하므로 한 번의 작성에서 놓치기 쉬운 키워드, 약한 구성, 상투적 표현을 찾을 수 있습니다.
+- **효율적인 검토 전달:** 검토자는 초안을 인라인으로 받아 다시 파일을 읽는 비용을 줄이고, 검증 체크리스트는 마지막에 한 번 실행합니다. PDF 렌더링과 레이아웃 반복에 추가 비용이 들 수 있으므로 전체 비용은 사용하는 모델과 문서 복잡도에 따라 달라집니다.
 
-## Customization
+<a id="customization"></a>
+## 사용자 설정
 
-### Which files to edit manually
+<a id="which-files-to-edit-manually"></a>
+### 직접 편집할 파일
 
-If you prefer editing files directly instead of using `/setup`:
+`/setup` 대신 파일을 직접 편집하려면 다음 위치를 사용하세요.
 
-| File | What to change |
-|------|---------------|
-| `CLAUDE.md` | Your full profile (name, education, experience, skills, goals) |
-| `01-candidate-profile.md` | Structured version of your CV data |
-| `02-behavioral-profile.md` | Your behavioral assessment or self-assessment |
-| `04-job-evaluation.md` | Skill match areas, career goals, motivation filters |
-| `05-cv-templates.md` | Profile statement templates for different role types |
-| `07-interview-prep.md` | Your STAR examples from actual experience |
-| `search-queries.md` | Job search queries for your skills and location |
+| 파일 | 변경할 내용 |
+| --- | --- |
+| `CLAUDE.md` | 이름, 학력, 경력, 기술, 목표를 포함한 전체 프로필 |
+| `01-candidate-profile.md` | CV 정보를 구조화한 프로필 |
+| `02-behavioral-profile.md` | 행동 평가 또는 자기 평가 |
+| `04-job-evaluation.md` | 기술 적합 영역, 경력 목표, 동기 필터 |
+| `05-cv-templates.md` | 직무 유형별 프로필 문구 템플릿 |
+| `07-interview-prep.md` | 실제 경험에 근거한 STAR 사례 |
+| `search-queries.md` | 기술과 지역에 맞는 검색어 |
 
-### Updating your search queries
+<a id="updating-your-search-queries"></a>
+### 검색어 업데이트
 
-As your priorities evolve, you can reconfigure just the job search without re-running the full profile setup:
+전체 프로필 설정을 다시 하지 않고 채용 검색 설정만 바꿀 수 있습니다.
 
-```
+```text
 /setup --section search
 ```
 
-This re-runs the search configuration interview: which roles to target, which skills to search for, which locations, and which portals. It also suggests role types you may not have considered based on your profile.
+목표 직무, 검색 기술, 지역, 사용할 포털을 다시 질문하고 프로필을 바탕으로 미처 고려하지 않은 직무 유형도 제안합니다.
 
-### Custom templates
+<a id="custom-templates"></a>
+### 사용자 정의 템플릿
 
-The CV uses [moderncv](https://ctan.org/pkg/moderncv) (banking style). The cover letter uses a custom `cover.cls` with Lato/Raleway fonts. Both are LaTeX — the reference engine this repo ships and maintains.
+기본 CV는 [moderncv](https://ctan.org/pkg/moderncv)의 banking 스타일을 사용합니다. 자기소개서는 Lato와 Raleway 글꼴을 포함한 사용자 정의 `cover.cls`를 사용합니다. 저장소가 기본으로 유지하는 참조 엔진은 LaTeX입니다.
 
-To use your own template instead — LaTeX, [Typst](https://typst.app/), or any other toolchain that compiles to PDF from the command line — run:
+LaTeX, [Typst](https://typst.app/) 또는 명령줄에서 PDF로 컴파일할 수 있는 다른 템플릿을 사용하려면 다음을 실행하세요.
 
-```
+```text
 /add-template
 ```
 
-Point it at your source file (a `.tex` file plus any `.cls`/`.sty` files or bundled fonts; a `.typ` file plus any local packages; or an equivalent for another toolchain). The command interviews you for the template's instructions — source extension, compile command, fonts and where they live, style rules to preserve, hard page limit — stores everything under `templates/`, runs a mandatory test compile, and activates the template so `/apply` drafts and compiles from it. Templates are stored with `[PLACEHOLDER]` tokens instead of personal data, so they're safe to commit and share.
+`.tex`와 관련 `.cls`·`.sty`·글꼴, `.typ`와 로컬 패키지 등 원본 파일을 지정하면 명령이 확장자, 컴파일 명령, 글꼴 위치, 보존할 스타일, 최대 페이지 수를 묻습니다. 설정을 `templates/`에 저장하고 필수 테스트 컴파일을 통과한 뒤 `/apply`에서 활성화합니다. 템플릿은 개인정보 대신 `[PLACEHOLDER]` 토큰을 사용하므로 커밋하고 공유할 수 있습니다.
 
-- `/add-template --list` shows registered templates
-- `/add-template --use <name>` switches between them
-- `/add-template --use default` reverts to the stock moderncv / cover.cls templates
+- `/add-template --list`: 등록한 템플릿 표시
+- `/add-template --use <name>`: 해당 템플릿으로 전환
+- `/add-template --use default`: 기본 moderncv와 `cover.cls`로 복귀
 
-If you prefer doing it by hand, the manual route still works: update the guidance in `05-cv-templates.md` and `06-cover-letter-templates.md`.
+직접 구성하려면 `05-cv-templates.md`와 `06-cover-letter-templates.md`의 지침을 수정해도 됩니다.
 
-### Job search tools
+<a id="job-search-tools"></a>
+### 채용 검색 도구
 
-The `jobkorea-search`, `saramin-search`, `linkareer-search`, `worknet-search` and `incruit-search` CLIs in `.agents/skills/` (JobKorea / 잡코리아, Saramin / 사람인 and Linkareer / 링커리어, Work24 / 고용24 and Incruit / 인크루트, South Korea) demonstrate the pattern for building a job-portal integration for a specific market. If you're in a different country, run:
+`.agents/skills/`에는 한국 시장용 5개와 범용 2개, 총 7개의 독립 CLI 스킬이 있습니다. 각 스킬은 `search`와 `detail`을 제공하며 검색 출력은 `json|table|plain`, 상세 출력은 `json|plain`을 사용합니다. 지원하는 필터는 스킬마다 다르며 `/scrape`가 활성화된 스킬을 자동 발견합니다.
 
+| 스킬 | 범위와 주요 옵션 | 검색 예시 |
+| --- | --- | --- |
+| [jobkorea-search](.agents/skills/jobkorea-search/SKILL.md) | 잡코리아 직접 검색. 지역은 익명 검색 제약 때문에 키워드로 매칭하며 `--career`, `--jobage`, `--sort` 지원 | `bun run .agents/skills/jobkorea-search/cli/src/cli.ts search -q "백엔드" -l "판교" --career experienced --format table` |
+| [saramin-search](.agents/skills/saramin-search/SKILL.md) | 사람인 직접 검색. 시·도와 구 단위 지역 필터, 경력·등록일·정렬 지원 | `bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "성남시 분당구" --jobage 7 --format table` |
+| [linkareer-search](.agents/skills/linkareer-search/SKILL.md) | 링커리어 직접 검색. 신입·인턴 중심이며 `--career new,intern`과 지역 필터 지원. 공모전·대외활동·교육 제외 | `bun run .agents/skills/linkareer-search/cli/src/cli.ts search -q "백엔드" --career new,intern -l "서울" --format table` |
+| [worknet-search](.agents/skills/worknet-search/SKILL.md) | 고용24 검색. 기본값은 고용24 자체 공고만 포함. `--source`로 특정 연계 제공처를 선택하거나 `--all-sources`로 고용24에 연계된 모든 제공처 포함 | `bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --source work,jobkorea,saramin --limit 5 --format table` |
+| [incruit-search](.agents/skills/incruit-search/SKILL.md) | 인크루트 공개 페이지를 EUC-KR로 직접 검색. `-l`은 지역명을 검색어에 추가하고 `--jobage`는 요청한 페이지 안에서 로컬 필터링 | `bun run .agents/skills/incruit-search/cli/src/cli.ts search -q "백엔드" -l "서울" --jobage 7 --format table` |
+| [linkedin-search](.agents/skills/linkedin-search/SKILL.md) | LinkedIn 공개 `jobs-guest` 검색. 국가 무관, 위치 필수, 원격 형태와 등록일 지원 | `bun run .agents/skills/linkedin-search/cli/src/cli.ts search -q "data engineer" -l "Seoul, South Korea" --remote hybrid --format table` |
+| [freehire-search](.agents/skills/freehire-search/SKILL.md) | freehire.me 공개 REST API 기반 기술직 통합 검색. 지역·국가·직급·분야·기술·근무 형태 facet 지원 | `bun run .agents/skills/freehire-search/cli/src/cli.ts search -q "backend engineer" --remote remote --region apac --format table` |
+
+`--source`는 기본 제공처 선택을 대체하므로 고용24 자체 공고도 유지하려면 `work`를 포함하세요. 기본 검색은 고용24 자체 공고만 대상으로 합니다. 고용24의 `--source`와 `--all-sources`는 **고용24에 연계된 공고**를 검색하며 원 플랫폼 전체를 직접 크롤링하지 않습니다. 잡코리아·사람인·인크루트 전체 검색은 각각의 전용 스킬을 사용하세요. 연계 공고의 상세 조회에는 검색 결과의 전체 URL을 전달해 `infoTypeCd`와 `infoTypeGroup`을 보존하세요. 외부 iframe에 본문이 있으면 `descriptionUrl`로 해당 주소를 확인할 수 있습니다. 인크루트의 지역은 별도 지역 코드가 아닌 키워드이고, `--jobage`는 지정한 한 페이지만 검사하므로 결과가 적을 수 있습니다. 등록일을 알 수 없는 공고는 기간 필터에서 제외하고 수정일은 별도로 기록합니다. 상세 조회는 텍스트와 이미지 URL을 제공하며 이미지에만 있는 요건은 이미지를 확인해야 합니다.
+
+예를 들어 고용24의 모든 연계 제공처를 포함하려면 다음처럼 실행하세요.
+
+```bash
+bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --all-sources --limit 5
 ```
+
+스킬의 `enabled: false` 설정으로 `/scrape` 실행 대상에서 제외할 수 있습니다. 각 CLI의 `cli/`에서 `bun test`와 `bun run typecheck`로 오프라인 검증을 실행합니다. 링커리어와 인크루트의 `bun run test:live`는 명시적으로 실행할 때만 실제 요청을 보내며 기본 테스트와 CI에서는 건너뜁니다. 요청량을 제한하고 각 스킬의 개인 사용 및 접근 안내를 따르세요.
+
+다른 포털을 추가하려면 다음을 실행하세요.
+
+```text
 /add-portal
 ```
 
-Give it your local job board's URL. The command investigates the portal (search-URL pattern, result-page structure, robots.txt/access rules), scaffolds a CLI skill with the same structure, commands, and output contract as the shipped ones, and test-runs a live query before registering anything. Auth-walled portals are declined, and portals with restrictive terms get a prominent personal-use-only warning in the generated skill. The generated skill is market-specific and lives in your fork; the generator itself is the universal part.
+포털 URL을 주면 검색 URL 패턴, 결과 구조, robots.txt와 접근 규칙을 조사하고 기존 스킬과 같은 구조·명령·출력 계약으로 CLI를 생성한 뒤 제한적인 라이브 검색을 시험합니다. 인증이 필요한 포털은 거절하고, 이용약관에 제한이 있으면 생성된 스킬에 개인 사용 전용 경고를 표시합니다.
 
-Maintaining a fork adapted to your market or language? Add it to the [Community forks & adaptations](https://github.com/MadsLorentzen/ai-job-search/discussions/78) thread so others can find it.
+한국 밖의 시장에서는 `linkedin-search`와 `freehire-search`를 출발점으로 사용할 수 있습니다. LinkedIn 자동 접근은 이용약관 제한이 있으므로 개인 용도로 요청량을 낮게 유지하세요. freehire.me는 API 키 없이 구조화된 기술직 결과를 제공하며 `FREEHIRE_API_URL`로 자체 호스팅 인스턴스를 지정할 수 있습니다. [freehire 백엔드](https://github.com/strelov1/freehire)는 MIT 라이선스로 공개되어 있습니다. 시장이나 언어에 맞춘 포크를 관리한다면 [커뮤니티 포크·응용 사례](https://github.com/MadsLorentzen/ai-job-search/discussions/78)에 공유할 수 있습니다.
 
-For **country-agnostic** starting points outside Korea, the repo ships two portal skills alongside the Korean ones:
+<a id="extending-the-framework-portals-templates-criteria-and-borrowing-from-other-forks"></a>
+### 프레임워크 확장: 포털, 템플릿, 평가 기준과 다른 포크 활용
 
-- **`linkedin-search`** — built on LinkedIn's public, unauthenticated `jobs-guest` endpoints. Field-agnostic, **zero runtime dependencies** (runs with just `bun`), and takes the search location as an explicit flag, so it works for any market out of the box (`-l "Berlin, Germany"`, `-l "Mumbai, Maharashtra, India"`, `-l "Remote"`, …). Intended for **personal use only** — automated access is against LinkedIn's Terms of Service, so keep volume low. See `.agents/skills/linkedin-search/SKILL.md`.
-- **`freehire-search`** — queries the [freehire.me](https://freehire.me) aggregator's public REST API (JSON, no API key). Tech-focused (software, data, engineering, DevOps, remote), multi-market via facet flags (`--region`, `--country`, `--remote`), and **zero runtime dependencies**. Unlike the HTML-scraping portals, results come back structured (skills, seniority, category). The backend is MIT-licensed and [self-hostable](https://github.com/strelov1/freehire) — point `FREEHIRE_API_URL` at your own instance if you prefer. See `.agents/skills/freehire-search/SKILL.md`.
+프레임워크에는 세 가지 확장 지점이 있으며 업스트림 코드를 수정하지 않고 사용할 수 있습니다.
 
-### Extending the framework: portals, templates, criteria - and borrowing from other forks
+1. **포털 스킬:** `.agents/skills/` 아래의 각 `*-search` 폴더는 `search`·`detail` CLI, `--format json|table|plain`, `SKILL.md`의 `enabled:` 값, 자체 테스트를 가진 독립 모듈입니다. `/scrape`가 계약을 만족하는 스킬을 자동 발견하며 `/add-portal`로 새 스킬을 만들 수 있습니다. 다른 포크의 스킬은 [커뮤니티 포털 목록](https://github.com/MadsLorentzen/ai-job-search/discussions/78)에서 찾을 수 있습니다.
+2. **문서 템플릿:** `/add-template`은 명령줄에서 PDF로 컴파일할 수 있는 CV 또는 자기소개서 도구 체인을 등록합니다.
+3. **평가 기준:** 프로필의 제외 조건과 선호 조건은 자유 형식입니다. 육아휴직 조건, 최소 급여, 온콜 제외 같은 요구를 프로필 한 줄로 기록할 수 있으며 `/rank`와 `/apply`가 그 내용을 실제 평가에 반영합니다. 언어는 구조화된 전용 규칙이 있습니다. `/setup`이 직접 묻거나 CV·LinkedIn 자료에서 파악한 업무 언어와 수준을 `Languages` 표에 기록하고, 공고가 선언하지 않은 언어를 필수로 요구하면 제외합니다. 선언한 언어에서 더 높은 수준을 요구하는 경우에는 자동 제외하지 않고 사용자가 판단할 수 있도록 표시합니다. 예를 들어 본인이 B1/B2 수준으로 기록한 언어에 공고가 유창함을 요구한다면 조용히 제외하는 대신 그 차이를 드러냅니다.
 
-Everything above adds up to an extension model, so here it is stated plainly. The framework has three extension points, and none of them require touching upstream:
+다른 포크의 포털 스킬을 가져올 때는 해당 폴더 하나를 `.agents/skills/`에 수동으로 복사합니다. 실행 전에는 다음을 확인하세요.
 
-1. **Portal skills** - the module system for job boards. Every `*-search` skill is a self-contained folder under `.agents/skills/` with the same contract (a `search`/`detail` CLI, `--format json|table|plain` output, an `enabled:` flag in its `SKILL.md`, its own tests). `/scrape` auto-discovers any installed skill that follows the contract - nothing to register, nothing to wire up. `/add-portal` generates new ones; the [community portal index](https://github.com/MadsLorentzen/ai-job-search/discussions/78) catalogs the ones other forks have built.
-2. **Document templates** - `/add-template` registers any CV or cover-letter toolchain that compiles to PDF from the command line, LaTeX or otherwise.
-3. **Evaluation criteria** - deal-breakers and preferences in your profile are free-form, and the evaluation rubric scores against whatever you put there. "Strong parental-leave terms", "minimum salary X per my union's scale", "no on-call" - each is one profile line, no code, and it carries real weight in `/rank` and `/apply` fit evaluations. Language is the one deal-breaker type with dedicated, structured handling: `/setup` captures every language you work in and your level (asked directly, or inferred from your CV/LinkedIn export) into a `Languages` table, and the Language Gate (`04-job-evaluation.md`) hard-rejects a posting that requires a language you haven't declared at all, while flagging - not auto-rejecting - one that asks for a higher level than you declared in a language you do work in, so a borderline case (a strict "fluent" bar against your own B1/B2, say) gets your judgment instead of a silent drop.
+- 코드를 전부 읽어 네트워크 요청이 명시된 채용 사이트로만 가는지, 자기 폴더 밖의 파일을 읽거나 쓰지 않는지 확인합니다.
+- `package.json`에 예상치 못한 런타임 의존성이나 `postinstall` 같은 생명주기 스크립트가 없는지 확인합니다.
+- 해당 스킬의 `cli/`에서 `bun test`를 실행해 오프라인 테스트가 통과하는지 확인합니다.
+- `enabled:` 값, 스킬의 이용약관 주의사항, `.claude/settings.json`의 명시적 권한 항목과 `tools/security_guards.py`의 매니페스트 검사를 함께 확인합니다.
 
-**Borrowing a portal skill from another fork** is the intended way to get a board that upstream doesn't ship: find it in the [portal index](https://github.com/MadsLorentzen/ai-job-search/discussions/78), open that fork, and copy the one folder into your own `.agents/skills/`. Before you run it:
+현재 저장소에 포함된 CLI만 `.claude/settings.json`에 명시적으로 허용되어 있습니다. 복사한 임의 스킬은 자동으로 사전 승인되지 않으며, 실행 권한과 보안 검사 설정을 검토한 뒤 사용해야 합니다. 수동 복사를 요구하는 이유도 사용자가 코드와 권한을 직접 확인하도록 하기 위해서입니다.
 
-- **Read the code.** All of it - these CLIs run pre-approved on your machine (`.claude/settings.json` allowlists them) against your career data. Check that the only network calls go to the job board it claims to search, that `package.json` has no `dependencies` and no lifecycle scripts (`postinstall` etc.), and that nothing reads or writes outside its own folder.
-- **Run its tests offline** (`bun test` in the skill's `cli/` directory) - a well-built skill's tests pass with no network access.
-- Check the `enabled:` flag and the skill's own ToS notes.
+국가별 급여 데이터베이스나 현지 임금표 같은 시장 특화 데이터도 같은 원칙을 따릅니다. 각 시장 포크에서 관리하고 [커뮤니티 논의 #78](https://github.com/MadsLorentzen/ai-job-search/discussions/78)을 통해 공유할 수 있습니다.
 
-The copy step is manual on purpose. Your settings already allow installed portal skills to run without asking each time - so an installer that fetched them from third-party repos for you would skip the one check that matters: you, reading the code first. There isn't one, and that's a security decision rather than a missing feature.
+<a id="salary-benchmarking"></a>
+### 급여 벤치마킹
 
-Market-specific *data sources* (a national salary database, local award-rate tables) follow the same pattern as portals: they belong in a market fork, shared via [#78](https://github.com/MadsLorentzen/ai-job-search/discussions/78), not upstream.
+급여 도구는 노조 통계, Glassdoor 내보내기, 개인 조사 등 사용자가 제공한 데이터를 사용합니다. 형식과 설정 방법은 `tools/README_SALARY_TOOL.md`를 참고하세요. 급여 데이터가 없으면 이 단계만 건너뜁니다.
 
-### Salary benchmarking
+<a id="starting-over"></a>
+### 처음부터 다시 시작
 
-The salary tool works with any salary data you provide (union statistics, Glassdoor exports, personal research, etc.). See `tools/README_SALARY_TOOL.md` for the expected format and setup. If you don't have salary data, the salary step is simply skipped.
+프로필 데이터를 지우고 새로 시작하려면 다음 명령을 사용합니다.
 
-### Starting over
-
-To wipe your profile data and start fresh:
-
+```text
+/reset profile    # 스킬 파일의 개인정보를 지우고 프레임워크 규칙은 보존
+/reset documents  # documents/ 폴더의 파일 삭제
+/reset all        # 둘 다 실행
 ```
-/reset profile    # clears skill files, preserves framework rules
-/reset documents  # deletes files from documents/ folder
-/reset all        # both
-```
 
-`/reset` shows exactly what will be deleted and requires you to type `RESET` to confirm. Nothing is deleted until you do.
+`/reset`은 삭제할 대상을 정확히 보여 주고 사용자가 `RESET`을 직접 입력해야 진행합니다. 입력 전에는 아무것도 삭제하지 않습니다.
 
-### Staying up to date
+<a id="staying-up-to-date"></a>
+### 최신 상태 유지
 
-Upstream moves fast. Rather than pulling raw `master` and hoping, update your fork to a tagged [release](../../releases) - a vetted checkpoint described in [CHANGELOG.md](CHANGELOG.md). `python3 tools/check_upstream_updates.py` previews exactly which of your personalized files an update touches before you merge, and `python3 tools/upstream_triage.py` sorts the commits you're behind into "worth reviewing" vs "probably skip" (a weekly workflow can post this to a rolling issue). Full walkthrough in [SETUP.md, section 8](SETUP.md#8-pulling-upstream-updates-into-your-fork).
+검증되지 않은 `master`를 바로 병합하기보다 태그가 붙은 업스트림 [릴리스](https://github.com/MadsLorentzen/ai-job-search/releases)를 기준으로 업데이트하세요. 각 체크포인트의 변경 사항은 [CHANGELOG.md](CHANGELOG.md)에 설명되어 있습니다. `python3 tools/check_upstream_updates.py`는 병합 전에 개인화 파일에 미치는 영향을 보여 주고, `python3 tools/upstream_triage.py`는 뒤처진 커밋을 검토 권장과 건너뛰기 후보로 분류합니다. 주간 워크플로로 이 분류를 누적 이슈에 게시할 수도 있습니다. 전체 절차는 [SETUP.md 8절](SETUP.md#8-pulling-upstream-updates-into-your-fork)을 참고하세요.
 
-## Tips for better results
+<a id="tips-for-better-results"></a>
+## 더 나은 결과를 위한 팁
 
-### Profile depth matters
+<a id="profile-depth-matters"></a>
+### 프로필의 깊이가 중요합니다
 
-The single biggest factor in output quality is how much detail you put into your profile. A thin profile produces generic applications; a detailed one enables genuinely tailored results.
+출력 품질에 가장 큰 영향을 주는 요소는 프로필의 구체성입니다. 얕은 프로필은 일반적인 지원서를 만들고, 자세한 프로필은 실제 직무에 맞춘 결과를 가능하게 합니다.
 
-- **Role descriptions:** Don't just list job titles. Describe what you actually did in each position: specific projects, tools used, responsibilities, and measurable achievements. The more material you provide, the more precisely the system can reframe your experience for different roles.
-- **Skills in context:** Instead of listing "Python" or "project management," describe how and where you applied them. "Built ML pipelines for customer churn prediction in Python using scikit-learn" gives the system far more to work with than "Python, machine learning."
-- **All onboarding paths work:** Whether you point `/setup` at your `documents/` folder, paste a single CV, or walk through the interview, the principle is the same: richer input produces sharper output.
+- **직무 설명:** 직함만 나열하지 말고 각 직장에서 실제로 수행한 프로젝트, 사용 도구, 책임, 측정 가능한 성과를 적으세요. 자료가 많을수록 여러 직무에 맞게 경험을 정확히 재구성할 수 있습니다.
+- **맥락 속 기술:** `Python`이나 `프로젝트 관리`만 적기보다 어디에서 어떻게 사용했는지 설명하세요. `scikit-learn과 Python으로 고객 이탈 예측 ML 파이프라인 구축`은 단순 기술 목록보다 훨씬 유용합니다.
+- **모든 온보딩 경로 활용 가능:** `documents/` 폴더, CV 붙여 넣기, 인터뷰 중 어떤 경로를 선택해도 원칙은 같습니다. 입력이 풍부할수록 결과가 정교해집니다.
 
-### Career path discovery
+<a id="career-path-discovery"></a>
+### 경력 경로 발견
 
-The framework supports two distinct modes of job searching:
+두 가지 방식으로 채용 기회를 찾을 수 있습니다.
 
-- **Explicit targeting:** You know which roles or sectors you want. The system helps refine and prioritize based on fit.
-- **Latent opportunity discovery:** By analyzing your full history (not just job titles, but the actual work you did), the system can surface career paths you haven't considered. Transferable skills that map to unexpected industries, patterns in what you enjoyed or excelled at, or emerging roles that combine your domain expertise with new technology.
+- **명시적 목표:** 원하는 직무나 산업을 이미 알고 있을 때 적합도를 바탕으로 후보를 다듬고 우선순위를 정합니다.
+- **잠재 기회 발견:** 직함뿐 아니라 실제 수행 업무 전체를 분석해 생각하지 못한 경력 경로를 찾습니다. 다른 산업으로 옮길 수 있는 기술, 즐겼거나 잘했던 업무의 패턴, 기존 전문성과 새 기술을 결합한 신흥 역할을 발견할 수 있습니다.
 
-To get the most from this, invest time during `/setup` in describing not just your experience, but what energized you, what drained you, and what you'd want more of. This context directly shapes how the system evaluates fit and which roles it surfaces during `/scrape`.
+`/setup`에서는 경력만 나열하지 말고 어떤 일이 활력을 주었는지, 무엇이 지치게 했는지, 앞으로 무엇을 더 하고 싶은지도 기록하세요. 이 맥락이 `/scrape`의 후보와 적합도 평가에 직접 반영됩니다.
 
-## Contributing
+<a id="contributing"></a>
+## 기여
 
-Thinking about a PR? Read [CONTRIBUTING.md](CONTRIBUTING.md) first - it explains what gets merged, what lives in forks, and why.
+PR을 만들기 전에 [CONTRIBUTING.md](CONTRIBUTING.md)를 읽어 주세요. 업스트림에 병합되는 변경, 시장별 포크에 남겨야 하는 변경, 그 기준의 이유를 설명합니다.
 
-## Acknowledgements
+<a id="acknowledgements"></a>
+## 감사
 
-- [Mikkel Krogholm](https://github.com/mikkelkrogsholm) ([skills repo](https://github.com/mikkelkrogsholm/skills)) for the job search CLI skills
-- Built with [Claude Code](https://claude.com/claude-code) by [Anthropic](https://anthropic.com)
+- 채용 검색 CLI 스킬의 기반을 제공한 [Mikkel Krogholm](https://github.com/mikkelkrogsholm)과 [skills 저장소](https://github.com/mikkelkrogsholm/skills)
+- [Anthropic](https://anthropic.com)의 [Claude Code](https://claude.com/claude-code)
+- 원본 프레임워크와 업스트림 유지보수를 맡은 [Mads Lorentzen](https://github.com/MadsLorentzen)
 
-## License
+<a id="license"></a>
+## 라이선스
 
 MIT

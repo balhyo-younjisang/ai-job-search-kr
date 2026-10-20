@@ -318,9 +318,17 @@ LaTeX, [Typst](https://typst.app/) 또는 명령줄에서 PDF로 컴파일할 �
 | [saramin-search](.agents/skills/saramin-search/SKILL.md) | 사람인 직접 검색. 시·도와 구 단위 지역 필터, 경력·등록일·정렬 지원 | `bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "성남시 분당구" --jobage 7 --format table` |
 | [linkareer-search](.agents/skills/linkareer-search/SKILL.md) | 링커리어 직접 검색. 신입·인턴 중심이며 `--career new,intern`과 지역 필터 지원. 공모전·대외활동·교육 제외 | `bun run .agents/skills/linkareer-search/cli/src/cli.ts search -q "백엔드" --career new,intern -l "서울" --format table` |
 | [worknet-search](.agents/skills/worknet-search/SKILL.md) | 고용24 검색. 기본값은 고용24 자체 공고만 포함. `--source`로 특정 연계 제공처를 선택하거나 `--all-sources`로 고용24에 연계된 모든 제공처 포함 | `bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --source work,jobkorea,saramin --limit 5 --format table` |
-| [incruit-search](.agents/skills/incruit-search/SKILL.md) | 인크루트 공개 페이지를 EUC-KR로 직접 검색. `-l`은 지역명을 검색어에 추가하고 `--jobage`는 요청한 페이지 안에서 로컬 필터링 | `bun run .agents/skills/incruit-search/cli/src/cli.ts search -q "백엔드" -l "서울" --jobage 7 --format table` |
+| [incruit-search](.agents/skills/incruit-search/SKILL.md) | ⚠️ **기본 비활성화**(아래 안내 참고). 인크루트 공개 페이지를 EUC-KR로 직접 검색. `-l`은 지역명을 검색어에 추가하고 `--jobage`는 요청한 페이지 안에서 로컬 필터링 | `bun run .agents/skills/incruit-search/cli/src/cli.ts search -q "백엔드" -l "서울" --jobage 7 --format table` |
 | [linkedin-search](.agents/skills/linkedin-search/SKILL.md) | LinkedIn 공개 `jobs-guest` 검색. 국가 무관, 위치 필수, 원격 형태와 등록일 지원 | `bun run .agents/skills/linkedin-search/cli/src/cli.ts search -q "data engineer" -l "Seoul, South Korea" --remote hybrid --format table` |
 | [freehire-search](.agents/skills/freehire-search/SKILL.md) | freehire.me 공개 REST API 기반 기술직 통합 검색. 지역·국가·직급·분야·기술·근무 형태 facet 지원 | `bun run .agents/skills/freehire-search/cli/src/cli.ts search -q "backend engineer" --remote remote --region apac --format table` |
+
+> [!WARNING]
+> **인크루트 스킬은 기본 비활성화(`enabled: false`) 상태로 제공되며 `/scrape`에서 실행되지 않습니다.** 접근 조건을 확인하지 못했기 때문입니다.
+> - 이용약관이 있는 `www.incruit.com`은 robots.txt가 모든 경로를 막고 있어 약관을 검토하지 못했습니다. 자동 접근 허용 여부를 알 수 없습니다.
+> - 검색·공고 호스트의 robots.txt는 GPTBot·ClaudeBot을 전면 차단하고 AI 검색 봇의 일부 경로 접근을 제한합니다. 이 CLI는 자체 User-Agent를 쓰지만 AI 에이전트가 실행하는 도구입니다.
+> - 공고 안내문에 따르면 재배포에는 인크루트의 동의가 필요하며, 기업·채용담당자 정보는 구직 목적으로만 이용할 수 있습니다.
+>
+> 사용하려면 인크루트의 최신 약관을 직접 확인한 뒤 [SKILL.md](.agents/skills/incruit-search/SKILL.md) frontmatter를 `enabled: true`로 바꾸세요. 활성화 여부의 판단과 책임은 사용자에게 있습니다. 활성화하지 않아도 고용24의 `--source incruit`로 고용24에 연계된 인크루트 공고를 검색할 수 있습니다.
 
 `--source`는 기본 제공처 선택을 대체하므로 고용24 자체 공고도 유지하려면 `work`를 포함하세요. 기본 검색은 고용24 자체 공고만 대상으로 합니다. 고용24의 `--source`와 `--all-sources`는 **고용24에 연계된 공고**를 검색하며 원 플랫폼 전체를 직접 크롤링하지 않습니다. 잡코리아·사람인·인크루트 전체 검색은 각각의 전용 스킬을 사용하세요. 연계 공고의 상세 조회에는 검색 결과의 전체 URL을 전달해 `infoTypeCd`와 `infoTypeGroup`을 보존하세요. 외부 iframe에 본문이 있으면 `descriptionUrl`로 해당 주소를 확인할 수 있습니다. 인크루트의 지역은 별도 지역 코드가 아닌 키워드이고, `--jobage`는 지정한 한 페이지만 검사하므로 결과가 적을 수 있습니다. 등록일을 알 수 없는 공고는 기간 필터에서 제외하고 수정일은 별도로 기록합니다. 상세 조회는 텍스트와 이미지 URL을 제공하며 이미지에만 있는 요건은 이미지를 확인해야 합니다.
 

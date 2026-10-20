@@ -315,7 +315,7 @@ This adaptation bundles the following seven portal skills. Read each skill's ins
 | [saramin-search](.agents/skills/saramin-search/SKILL.md) | Saramin Korean job postings; province/district filters |
 | [linkareer-search](.agents/skills/linkareer-search/SKILL.md) | Linkareer jobs, especially new-graduate roles and internships; excludes contests and extracurricular activities |
 | [worknet-search](.agents/skills/worknet-search/SKILL.md) | Work24's own postings by default; optional selected or all syndicated providers |
-| [incruit-search](.agents/skills/incruit-search/SKILL.md) | Direct Incruit HTML search and description iframe; EUC-KR decoding |
+| [incruit-search](.agents/skills/incruit-search/SKILL.md) | ⚠️ **Disabled by default** (see below). Direct Incruit HTML search and description iframe; EUC-KR decoding |
 | [linkedin-search](.agents/skills/linkedin-search/SKILL.md) | Multiple markets and fields; requires an explicit search location |
 | [freehire-search](.agents/skills/freehire-search/SKILL.md) | Tech-focused aggregator covering multiple markets and remote roles |
 
@@ -337,6 +337,9 @@ bun run .agents/skills/linkareer-search/cli/src/cli.ts search -q "마케팅" --c
 ```
 
 Work24 provider options cover **postings syndicated into Work24**, not all postings on the original platforms. `--source` replaces the default provider selection; include `work` to keep Work24's own postings. For syndicated details, pass the full search result URL so `infoTypeCd` and `infoTypeGroup` survive. Some bodies live in an external iframe, exposed as `descriptionUrl`.
+
+> [!WARNING]
+> **`incruit-search` ships with `enabled: false`, so `/scrape` skips it.** Its access terms are unverified: the terms of service sit on `www.incruit.com`, whose robots.txt disallows every path, so they were never reviewed; the search and posting hosts fully exclude GPTBot and ClaudeBot; and each posting's notice requires Incruit's consent for redistribution. Check Incruit's current terms yourself before setting `enabled: true` in its [SKILL.md](.agents/skills/incruit-search/SKILL.md) - that decision is yours. Work24's `--source incruit` covers postings Incruit syndicates to Work24 without enabling it.
 
 Incruit's `--location` adds keywords rather than applying a dedicated region filter. Its `--jobage` filters only the requested page locally and excludes unknown registration dates; modification dates are kept separately. It can return description image URLs as well as text. HTML structures can change, so use each CLI's `--help` and the skill's `url-reference.md` when diagnosing failures.
 

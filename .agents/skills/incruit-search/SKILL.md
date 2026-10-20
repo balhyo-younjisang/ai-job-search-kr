@@ -6,7 +6,7 @@ description: >
   specific Incruit posting, including its full text and description images.
   Use for Incruit jobs, 인크루트 채용, 인크루트 공고 검색, or 인크루트 공고 상세 조회.
 context: fork
-enabled: true
+enabled: false  # off by default: Incruit's terms could not be reviewed (see "Disabled by default" below)
 allowed-tools: Bash(bun run .agents/skills/incruit-search/cli/src/cli.ts *)
 ---
 
@@ -16,13 +16,38 @@ Search Incruit's public Korean job listings with Bun, without login, API keys,
 or runtime dependencies. This searches Incruit directly; Work24's
 `--source incruit` instead covers only postings syndicated to Work24.
 
+## ⚠️ Disabled by default - read before enabling
+
+This skill ships with `enabled: false`, so `/scrape` skips it. The CLI still
+works when run by hand, and `/apply` still accepts Incruit posting URLs you
+paste. It is off because its access terms are **unverified**, not because it
+is known to break them:
+
+- **Terms not reviewed.** Incruit's terms of service live on the main
+  `www.incruit.com` host, whose `robots.txt` disallows every path for all
+  agents, so they were never fetched. Whether automated access to the search
+  and posting pages is permitted is unknown.
+- **AI crawlers are explicitly excluded.** The search and posting hosts' robots
+  rules fully exclude GPTBot and ClaudeBot and restrict OAI-SearchBot and
+  Claude-SearchBot. This CLI sends its own project User-Agent, which falls
+  under the wildcard group, but it is run by an AI agent - read that as a sign
+  the operator does not welcome AI-driven access.
+- **Redistribution needs consent.** The notice on each posting reserves
+  redistribution to Incruit's consent and limits employer/recruiter
+  information to job seeking.
+
+To enable it, check Incruit's current terms yourself first, then set
+`enabled: true` in this file's frontmatter. You are responsible for that
+decision. If you enable it, do not store or share posting text beyond your own
+job search. Use Work24's `--source incruit` for postings Incruit syndicates to
+Work24.
+
 ## Personal use only
 
 Use for your own job search, with a small number of searches and relevant
 detail requests. Do not bulk collect or redistribute postings. Incruit's
 posting notice reserves redistribution to its consent and limits use of
-employer/recruiter information to job seeking. The main site's terms were
-not fetched because its wildcard robots group disallows all paths.
+employer/recruiter information to job seeking.
 
 The CLI identifies this project honestly and only requests the public search,
 detail, and description endpoints described in [url-reference.md](url-reference.md).

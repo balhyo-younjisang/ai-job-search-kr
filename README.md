@@ -129,7 +129,7 @@ claude
 /apply <채용 공고 전문을 여기에 붙여 넣으세요>
 ```
 
-적합도 평가, CV와 자기소개서 초안 작성, 두 번째 에이전트 검토, 수정, 최종 결과 제시를 차례로 실행합니다.
+적합도 평가, CV와 자기소개서 초안 작성, 두 번째 에이전트 검토, 수정, 최종 결과 제시를 차례로 실행합니다. 평가 전에 공고 무결성 검사가 숨겨진 텍스트, 보이지 않는 문자, 지시문 형태의 문장과 숨겨진 링크를 확인하고, 한 줄 판정으로 평가를 시작합니다. 공고 수집·평가·검토 에이전트는 읽기 전용 권한으로 실행됩니다.
 
 채용 공고는 신뢰할 수 없는 입력으로 처리합니다. 워크플로는 공고 본문에 삽입된 지시를 따르거나 본문의 링크를 자동으로 가져오지 않습니다. 다만 이 방어는 샌드박스가 아닌 지침 수준이므로 처음 보는 채용 사이트에서는 제출 전에 가져온 내용과 생성 파일을 확인하세요. 자세한 내용은 [SECURITY.md](SECURITY.md)를 참고하세요.
 
@@ -161,6 +161,7 @@ ai-job-search-kr/
 ├── CLAUDE.md                          # 기본 후보자 프로필과 워크플로 규칙
 ├── AGENTS.md                          # 여러 에이전트용 thin-pointer 안내
 ├── .claude/                           # Claude Code의 표준 워크플로 단일 출처
+│   ├── agents/                       # 읽기 전용 공고 수집·평가·지원서 검토 에이전트
 │   ├── commands/
 │   │   ├── apply.md                   # /apply 작성자-검토자 워크플로
 │   │   ├── setup.md                   # /setup 문서·CV·인터뷰 온보딩
@@ -216,10 +217,12 @@ ai-job-search-kr/
 │   ├── check_framework_version.py     # 스킬 변경 시 버전 증가 검사
 │   ├── check_upstream_updates.py      # 업데이트가 개인화 파일에 미치는 영향 미리보기
 │   ├── convert_salary_excel.py        # 급여 Excel을 JSON으로 변환
+│   ├── fetch_page.py                  # robots.txt를 적용하는 GET 전용 403 재시도
 │   ├── install_portal_clis.py         # 발견한 모든 포털 CLI 설치
 │   ├── lint_skills.py                 # 스킬·명령·settings.json 린트
+│   ├── posting_guard.py               # 숨은 텍스트 제거와 지시문 형태의 입력 검사
 │   ├── robots_check.py                # robots.txt 기반 재시도 허용 검사
-│   ├── security_guards.py             # 권한·gitignore·매니페스트 보안 검사
+│   ├── security_guards.py             # 허용·확인·거부 권한, 스킬 권한·gitignore·매니페스트 검사
 │   ├── upstream_triage.py             # 업스트림 커밋 검토 우선순위 분류
 │   ├── verify_layout.py               # PDF 레이아웃 측정
 │   ├── verify_pdf.py                  # pypdf 우선, pdftotext 대체 PDF 검사

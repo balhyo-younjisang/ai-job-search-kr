@@ -67,12 +67,13 @@ endpoints, parsing anchors, and the robots.txt / User-Agent maintenance check.
 
 ```bash
 bun run typecheck
-bun run test        # offline: stubbed fetch + trimmed real pages, no requests to JobKorea
+bun run test        # offline: stubbed fetch + synthetic pages, no requests to JobKorea
 bun run test:live   # opt-in live smoke test: one search, one detail
 ```
 
 `bun run test` is what CI runs, and it never contacts the portal: parsers and
-commands are tested against trimmed real pages in `tests/fixtures/` (see
-`provenance.md`). `tests/live-smoke.test.ts` is skipped unless
+commands are tested against synthetic pages in `tests/fixtures/` that mirror
+the portal's markup with fictional content (see `provenance.md`).
+`tests/live-smoke.test.ts` is skipped unless
 `JOBKOREA_LIVE=1` is set, which `test:live` does - run it by hand after
 changing a parser.

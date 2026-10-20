@@ -4,8 +4,8 @@ import { runSearch, type SearchOpts } from "../src/commands/search";
 import { runDetail } from "../src/commands/detail";
 import { koreaDate } from "../src/helpers";
 
-// End-to-end command tests, offline: fetch is stubbed to serve the trimmed
-// real pages in fixtures/, and stdout/stderr are captured in-process.
+// End-to-end command tests, offline: fetch is stubbed to serve the
+// synthetic pages in fixtures/, and stdout/stderr are captured in-process.
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name)).text();
 
 const originalFetch = globalThis.fetch;
@@ -40,7 +40,7 @@ function capture(): { out: () => string; err: () => string } {
 const baseOpts: SearchOpts = { query: "백엔드", sort: "relevance", page: 1, format: "json" };
 
 describe("runSearch", () => {
-  test("emits the contract JSON shape for a real results page", async () => {
+  test("emits the contract JSON shape for a results page", async () => {
     const page = await fixture("search-page.html");
     const urls = stubFetch(() => new Response(page));
     const io = capture();
@@ -49,7 +49,7 @@ describe("runSearch", () => {
     expect(urls).toHaveLength(1);
     expect(new URL(urls[0]).searchParams.get("stext")).toBe("백엔드");
     const data = JSON.parse(io.out());
-    expect(data.meta).toEqual({ count: 3, page: 1, total: 2377, totalPages: 119 });
+    expect(data.meta).toEqual({ count: 3, page: 1, total: 1234, totalPages: 62 });
     for (const r of data.results) {
       for (const key of ["id", "title", "company", "location", "date", "deadline", "url"]) expect(r).toHaveProperty(key);
     }
@@ -62,7 +62,7 @@ describe("runSearch", () => {
     const io = capture();
 
     expect(await runSearch({ ...baseOpts, limit: 1 })).toBe(0);
-    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["50135552"]);
+    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["59100001"]);
   });
 
   test("--jobage trims to the exact window by posting date", async () => {
@@ -73,7 +73,7 @@ describe("runSearch", () => {
     // The fixture's postings are dated 2026-10-09, 2026-10-13, 2026-09-17.
     const days = Math.round((Date.parse(koreaDate()) - Date.parse("2026-10-10")) / 86400000);
     expect(await runSearch({ ...baseOpts, jobage: days })).toBe(0);
-    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["50159061"]);
+    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["59100002"]);
   });
 
   test("table output lists each posting on one aligned row", async () => {
@@ -109,15 +109,15 @@ describe("runSearch", () => {
 
 describe("runDetail", () => {
   test("fetches the posting page and its description iframe", async () => {
-    const page = await fixture("detail-50007983.html");
-    const iframe = await fixture("description-image-50007983.html");
+    const page = await fixture("detail.html");
+    const iframe = await fixture("description-image.html");
     const urls = stubFetch((url) => new Response(url.includes("GI_Read_Comt_Ifrm") ? iframe : page));
     const io = capture();
 
-    expect(await runDetail({ id: "https://www.jobkorea.co.kr/Recruit/GI_Read/50007983?Oem_Code=C1", format: "json" })).toBe(0);
+    expect(await runDetail({ id: "https://www.jobkorea.co.kr/Recruit/GI_Read/59100003?Oem_Code=C1", format: "json" })).toBe(0);
     expect(urls).toEqual([
-      "https://www.jobkorea.co.kr/Recruit/GI_Read/50007983",
-      "https://www.jobkorea.co.kr/Recruit/GI_Read_Comt_Ifrm?Gno=50007983",
+      "https://www.jobkorea.co.kr/Recruit/GI_Read/59100003",
+      "https://www.jobkorea.co.kr/Recruit/GI_Read_Comt_Ifrm?Gno=59100003",
     ]);
     const job = JSON.parse(io.out());
     expect(job.description).toBeNull();
@@ -125,12 +125,12 @@ describe("runDetail", () => {
   });
 
   test("plain output says when the description is image-only", async () => {
-    const page = await fixture("detail-50007983.html");
-    const iframe = await fixture("description-image-50007983.html");
+    const page = await fixture("detail.html");
+    const iframe = await fixture("description-image.html");
     stubFetch((url) => new Response(url.includes("GI_Read_Comt_Ifrm") ? iframe : page));
     const io = capture();
 
-    expect(await runDetail({ id: "50007983", format: "plain" })).toBe(0);
+    expect(await runDetail({ id: "59100003", format: "plain" })).toBe(0);
     const out = io.out();
     expect(out).toStartWith("AI백엔드 엔지니어 경력 모집\n㈜가상러닝 · 서울 구로구");
     expect(out).toContain("Salary: 회사 내규에 따름 (면접 후 결정)");
@@ -150,7 +150,7 @@ describe("runDetail", () => {
     stubFetch(() => new Response("<html><body>changed</body></html>"));
     const io = capture();
 
-    expect(await runDetail({ id: "50007983", format: "json" })).toBe(1);
+    expect(await runDetail({ id: "59100003", format: "json" })).toBe(1);
     expect(JSON.parse(io.err()).code).toBe("PARSE_FAILED");
   });
 });

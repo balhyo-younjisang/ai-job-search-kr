@@ -23,17 +23,17 @@ import {
 import { buildDetail, normalizeId } from "../src/commands/detail";
 import { buildUrl } from "../src/commands/search";
 
-// Offline parser tests against trimmed copies of real Saramin pages
-// (see fixtures/provenance.md). The search fixture was captured at
+// Offline parser tests against synthetic pages that mirror Saramin's markup
+// (see fixtures/provenance.md). The search fixture is pinned to
 // 2026-10-20 00:37 KST, which relative deadline labels ("내일마감") need.
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name)).text();
 const CAPTURED = new Date("2026-10-19T15:37:00Z");
 
-describe("parseSearchPage (real search page)", () => {
+describe("parseSearchPage (search page fixture)", () => {
   test("returns the cards inside the result list, with the total", async () => {
     const page = parseSearchPage(await fixture("search-page.html"), CAPTURED);
-    expect(page.results.map((r) => r.id)).toEqual(["55326336", "55210151", "55148419", "55322337"]);
-    expect(page.total).toBe(2418);
+    expect(page.results.map((r) => r.id)).toEqual(["59000001", "59000002", "59000003", "59000004"]);
+    expect(page.total).toBe(1234);
   });
 
   test("ignores recommendation cards outside the result list", async () => {
@@ -46,9 +46,9 @@ describe("parseSearchPage (real search page)", () => {
   test("maps a card with a registration date and a dated deadline", async () => {
     const [first] = parseSearchPage(await fixture("search-page.html"), CAPTURED).results;
     expect(first).toEqual({
-      id: "55326336",
-      title: "[ICT사업부] 백엔드 웹개발자 정규직 채용",
-      company: "(주)샘플소프트",
+      id: "59000001",
+      title: "[플랫폼개발팀] 백엔드 웹개발자 정규직 채용",
+      company: "(주)예시테크",
       location: "부산 강서구",
       date: "2026-10-19",
       modifiedDate: null,
@@ -58,7 +58,7 @@ describe("parseSearchPage (real search page)", () => {
       education: "대졸↑",
       employmentType: "정규직",
       jobCategory: "백엔드/서버개발, 웹개발, AI(인공지능), 앱개발, 게임개발",
-      url: "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55326336",
+      url: "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=59000001",
     });
   });
 
@@ -209,9 +209,9 @@ describe("buildUrl", () => {
 
 describe("detail parsing", () => {
   test("header and summary of an active posting", async () => {
-    const html = await fixture("detail-active-55210151.html");
-    expect(parseTitle(html)).toBe("[샘플그룹] 예시테크 백엔드개발 경력 채용");
-    expect(parseCompany(html)).toBe("(주)예시테크");
+    const html = await fixture("detail-active.html");
+    expect(parseTitle(html)).toBe("[샘플그룹] 결제 플랫폼 백엔드 경력 채용");
+    expect(parseCompany(html)).toBe("(주)샘플소프트");
     expect(parseSummary(html)).toMatchObject({
       경력: "경력 3~15년",
       학력: "대졸(4년제) 이상",
@@ -226,19 +226,19 @@ describe("detail parsing", () => {
   });
 
   test("an open-until-filled posting has a start date and no end", async () => {
-    expect(parsePeriod(await fixture("detail-always-open-55148419.html"))).toMatchObject({
+    expect(parsePeriod(await fixture("detail-always-open.html"))).toMatchObject({
       start: "2026-09-29", end: null, closed: false, alwaysOpen: true,
     });
   });
 
   test("a closed posting is marked closed", async () => {
-    expect(parsePeriod(await fixture("detail-closed-50000000.html"))).toMatchObject({
+    expect(parsePeriod(await fixture("detail-closed.html"))).toMatchObject({
       start: "2025-02-13", end: "2025-02-28", closed: true,
     });
   });
 
   test("a description with text and images returns both", async () => {
-    const { text, images } = parseDescription(await fixture("description-55210151.html"));
+    const { text, images } = parseDescription(await fixture("description-mixed.html"));
     expect(text!.split("\n").slice(0, 2)).toEqual(["접수방법 및 기간", "ㆍ접수방법 : 사람인 온라인 입사지원"]);
     expect(text).not.toMatch(/&nbsp;|<[a-z]/i);
     expect(images.length).toBeGreaterThan(1);
@@ -246,16 +246,16 @@ describe("detail parsing", () => {
   });
 
   test("a text-only description has no images", async () => {
-    const { text, images } = parseDescription(await fixture("description-50000000.html"));
-    expect(text).toStartWith("[직무내용] 예시식품는");
+    const { text, images } = parseDescription(await fixture("description-text.html"));
+    expect(text).toStartWith("[직무내용] 예시식품은");
     expect(images).toEqual([]);
   });
 
   test("buildDetail combines summary, period and description", async () => {
     const now = new Date("2026-10-20T00:00:00Z");
-    const job = buildDetail("55148419", await fixture("detail-always-open-55148419.html"), "", now);
+    const job = buildDetail("59000003", await fixture("detail-always-open.html"), "", now);
     expect(job).toMatchObject({
-      id: "55148419",
+      id: "59000003",
       title: "예약 서비스 백엔드 개발자 [Spring]",
       company: "가상헬스",
       location: "서울 종로구",
@@ -271,27 +271,27 @@ describe("detail parsing", () => {
       descriptionImages: [],
       isActive: true,
     });
-    const closed = buildDetail("50000000", await fixture("detail-closed-50000000.html"), "", now);
+    const closed = buildDetail("59000005", await fixture("detail-closed.html"), "", now);
     expect(closed).toMatchObject({ deadline: "2025-02-28", salary: "연봉 2,800 만원", isActive: false });
   });
 
   test("buildDetail returns null when the page has no title", () => {
-    expect(buildDetail("55210151", "<html></html>", "")).toBeNull();
+    expect(buildDetail("59000002", "<html></html>", "")).toBeNull();
   });
 });
 
 describe("normalizeId", () => {
   test("accepts ids and Saramin URLs carrying rec_idx", () => {
-    expect(normalizeId("55210151")).toBe("55210151");
-    expect(normalizeId("https://www.saramin.co.kr/zf_user/jobs/relay/view?view_type=search&rec_idx=55210151&location=ts")).toBe("55210151");
-    expect(normalizeId("www.saramin.co.kr/zf_user/jobs/view?rec_idx=55210151")).toBe("55210151");
-    expect(normalizeId("https://m.saramin.co.kr/job-search/view?rec_idx=55210151")).toBe("55210151");
+    expect(normalizeId("59000002")).toBe("59000002");
+    expect(normalizeId("https://www.saramin.co.kr/zf_user/jobs/relay/view?view_type=search&rec_idx=59000002&location=ts")).toBe("59000002");
+    expect(normalizeId("www.saramin.co.kr/zf_user/jobs/view?rec_idx=59000002")).toBe("59000002");
+    expect(normalizeId("https://m.saramin.co.kr/job-search/view?rec_idx=59000002")).toBe("59000002");
   });
 
   test("rejects other hosts, look-alikes, and URLs without rec_idx", () => {
-    expect(normalizeId("https://boards.greenhouse.io/acme/jobs/55210151?rec_idx=55210151")).toBeNull();
-    expect(normalizeId("https://www.saramin.co.kr.evil.io/zf_user/jobs/view?rec_idx=55210151")).toBeNull();
-    expect(normalizeId("https://www.saramin.co.kr@evil.io/zf_user/jobs/view?rec_idx=55210151")).toBeNull();
+    expect(normalizeId("https://boards.greenhouse.io/acme/jobs/59000002?rec_idx=59000002")).toBeNull();
+    expect(normalizeId("https://www.saramin.co.kr.evil.io/zf_user/jobs/view?rec_idx=59000002")).toBeNull();
+    expect(normalizeId("https://www.saramin.co.kr@evil.io/zf_user/jobs/view?rec_idx=59000002")).toBeNull();
     expect(normalizeId("https://www.saramin.co.kr/zf_user/company-info/view?csn=abc")).toBeNull();
     expect(normalizeId("123")).toBeNull();
   });

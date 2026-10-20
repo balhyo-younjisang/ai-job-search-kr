@@ -3,8 +3,8 @@ import { join } from "path";
 import { runSearch, type SearchOpts } from "../src/commands/search";
 import { runDetail } from "../src/commands/detail";
 
-// End-to-end command tests, offline: fetch is stubbed to serve the trimmed
-// real pages in fixtures/, and stdout/stderr are captured in-process.
+// End-to-end command tests, offline: fetch is stubbed to serve the
+// synthetic pages in fixtures/, and stdout/stderr are captured in-process.
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name)).text();
 
 const originalFetch = globalThis.fetch;
@@ -39,7 +39,7 @@ function capture(): { out: () => string; err: () => string } {
 const baseOpts: SearchOpts = { query: "백엔드", sort: "relevance", page: 1, format: "json" };
 
 describe("runSearch", () => {
-  test("emits the contract JSON shape for a real results page", async () => {
+  test("emits the contract JSON shape for a results page", async () => {
     const page = await fixture("search-page.html");
     const urls = stubFetch(() => new Response(page));
     const io = capture();
@@ -48,7 +48,7 @@ describe("runSearch", () => {
     expect(urls).toHaveLength(1);
     expect(new URL(urls[0]).searchParams.get("searchword")).toBe("백엔드");
     const data = JSON.parse(io.out());
-    expect(data.meta).toEqual({ count: 4, page: 1, total: 2418 });
+    expect(data.meta).toEqual({ count: 4, page: 1, total: 1234 });
     for (const r of data.results) {
       for (const key of ["id", "title", "company", "location", "date", "deadline", "url"]) expect(r).toHaveProperty(key);
     }
@@ -61,7 +61,7 @@ describe("runSearch", () => {
     const io = capture();
 
     expect(await runSearch({ ...baseOpts, limit: 1 })).toBe(0);
-    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["55326336"]);
+    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["59000001"]);
   });
 
   test("a zero-result page is an empty result, not an error", async () => {
@@ -107,32 +107,32 @@ describe("runSearch", () => {
 
 describe("runDetail", () => {
   test("fetches the print view and the description page, nothing else", async () => {
-    const page = await fixture("detail-active-55210151.html");
-    const description = await fixture("description-55210151.html");
+    const page = await fixture("detail-active.html");
+    const description = await fixture("description-mixed.html");
     const urls = stubFetch((url) => new Response(url.includes("view-detail") ? description : page));
     const io = capture();
 
-    expect(await runDetail({ id: "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55210151&view_type=search", format: "json" })).toBe(0);
+    expect(await runDetail({ id: "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=59000002&view_type=search", format: "json" })).toBe(0);
     expect(urls).toEqual([
-      "https://www.saramin.co.kr/zf_user/jobs/view?rec_idx=55210151&isPrint=yes",
-      "https://www.saramin.co.kr/zf_user/jobs/relay/view-detail?rec_idx=55210151",
+      "https://www.saramin.co.kr/zf_user/jobs/view?rec_idx=59000002&isPrint=yes",
+      "https://www.saramin.co.kr/zf_user/jobs/relay/view-detail?rec_idx=59000002",
     ]);
     const job = JSON.parse(io.out());
-    expect(job.title).toBe("[샘플그룹] 예시테크 백엔드개발 경력 채용");
+    expect(job.title).toBe("[샘플그룹] 결제 플랫폼 백엔드 경력 채용");
     expect(job.date).toBe("2026-10-07");
     expect(job.description).toContain("접수방법 및 기간");
     expect(job.descriptionImages.length).toBeGreaterThan(0);
   });
 
   test("plain output shows the facts, then the description and its images", async () => {
-    const page = await fixture("detail-active-55210151.html");
-    const description = await fixture("description-55210151.html");
+    const page = await fixture("detail-active.html");
+    const description = await fixture("description-mixed.html");
     stubFetch((url) => new Response(url.includes("view-detail") ? description : page));
     const io = capture();
 
-    expect(await runDetail({ id: "55210151", format: "plain" })).toBe(0);
+    expect(await runDetail({ id: "59000002", format: "plain" })).toBe(0);
     const out = io.out();
-    expect(out).toStartWith("[샘플그룹] 예시테크 백엔드개발 경력 채용\n(주)예시테크 · 서울 송파구, 서울전체");
+    expect(out).toStartWith("[샘플그룹] 결제 플랫폼 백엔드 경력 채용\n(주)샘플소프트 · 서울 송파구, 서울전체");
     expect(out).toContain("Experience: 경력 3~15년");
     expect(out).toContain("Description images:\nhttps://");
     expect(out).not.toMatch(/\n{3,}/);
@@ -150,7 +150,7 @@ describe("runDetail", () => {
     stubFetch(() => new Response("<html><body>changed</body></html>"));
     const io = capture();
 
-    expect(await runDetail({ id: "55210151", format: "json" })).toBe(1);
+    expect(await runDetail({ id: "59000002", format: "json" })).toBe(1);
     expect(JSON.parse(io.err()).code).toBe("PARSE_FAILED");
   });
 });

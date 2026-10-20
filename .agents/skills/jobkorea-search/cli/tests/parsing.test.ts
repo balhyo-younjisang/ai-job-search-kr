@@ -23,7 +23,7 @@ import {
 import { buildDetail, normalizeId } from "../src/commands/detail";
 import { buildUrl } from "../src/commands/search";
 
-// Offline parser tests against trimmed copies of real JobKorea pages
+// Offline parser tests against synthetic pages that mirror JobKorea's markup
 // (see fixtures/provenance.md).
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name)).text();
 
@@ -49,24 +49,24 @@ function jobListPayload(content: unknown[], total = content.length): string {
   return `13:[["$","$L28",null,{"state":{"mutations":[],"queries":[${JSON.stringify(query)}]}}]]\n`;
 }
 
-describe("parseSearchPage (real search page)", () => {
+describe("parseSearchPage (search page fixture)", () => {
   test("returns the organic JOB_LIST results in order, with totals", async () => {
     const page = parseSearchPage(await fixture("search-page.html"));
-    expect(page.results.map((r) => r.id)).toEqual(["50135552", "50159061", "50007983"]);
-    expect(page.total).toBe(2377);
-    expect(page.totalPages).toBe(119);
+    expect(page.results.map((r) => r.id)).toEqual(["59100001", "59100002", "59100003"]);
+    expect(page.total).toBe(1234);
+    expect(page.totalPages).toBe(62);
   });
 
   test("ignores the premium block and ad cards that sit beside the organic list", async () => {
     const page = parseSearchPage(await fixture("search-page.html"));
-    // 50194339 is both the decoy premium-list entry and an sc=808 ad card.
-    expect(page.results.some((r) => r.id === "50194339")).toBe(false);
+    // 59100009 is both the decoy premium-list entry and an sc=808 ad card.
+    expect(page.results.some((r) => r.id === "59100009")).toBe(false);
   });
 
   test("maps one posting's fields, with the location chip from its card", async () => {
     const page = parseSearchPage(await fixture("search-page.html"));
     expect(page.results[2]).toEqual({
-      id: "50007983",
+      id: "59100003",
       title: "AI백엔드 엔지니어 경력 모집",
       company: "㈜가상러닝",
       location: "서울 구로구",
@@ -77,15 +77,15 @@ describe("parseSearchPage (real search page)", () => {
       career: "경력 5년↑",
       education: "학력무관",
       jobCategory: "솔루션·SI·CRM·ERP, 백엔드개발자, AI/ML엔지니어",
-      url: "https://www.jobkorea.co.kr/Recruit/GI_Read/50007983",
+      url: "https://www.jobkorea.co.kr/Recruit/GI_Read/59100003",
     });
   });
 
   test("an always-open posting (end 2070-01-01) has no deadline", async () => {
     const page = parseSearchPage(await fixture("search-page.html"));
-    const example = page.results.find((r) => r.id === "50159061")!;
-    expect(example.deadline).toBeNull();
-    expect(example.alwaysOpen).toBe(true);
+    const open = page.results.find((r) => r.id === "59100002")!;
+    expect(open.deadline).toBeNull();
+    expect(open.alwaysOpen).toBe(true);
   });
 
   test("urls are canonical, without the tracking parameters search links carry", async () => {
@@ -157,8 +157,8 @@ describe("RSC helpers", () => {
 
   test("parseCardChips reads location and job category per card, first card wins", async () => {
     const chips = parseCardChips(await fixture("search-page.html"));
-    expect(chips.get("50159061")).toEqual({ location: "경기 성남시", jobCategory: "네트워크·통신서비스, 백엔드개발자" });
-    expect(chips.get("50135552")?.location).toBe("서울 서초구 외 1");
+    expect(chips.get("59100002")).toEqual({ location: "경기 성남시", jobCategory: "네트워크·통신서비스, 백엔드개발자" });
+    expect(chips.get("59100001")?.location).toBe("서울 서초구 외 1");
   });
 });
 
@@ -230,13 +230,13 @@ describe("buildUrl", () => {
 
 describe("detail parsing", () => {
   test("parseJsonLd finds the JobPosting block", async () => {
-    const ld = parseJsonLd(await fixture("detail-50007983.html"));
+    const ld = parseJsonLd(await fixture("detail.html"));
     expect(ld?.title).toBe("AI백엔드 엔지니어 경력 모집");
     expect(ld?.validThrough).toBe("2026-11-16T23:59");
   });
 
   test("parseSummaryTable reads clean label/value pairs", async () => {
-    const summary = parseSummaryTable(await fixture("detail-50007983.html"));
+    const summary = parseSummaryTable(await fixture("detail.html"));
     expect(summary["고용형태"]).toBe("정규직 (수습 3개월)");
     expect(summary["급여"]).toBe("회사 내규에 따름 (면접 후 결정)");
     expect(summary["근무시간"]).toBe("주5일(월~금) 09:00 ~ 18:00");
@@ -245,7 +245,7 @@ describe("detail parsing", () => {
   });
 
   test("a text description keeps its line structure", async () => {
-    const { text, images } = parseDescription(await fixture("description-text-50159061.html"));
+    const { text, images } = parseDescription(await fixture("description-text.html"));
     expect(images).toEqual([]);
     const lines = text!.split("\n");
     expect(lines.slice(0, 3)).toEqual(["샘플커머스(주)", "파트너 플랫폼 백엔드 개발자 모집", "포지션 및 자격요건"]);
@@ -255,16 +255,16 @@ describe("detail parsing", () => {
   });
 
   test("an image-only description returns null text and the image URL", async () => {
-    expect(parseDescription(await fixture("description-image-50007983.html"))).toEqual({
+    expect(parseDescription(await fixture("description-image.html"))).toEqual({
       text: null,
-      images: ["https://file2.jobkorea.co.kr/Net/Mng/DownImage/CorpEditor?file_No=1882249"],
+      images: ["https://file2.jobkorea.co.kr/Net/Mng/DownImage/CorpEditor?file_No=1000001"],
     });
   });
 
   test("buildDetail combines JSON-LD, summary, and the image-only description", async () => {
-    const job = buildDetail("50007983", await fixture("detail-50007983.html"), await fixture("description-image-50007983.html"));
+    const job = buildDetail("59100003", await fixture("detail.html"), await fixture("description-image.html"));
     expect(job).toMatchObject({
-      id: "50007983",
+      id: "59100003",
       title: "AI백엔드 엔지니어 경력 모집",
       company: "㈜가상러닝",
       location: "서울 구로구 예시로 123 (구로동, 샘플타워) 601호",
@@ -276,12 +276,12 @@ describe("detail parsing", () => {
       education: "학력무관",
       salary: "회사 내규에 따름 (면접 후 결정)",
       description: null,
-      descriptionImages: ["https://file2.jobkorea.co.kr/Net/Mng/DownImage/CorpEditor?file_No=1882249"],
+      descriptionImages: ["https://file2.jobkorea.co.kr/Net/Mng/DownImage/CorpEditor?file_No=1000001"],
     });
   });
 
   test("buildDetail returns null when the page has no JobPosting", () => {
-    expect(buildDetail("50007983", "<html></html>", "")).toBeNull();
+    expect(buildDetail("59100003", "<html></html>", "")).toBeNull();
   });
 
   test("pageSaysAlwaysOpen reads the rendered 마감일 label", () => {
@@ -301,18 +301,18 @@ describe("detail parsing", () => {
 
 describe("normalizeId", () => {
   test("accepts ids and JobKorea posting URLs", () => {
-    expect(normalizeId("50159061")).toBe("50159061");
-    expect(normalizeId(" 50159061 ")).toBe("50159061");
-    expect(normalizeId("https://www.jobkorea.co.kr/Recruit/GI_Read/50159061?Oem_Code=C1&logpath=1")).toBe("50159061");
-    expect(normalizeId("www.jobkorea.co.kr/Recruit/GI_Read/50159061")).toBe("50159061");
-    expect(normalizeId("https://m.jobkorea.co.kr/Recruit/GI_Read/50159061")).toBe("50159061");
-    expect(normalizeId("https://www.jobkorea.co.kr/Recruit/GI_Read_Comt_Ifrm?Gno=50159061")).toBe("50159061");
+    expect(normalizeId("59100002")).toBe("59100002");
+    expect(normalizeId(" 59100002 ")).toBe("59100002");
+    expect(normalizeId("https://www.jobkorea.co.kr/Recruit/GI_Read/59100002?Oem_Code=C1&logpath=1")).toBe("59100002");
+    expect(normalizeId("www.jobkorea.co.kr/Recruit/GI_Read/59100002")).toBe("59100002");
+    expect(normalizeId("https://m.jobkorea.co.kr/Recruit/GI_Read/59100002")).toBe("59100002");
+    expect(normalizeId("https://www.jobkorea.co.kr/Recruit/GI_Read_Comt_Ifrm?Gno=59100002")).toBe("59100002");
   });
 
   test("rejects other hosts and look-alikes instead of mining digits", () => {
-    expect(normalizeId("https://boards.greenhouse.io/acme/jobs/50159061")).toBeNull();
-    expect(normalizeId("https://www.jobkorea.co.kr.evil.io/Recruit/GI_Read/50159061")).toBeNull();
-    expect(normalizeId("https://www.jobkorea.co.kr@evil.io/Recruit/GI_Read/50159061")).toBeNull();
+    expect(normalizeId("https://boards.greenhouse.io/acme/jobs/59100002")).toBeNull();
+    expect(normalizeId("https://www.jobkorea.co.kr.evil.io/Recruit/GI_Read/59100002")).toBeNull();
+    expect(normalizeId("https://www.jobkorea.co.kr@evil.io/Recruit/GI_Read/59100002")).toBeNull();
     expect(normalizeId("https://www.jobkorea.co.kr/Recruit/Co_Read/C/example")).toBeNull();
     expect(normalizeId("abc")).toBeNull();
     expect(normalizeId("123")).toBeNull();

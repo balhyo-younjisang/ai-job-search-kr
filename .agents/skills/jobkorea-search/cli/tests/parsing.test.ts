@@ -261,6 +261,15 @@ describe("detail parsing", () => {
     });
   });
 
+  test("an image-only agency template leaks no comment fragments or apply-button labels", async () => {
+    // Comments that hold tags (`<!-- ... <p ...> / 이메일 ... -->`, `<!-- <div> ... </div> -->`)
+    // and the 입사 지원하기 button must not become description text.
+    expect(parseDescription(await fixture("description-image-template.html"))).toEqual({
+      text: null,
+      images: ["https://file1.jobkorea.co.kr/Mng/2026/10/example_1008_01.jpg"],
+    });
+  });
+
   test("buildDetail combines JSON-LD, summary, and the image-only description", async () => {
     const job = buildDetail("59100003", await fixture("detail.html"), await fixture("description-image.html"));
     expect(job).toMatchObject({

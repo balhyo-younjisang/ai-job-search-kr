@@ -126,8 +126,13 @@ export function decodeHtmlEntities(text: string): string {
     .replace(/&nbsp;/g, " ")
 }
 
+/** HTML comments, removed whole: a comment can hold tags, which a tag regex would cut in half. */
+function stripComments(html: string): string {
+  return html.replace(/<!--[\s\S]*?-->/g, " ")
+}
+
 function stripTags(html: string): string {
-  return html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
+  return stripComments(html).replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim()
 }
 
 export function clean(html: string): string {
@@ -459,9 +464,15 @@ export function parseSummaryTable(html: string): Record<string, string> {
  * text at all, in which case `text` is null and `images` carries the posting.
  */
 export function parseDescription(html: string): { text: string | null; images: string[] } {
-  const block = extractDivById(html, "detail-content")
+  // Drop comments before finding the block: agency templates leave commented-out
+  // markup (`<!-- <p ...> / 이메일 ... -->`, `<!-- <div> ... -->`) that would leak
+  // into the text and throw off the <div> depth count.
+  const block = extractDivById(stripComments(html), "detail-content")
   if (block === null) return { text: null, images: [] }
-  const body = block.replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, "")
+  const body = block
+    .replace(/<(script|style)\b[\s\S]*?<\/\1>/gi, "")
+    // The template's 입사 지원하기 buttons are page chrome, not posting text.
+    .replace(/<a\b[^>]*\bclass="[^"]*\bdetBtn\b[^"]*"[^>]*>[\s\S]*?<\/a>/gi, " ")
 
   const images: string[] = []
   const imgRe = /<img\b[^>]*\bsrc="([^"]+)"/gi

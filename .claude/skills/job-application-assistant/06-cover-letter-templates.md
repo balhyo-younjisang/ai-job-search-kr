@@ -1,5 +1,5 @@
 ---
-framework_version: 1.0.2
+framework_version: 1.1.0
 ---
 
 # Cover Letter Templates and Tailoring Guide
@@ -159,6 +159,16 @@ Escape these wherever they appear in body text:
 - Same template structure, just write content in the posting's language
 - Adjust date format to local convention
 - Adjust closing to local convention (e.g. "Med venlig hilsen," for Danish)
+
+### Korean cover letters
+- **Register:** formal 합니다체 throughout (`~했습니다`, `~하겠습니다`). Never mix in 해요체 or 반말, and do not switch register between paragraphs.
+- **Salutation:** a named person from the posting gets `<이름> <직함>님께` (e.g. `김지원 팀장님께`). Otherwise use `<회사명> 채용 담당자님께`. Never write `To whom it may concern` in Hangul.
+- **Date:** `2026년 10월 21일`.
+- **Closing:** `감사합니다.` as the last body line, then `<이름> 드림` as the signature line.
+- **Company name:** as the company writes it, with any `(주)`/`㈜` dropped in running text (`예시테크에 지원합니다`, not `(주)예시테크에`).
+- **Tech terms:** keep the posting's own spelling (`Spring Boot`, `Kubernetes`, `MSA`). Do not transliterate them into Hangul (`스프링 부트`) unless the posting does.
+- **자기소개서 문항:** when a Korean posting or portal asks for 자기소개서 answers (지원동기, 입사 후 포부, 성장과정, 직무 역량 and so on), those are application-form fields, not this letter. Draft them per `08-application-forms.md`.
+- **Fonts (known limitation):** the stock `cover.cls` fonts (Lato, Raleway) have no Hangul glyphs. Until the template ships a Korean font, Hangul text compiles with missing characters. Step 5's PDF inspection catches it. If it happens, tell the user plainly instead of presenting the PDF as finished.
 
 ## Checklist Before Finalizing
 - [ ] No em-dashes (use commas or periods instead)

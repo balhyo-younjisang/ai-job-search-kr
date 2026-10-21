@@ -1,5 +1,5 @@
 ---
-framework_version: 1.0.0
+framework_version: 1.1.0
 ---
 
 # Application Form Fields
@@ -17,6 +17,7 @@ Trigger it whenever a posting or portal asks for any of:
 - A short pitch under a hard character limit ("stand out in 140 characters", "why you, in one sentence")
 - Motivation questions ("why this company", "why this program")
 - Competency questions with a word cap ("describe a time you…", 200 words)
+- Korean 자기소개서 문항 (지원동기, 입사 후 포부, 성장과정, 직무 역량 경험 and similar), usually under a character limit
 
 ## The rule that governs everything here
 
@@ -61,7 +62,7 @@ These reward **a specific situation over an adjective**. Most applicants submit 
 **Method:**
 1. Pick the single most distinctive true thing: usually a number, an unusual combination of backgrounds, or a problem shape that maps onto the employer's own work.
 2. Draft 4–6 candidates at different angles.
-3. **Count characters programmatically. Do not estimate.** Over-limit text is truncated mid-word.
+3. **Count characters programmatically. Do not estimate.** Over-limit text is truncated mid-word. Korean portals state limits as characters `공백 포함` (spaces counted) or `공백 제외` (spaces not counted). Count the way the field says, and report both counts when it does not say.
 4. Present all candidates with counts, recommend one, and say why.
 
 Prefer the version that **maps the candidate's problem onto the employer's problem**, where a truthful mapping exists. That is what "stand out" is actually asking for.

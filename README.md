@@ -201,7 +201,8 @@ ai-job-search-kr/
 ├── cover_letters/
 │   ├── cover.cls                      # 사용자 정의 자기소개서 LaTeX 클래스
 │   ├── cover_example.tex              # 구조 예시와 CI 스모크 테스트
-│   └── OpenFonts/                     # Lato·Raleway 글꼴
+│   ├── cover_example_ko.tex           # 한국어 커버레터 예시(`korean` 옵션, 나눔고딕)
+│   └── OpenFonts/                     # Lato·Raleway 글꼴, 한글용 나눔고딕(OFL)
 ├── templates/
 │   └── README.md                      # /add-template 등록 폴더 안내
 ├── documents/                         # /setup 경로 A와 /expand의 경력 자료

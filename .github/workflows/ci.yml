@@ -166,12 +166,13 @@ jobs:
         # ships in texlive-fonts-extra (lualatex dies fatally without it), and
         # hyperref's xetex driver probes the pzdr metrics from
         # texlive-fonts-recommended (the cover letter fails without it).
+        # texlive-lang-korean ships xetexko/luatexko for the Korean examples.
         run: |
           apt-get update
           apt-get install -y --no-install-recommends \
             texlive-luatex texlive-latex-extra texlive-xetex \
             texlive-fonts-extra texlive-fonts-recommended \
-            poppler-utils python3
+            texlive-lang-korean poppler-utils python3
       - name: Install PDF inspection tools
         run: |
           if ! command -v pdfinfo >/dev/null || ! command -v pdftotext >/dev/null; then
@@ -198,10 +199,48 @@ jobs:
             grep -A3 '^!' cover_example.log
             exit 1
           fi
+      - name: Compile Korean cover letter example (xelatex, korean option)
+        run: |
+          cd cover_letters
+          xelatex -interaction=nonstopmode -halt-on-error cover_example_ko.tex
+          test -f cover_example_ko.pdf
+          if grep -q '^!' cover_example_ko.log; then
+            echo '::error::xelatex reported errors compiling cover_letters/cover_example_ko.tex'
+            grep -A3 '^!' cover_example_ko.log
+            exit 1
+          fi
+          # A font without Hangul does not fail the build; it drops the glyphs
+          # and logs "Missing character". That is the failure this guards.
+          if grep -q 'Missing character' cover_example_ko.log; then
+            echo '::error::Hangul glyphs missing in cover_example_ko.pdf'
+            grep -m5 'Missing character' cover_example_ko.log
+            exit 1
+          fi
+      - name: Compile Korean CV variant (lualatex, luatexko block uncommented)
+        # No tracked Korean CV: the stock example with its commented Korean
+        # block switched on and one heading and one line in Hangul.
+        run: |
+          cd cv
+          sed -e 's/^% \\usepackage{luatexko}/\\usepackage{luatexko}/' \
+              -e 's/^% \\set\(main\|sans\)hangulfont/\\set\1hangulfont/' \
+              -e 's/\\section{Education}/\\section{학력}\n\\cvitem{요약}{결제 API 응답 시간을 줄였습니다.}/' \
+              main_example.tex > main_example_ko.tex
+          grep -q '^\\usepackage{luatexko}' main_example_ko.tex
+          lualatex -interaction=nonstopmode -halt-on-error main_example_ko.tex
+          test -f main_example_ko.pdf
+          if grep -q '^!' main_example_ko.log || grep -q 'Missing character' main_example_ko.log; then
+            echo '::error::the Korean CV variant failed or dropped Hangul glyphs'
+            grep -A3 -e '^!' -e 'Missing character' main_example_ko.log | head -20
+            exit 1
+          fi
       - name: Verify extractable PDF text
         run: |
           python3 tools/verify_pdf.py cv/main_example.pdf --min-chars 100
           python3 tools/verify_pdf.py cover_letters/cover_example.pdf --min-chars 100
+          python3 tools/verify_pdf.py cover_letters/cover_example_ko.pdf --pages 1 \
+            --contains '채용 담당자님께' --contains '[이름] 드림'
+          python3 tools/verify_pdf.py cv/main_example_ko.pdf --pages 2 \
+            --contains '학력' --contains '결제 API 응답 시간을 줄였습니다'
       - name: Assert stock PDF structure (upstream template only)
         if: github.repository == 'MadsLorentzen/ai-job-search'
         run: |

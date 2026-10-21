@@ -2,6 +2,9 @@
 \ProvidesClass{cover}[2024/04/30 Cover letter class]
 \NeedsTeXFormat{LaTeX2e}
 \DeclareOption{print}{\def\@cv@print{}}
+% korean: Hangul from the bundled Nanum Gothic (see "Korean" below)
+\newif\if@cover@korean
+\DeclareOption{korean}{\@cover@koreantrue}
 \DeclareOption*{%
   \PassOptionsToClass{\CurrentOption}{article}
 }
@@ -29,6 +32,16 @@
 % Set main fonts
 \setmainfont[Color=primary, Path = OpenFonts/fonts/lato/,BoldItalicFont=Lato-RegIta,BoldFont=Lato-Reg,ItalicFont=Lato-LigIta]{Lato-Lig}
 \setsansfont[Scale=MatchLowercase,Mapping=tex-text, Path = OpenFonts/fonts/raleway/]{Raleway-ExtraLight}
+
+% Korean. Lato and Raleway have no Hangul glyphs, so without this option every
+% Hangul character silently drops out of the PDF. With \documentclass[korean]{cover},
+% xetexko sets Hangul in Nanum Gothic (SIL OFL 1.1, bundled with its OFL.txt in
+% OpenFonts/fonts/nanumgothic/) while Latin text keeps the Lato/Raleway calls above.
+\if@cover@korean
+  \RequirePackage{xetexko}
+  \setmainhangulfont[Path = OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold, Color = primary]{NanumGothic-Regular}
+  \setsanshangulfont[Path = OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold]{NanumGothic-Regular}
+\fi
 
 % Date command
 \setlength{\TPHorizModule}{1mm}

@@ -205,7 +205,8 @@ ai-job-search-kr/
 ├── cover_letters/
 │   ├── cover.cls                      # Custom cover letter LaTeX class
 │   ├── cover_example.tex              # Example cover letter (structural reference + CI smoke test)
-│   └── OpenFonts/                     # Lato + Raleway fonts
+│   ├── cover_example_ko.tex           # Korean example (`korean` class option, Nanum Gothic)
+│   └── OpenFonts/                     # Lato + Raleway fonts, Nanum Gothic (OFL) for Hangul
 ├── templates/                         # Custom templates registered via /add-template
 │   └── README.md                      # Folder layout instructions
 ├── documents/                         # Career source materials for /setup Path A and /expand

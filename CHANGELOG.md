@@ -48,8 +48,10 @@
   씁니다(후보자가 Languages 표에 적은 언어일 때만). 한국어 커버레터 규칙(합니다체, `채용 담당자님께`, `감사합니다.`·
   `<이름> 드림`)과 CV 섹션 제목 예시를 추가하고, 자기소개서 문항은 지원서 양식 필드(`08-application-forms.md`,
   공백 포함/제외 글자 수)로 다룹니다. 이미지 본문 공고는 사용자가 넘겨준 이미지만 읽습니다
-- 알려진 제한: 기본 CV·커버레터 글꼴(Lato·Raleway)에 한글 글리프가 없어 한글이 PDF에 나오지 않습니다.
-  한글 글꼴을 템플릿에 포함하는 작업은 TeX 설치 후 컴파일로 검증해서 진행합니다
+- 한글 PDF 지원: 기본 글꼴(Lato·Raleway)에는 한글 글리프가 없어 나눔고딕(SIL OFL 1.1, `OFL.txt` 포함)을
+  `cover_letters/OpenFonts/fonts/nanumgothic/`에 추가했습니다. 커버레터는 `\documentclass[korean]{cover}`
+  (`xetexko`), CV는 `main_example.tex`의 `luatexko` 주석 블록으로 한글을 씁니다. 한국어 커버레터 예시
+  `cover_example_ko.tex`를 추가했고, CI가 한국어 커버레터와 한국어 CV 변형을 컴파일해 한글 누락을 검사합니다
 - 원본 LinkedIn·Freehire 검색 Skill은 그대로 유지
 
 ### Removed

@@ -1,5 +1,5 @@
 ---
-framework_version: 1.5.0
+framework_version: 1.5.1
 ---
 
 # CV Templates and Tailoring Guide
@@ -125,7 +125,7 @@ Two related patterns are fine and should be kept:
 
 Section headings such as `\section{Core Competencies}`, `Professional Experience`, `Education`, `Languages`, `Publications`, `Honors and Awards`, `References` (and any others your template defines), plus the `Available upon request.` line under References, are all **literal English text baked into the template** - they do not translate themselves. Whenever the CV language (see `CV language` in the candidate profile) is not English, translate every one of these too, whatever they are, not just the body prose - a CV with a fully localized profile statement and bullets sitting under untouched English section headers reads as sloppy and inconsistent, and it's an easy thing to forget precisely because the prose translation is the obvious, visible part of the job. Worked example for Spanish: `Competencias Clave`, `Experiencia Profesional`, `Educaci\'on`, `Idiomas`, `Publicaciones`, `Distinciones y Premios`, `Referencias`, `Disponibles a solicitud.` Worked example for Korean: `핵심 역량`, `경력`, `학력`, `어학`, `논문 및 발표`, `수상`, `추천인`, `요청 시 제공합니다.` The same rule applies for any other target language - check this explicitly during the verification pass.
 
-**Korean CV (known limitation):** the stock moderncv fonts have no Hangul glyphs, so a `CV language: Korean` CV currently compiles with missing characters until the template ships a Korean font. Step 5's PDF inspection catches it; report it to the user rather than presenting the PDF as finished. Do not add a photo, birth date, or family details that Korean paper 이력서 forms sometimes carry unless the user asks for them.
+**Korean CV:** moderncv's fonts have no Hangul glyphs. For `CV language: Korean`, uncomment the three-line `luatexko` block in the preamble of `cv/main_example.tex` (it sets Hangul in the bundled Nanum Gothic from `cover_letters/OpenFonts/fonts/nanumgothic/`; Latin text keeps moderncv's fonts). Without it the CV still compiles, but every Hangul character is silently dropped, so check the `.log` for `Missing character` in Step 5. Do not add a photo, birth date, or family details that Korean paper 이력서 forms sometimes carry unless the user asks for them.
 
 ## Section-by-Section Tailoring
 

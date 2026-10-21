@@ -1,5 +1,5 @@
 ---
-framework_version: 1.1.0
+framework_version: 1.1.1
 ---
 
 # Cover Letter Templates and Tailoring Guide
@@ -168,7 +168,7 @@ Escape these wherever they appear in body text:
 - **Company name:** as the company writes it, with any `(주)`/`㈜` dropped in running text (`예시테크에 지원합니다`, not `(주)예시테크에`).
 - **Tech terms:** keep the posting's own spelling (`Spring Boot`, `Kubernetes`, `MSA`). Do not transliterate them into Hangul (`스프링 부트`) unless the posting does.
 - **자기소개서 문항:** when a Korean posting or portal asks for 자기소개서 answers (지원동기, 입사 후 포부, 성장과정, 직무 역량 and so on), those are application-form fields, not this letter. Draft them per `08-application-forms.md`.
-- **Fonts (known limitation):** the stock `cover.cls` fonts (Lato, Raleway) have no Hangul glyphs. Until the template ships a Korean font, Hangul text compiles with missing characters. Step 5's PDF inspection catches it. If it happens, tell the user plainly instead of presenting the PDF as finished.
+- **Template:** start from `cover_letters/cover_example_ko.tex` and keep `\documentclass[korean]{cover}`. Lato and Raleway have no Hangul glyphs; the `korean` option loads `xetexko` and sets Hangul in the bundled Nanum Gothic (`OpenFonts/fonts/nanumgothic/`, SIL OFL 1.1), while Latin text and the Raleway itemize wrapper stay as they are. Without the option the letter still compiles, but every Hangul character is silently dropped. Check the `.log` for `Missing character` in Step 5.
 
 ## Checklist Before Finalizing
 - [ ] No em-dashes (use commas or periods instead)

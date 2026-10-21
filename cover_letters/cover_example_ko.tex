@@ -1,0 +1,61 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Cover Letter (Korean) - [회사명], [직무]
+%
+% Korean example with placeholder content: the structural reference for a
+% Korean cover letter (see "Korean cover letters" in 06-cover-letter-templates.md)
+% and the CI smoke test for cover.cls's `korean` option. It must compile with
+% xelatex to exactly 1 page with every Hangul character in the text layer.
+% The `korean` option loads xetexko and sets Hangul in the bundled Nanum Gothic;
+% Latin text keeps the Lato/Raleway fonts, so the itemize wrapper is unchanged.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\documentclass[korean]{cover}
+\usepackage{fancyhdr}
+
+\pagestyle{fancy}
+\fancyhf{}
+
+\rfoot{\thepage \hspace{0pt}}
+\thispagestyle{empty}
+\renewcommand{\headrulewidth}{0pt}
+\begin{document}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     TITLE NAME
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\namesection{}{\Huge{[이름]}}{  \href{mailto:your.email@example.com}{your.email@example.com} | [010-0000-0000] |  \urlstyle{same}\href{https://www.linkedin.com/in/yourprofile}{LinkedIn}
+}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%     MAIN COVER LETTER CONTENT
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\currentdate{2026년 10월 21일}
+\lettercontent{[회사명] 채용 담당자님께}
+
+\lettercontent{[첫 문단: 지원하는 직무와 공고를 본 곳을 밝히고, 직무와 가장 강하게 연결되는 경험을 한 문장으로 말한 뒤, 적합한 이유를 2~3문장으로 예고합니다.]}
+
+\lettercontent{[본문: 공고의 담당업무에 맞춰 가장 관련 있는 경험을 설명하고, 구체적인 성과 3~5개를 이어 적습니다.]}
+
+{\raggedright\fontspec[Path = OpenFonts/fonts/raleway/]{Raleway-Medium}\fontsize{11pt}{13pt}\selectfont
+\begin{itemize}
+    \item \textbf{[성과 1]:} [가능하면 숫자로 나타낸 구체적인 결과]
+    \item \textbf{[성과 2]:} [자격요건 하나에 대응하는 기술 또는 프로젝트, 예: Spring Boot]
+    \item \textbf{[성과 3]:} [우대사항에 대응하는 근거]
+\end{itemize}\par}
+\vspace{6pt}
+
+\lettercontent{[지원 동기: 이 회사여야 하는 이유. 확인한 구체적인 사실(제품, 밝힌 우선순위, 팀)을 언급합니다. 일반론은 쓰지 않습니다.]}
+
+\lettercontent{[적합성: 행동 특성과 팀에 기여할 점을 2~3문장으로 적습니다.]}
+
+\lettercontent{면접 기회를 주신다면 [핵심 경험]을 더 자세히 말씀드리겠습니다.}
+
+\begin{flushright}
+% Note: no trailing \\ inside \closing{} - cover.cls appends its own \\, and a
+% doubled break triggers "There's no line here to end."
+\closing{감사합니다.}
+
+\signature{[이름] 드림}
+\end{flushright}
+\end{document}

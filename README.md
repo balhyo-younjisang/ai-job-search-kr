@@ -315,7 +315,7 @@ LaTeX, [Typst](https://typst.app/) 또는 명령줄에서 PDF로 컴파일할 �
 | 스킬 | 범위와 주요 옵션 | 검색 예시 |
 | --- | --- | --- |
 | [jobkorea-search](.agents/skills/jobkorea-search/SKILL.md) | 잡코리아 직접 검색. 지역은 익명 검색 제약 때문에 키워드로 매칭하며 `--career`, `--jobage`, `--sort` 지원 | `bun run .agents/skills/jobkorea-search/cli/src/cli.ts search -q "백엔드" -l "판교" --career experienced --format table` |
-| [saramin-search](.agents/skills/saramin-search/SKILL.md) | 사람인 직접 검색. 시·도와 구 단위 지역 필터, 경력·등록일·정렬 지원 | `bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "성남시 분당구" --jobage 7 --format table` |
+| [saramin-search](.agents/skills/saramin-search/SKILL.md) | 사람인 직접 검색. 시·도와 구 단위 지역 필터, 경력·정렬 지원. 등록일 필터는 없음(`--jobage` 미지원) | `bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "성남시 분당구" --career experienced --format table` |
 | [linkareer-search](.agents/skills/linkareer-search/SKILL.md) | 링커리어 직접 검색. 신입·인턴 중심이며 `--career new,intern`과 지역 필터 지원. 공모전·대외활동·교육 제외 | `bun run .agents/skills/linkareer-search/cli/src/cli.ts search -q "백엔드" --career new,intern -l "서울" --format table` |
 | [worknet-search](.agents/skills/worknet-search/SKILL.md) | 고용24 검색. 기본값은 고용24 자체 공고만 포함. `--source`로 특정 연계 제공처를 선택하거나 `--all-sources`로 고용24에 연계된 모든 제공처 포함 | `bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --source work,jobkorea,saramin --limit 5 --format table` |
 | [incruit-search](.agents/skills/incruit-search/SKILL.md) | ⚠️ **기본 비활성화**(아래 안내 참고). 인크루트 공개 페이지를 EUC-KR로 직접 검색. `-l`은 지역명을 검색어에 추가하고 `--jobage`는 요청한 페이지 안에서 로컬 필터링 | `bun run .agents/skills/incruit-search/cli/src/cli.ts search -q "백엔드" -l "서울" --jobage 7 --format table` |

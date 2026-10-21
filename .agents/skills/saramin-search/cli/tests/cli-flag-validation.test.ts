@@ -36,10 +36,13 @@ describe("search flag validation", () => {
     ["--page", "0"],
     ["--page", "-1"],
     ["--limit", "abc"],
-    ["--jobage", "0.5"],
-    ["--jobage", "0"],
+    ["--page", "0.5"],
   ])("%s %s is rejected", async (flag, value) => {
     expectJsonError(await runCLI(["search", "-q", "백엔드", flag, value]), "BAD_ARG");
+  });
+
+  test("--jobage is not a search flag (Saramin has no posting-date filter)", async () => {
+    expectJsonError(await runCLI(["search", "-q", "백엔드", "--jobage", "7"]), "UNKNOWN_FLAG");
   });
 
   test("--format, --sort and --career only take their documented values", async () => {
@@ -63,7 +66,7 @@ describe("detail argument validation", () => {
   });
 
   test("detail rejects search-only flags", async () => {
-    expectJsonError(await runCLI(["detail", "55210151", "--jobage", "3"]), "UNKNOWN_FLAG");
+    expectJsonError(await runCLI(["detail", "55210151", "--career", "new"]), "UNKNOWN_FLAG");
   });
 });
 

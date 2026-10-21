@@ -37,8 +37,8 @@ seeking. So:
 
 ## When to use this skill
 
-- Search Korean job postings by keyword, narrowed by province or district,
-  career level (신입/경력), and recency
+- Search Korean job postings by keyword, narrowed by province or district
+  and career level (신입/경력)
 - Read one posting's full detail: employment type, salary, position, address,
   dates, and the description (상세요강) - text plus any images it contains
 
@@ -59,7 +59,6 @@ Flags:
   is added to the keyword instead.
 - `--career new|experienced` - 신입 or 경력. `experienced` also returns 신입·경력 and
   경력무관 postings, which accept experienced applicants.
-- `--jobage <days>` - registered within N days (see Notes - Saramin has no date filter).
 - `--sort relevance|date` - default `relevance`; `date` = newest registration first.
 - `--page <n>` - 1-indexed page, 40 results per page. Default 1.
 - `--limit <n>` / `-n <n>` - cap results emitted (client-side).
@@ -90,8 +89,8 @@ often the requirements (자격요건, 우대사항) or the benefits - is only in
 # Experienced backend roles in Bundang, table view
 bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "백엔드" -l "성남시 분당구" --career experienced --format table
 
-# New-graduate data roles in Seoul registered in the last 7 days
-bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "서울" --career new --jobage 7 --format table
+# New-graduate data roles in Seoul
+bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "데이터 분석" -l "서울" --career new --format table
 
 # Frontend roles in Gangnam, newest first
 bun run .agents/skills/saramin-search/cli/src/cli.ts search -q "프론트엔드" -l "강남구" --sort date --format table
@@ -130,12 +129,13 @@ structure (see `url-reference.md`).
   modification-only card has `date: null` and the edit date in `modifiedDate`.
   The CLI never passes an edit date off as a posting date. `detail` always has
   the real start date.
-- **Recency (`--jobage`).** Saramin has no posting-date filter. `--jobage` sorts
-  by registration date and keeps results down to the last card whose
-  registration date is inside the window; modification-only cards above it are
-  newer by the sort order and stay in, while an undated tail at the cut is
-  dropped rather than guessed. A full page of in-window results means the
-  next `--page` may hold more.
+- **No recency flag.** Saramin has no posting-date filter, so this CLI has no
+  `--jobage`; passing it fails with `UNKNOWN_FLAG`. Faking one by switching to
+  the registration-date sort let unrelated postings crowd out relevant ones, so
+  it was removed. Keep the default relevance sort and filter by `date` after
+  the call (what `/scrape` does for portals without a recency flag). A card
+  with `date: null` has only `modifiedDate`: treat it as unknown, not as old,
+  and check `detail` for its real start date when it matters.
 - **Location.** Region filtering is Saramin's own and also returns postings
   that list the region among several work sites, so a card's `location` (its
   first site, e.g. `서울전체, 강남구`) may name another place.

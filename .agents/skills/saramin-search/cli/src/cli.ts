@@ -54,7 +54,6 @@ SEARCH FLAGS
                           "부산 중구". Uses Saramin's region filter; names it has no code for
                           ("판교") are added to the keyword instead.
   --career <level>        new (신입) | experienced (경력). Postings open to both match either.
-  --jobage <days>         Registered within N days (sorts by registration date).
   --sort <order>          relevance (default) | date (newest registration first).
   --page <n>              1-indexed page (40 results/page). Default 1.
   --limit, -n <n>         Cap results emitted (client-side).
@@ -62,7 +61,7 @@ SEARCH FLAGS
 
 EXAMPLES
   bun run src/cli.ts search -q "백엔드" -l "성남시 분당구" --career experienced --format table
-  bun run src/cli.ts search -q "데이터 분석" -l "서울" --jobage 7 --sort date --format table
+  bun run src/cli.ts search -q "데이터 분석" -l "서울" --sort date --format table
   bun run src/cli.ts search -q "프론트엔드" --career new --format table
   bun run src/cli.ts detail 55210151 --format plain
   bun run src/cli.ts detail "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55210151"
@@ -74,7 +73,7 @@ Personal use only — reads Saramin's public pages for your own job search; keep
 // aliases q/l/n to these before validation). "help"/"h" pass so `search --help`
 // still prints usage.
 const KNOWN_FLAGS: Record<string, Set<string>> = {
-  search: new Set(["query", "location", "career", "jobage", "sort", "page", "limit", "format", "help", "h"]),
+  search: new Set(["query", "location", "career", "sort", "page", "limit", "format", "help", "h"]),
   detail: new Set(["format", "help", "h"]),
 }
 
@@ -136,10 +135,10 @@ async function main(): Promise<number> {
       return fail(`--career must be one of ${Object.keys(CAREER_CODES).join("|")}, got "${career}"`, "BAD_ARG")
     }
 
-    // Number(), not parseInt(): parseInt truncates, so "--jobage 0.5" would
-    // become 0 and silently drop the filter. Whole numbers >= 1 only.
+    // Number(), not parseInt(): parseInt truncates, so "--page 0.5" would
+    // become 0 and slip past the check. Whole numbers >= 1 only.
     const ints: Record<string, number> = {}
-    for (const name of ["jobage", "page", "limit"]) {
+    for (const name of ["page", "limit"]) {
       const raw = flags[name]
       if (raw === undefined) continue
       const val = typeof raw === "string" ? Number(raw.trim()) : NaN
@@ -153,7 +152,6 @@ async function main(): Promise<number> {
       query,
       location: typeof flags.location === "string" ? flags.location.trim() : undefined,
       career,
-      jobage: ints.jobage,
       sort: sort as SearchOpts["sort"],
       page: ints.page ?? 1,
       limit: ints.limit,

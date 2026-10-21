@@ -17,7 +17,6 @@ import {
   parseTitle,
   resolveLocation,
   shortDate,
-  trimToWindow,
   type JobCard,
 } from "../src/helpers";
 import { buildDetail, normalizeId } from "../src/commands/detail";
@@ -129,27 +128,6 @@ describe("dates", () => {
   });
 });
 
-describe("trimToWindow (--jobage on a registration-date sorted page)", () => {
-  const card = (id: string, date: string | null, modifiedDate: string | null = null): JobCard => ({
-    id, title: id, company: null, location: null, date, modifiedDate, deadline: null,
-    alwaysOpen: false, career: null, education: null, employmentType: null, jobCategory: null, url: id,
-  });
-
-  test("keeps modification-only cards that sit above an in-window card", () => {
-    const cards = [card("a", "2026-10-19"), card("b", null, "2026-10-19"), card("c", "2026-10-18"), card("d", "2026-10-10")];
-    expect(trimToWindow(cards, "2026-10-17").map((c) => c.id)).toEqual(["a", "b", "c"]);
-  });
-
-  test("drops an ambiguous tail of modification-only cards", () => {
-    const cards = [card("a", "2026-10-19"), card("b", null, "2026-10-19"), card("c", "2026-10-01")];
-    expect(trimToWindow(cards, "2026-10-17").map((c) => c.id)).toEqual(["a"]);
-  });
-
-  test("keeps nothing when no card is known to be in the window", () => {
-    expect(trimToWindow([card("a", null, "2026-10-19")], "2026-10-17")).toEqual([]);
-  });
-});
-
 describe("resolveLocation", () => {
   test("provinces map to loc_mcd, full names included", () => {
     expect(resolveLocation("서울")).toMatchObject({ param: "loc_mcd", code: "101000" });
@@ -199,9 +177,9 @@ describe("buildUrl", () => {
     expect(url.searchParams.get("searchword")).toBe("백엔드");
   });
 
-  test("--jobage forces the registration-date sort; an uncoded place joins the keyword", () => {
-    const url = new URL(buildUrl({ ...base, location: "판교", jobage: 3 }));
-    expect(url.searchParams.get("recruitSort")).toBe("reg_dt");
+  test("relevance stays the default sort; an uncoded place joins the keyword", () => {
+    const url = new URL(buildUrl({ ...base, location: "판교" }));
+    expect(url.searchParams.has("recruitSort")).toBe(false);
     expect(url.searchParams.get("searchword")).toBe("백엔드 판교");
     expect(url.searchParams.has("loc_cd")).toBe(false);
   });

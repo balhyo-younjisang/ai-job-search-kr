@@ -229,22 +229,6 @@ export function parseDeadlineLabel(
   return { deadline: `${year}-${mmdd}`, alwaysOpen: false }
 }
 
-/**
- * Keep only postings registered within the window, for a page sorted by
- * registration date (newest first). Cards that show only a modification date
- * carry no registration date, but the sort order bounds it: every card above
- * a card registered on or after `cutoff` was registered no earlier. So keep
- * everything up to the last card with a known in-window registration date and
- * drop the rest - an ambiguous tail is dropped rather than guessed in.
- */
-export function trimToWindow(cards: JobCard[], cutoff: string): JobCard[] {
-  let last = -1
-  cards.forEach((c, i) => {
-    if (c.date !== null && c.date >= cutoff) last = i
-  })
-  return cards.slice(0, last + 1).filter((c) => (c.date !== null ? c.date >= cutoff : true))
-}
-
 // ---------------------------------------------------------------- search
 
 const CAREER = /신입|경력/

@@ -3,10 +3,8 @@ import {
   SEARCH_URL,
   fitColumn,
   htmlFetch,
-  koreaDate,
   parseSearchPage,
   resolveLocation,
-  trimToWindow,
   writeError,
   type JobCard,
 } from "../helpers.js"
@@ -15,7 +13,6 @@ export interface SearchOpts {
   query: string
   location?: string
   career?: string // "new" | "experienced"
-  jobage?: number
   sort: "relevance" | "date"
   page: number
   limit?: number
@@ -41,8 +38,7 @@ export function buildUrl(opts: SearchOpts): string {
   }
   params.set("searchword", keyword)
   if (opts.career) params.set("exp_cd", CAREER_CODES[opts.career])
-  // Saramin has no posting-date filter; --jobage relies on the registration-date sort.
-  if (opts.sort === "date" || opts.jobage !== undefined) params.set("recruitSort", "reg_dt")
+  if (opts.sort === "date") params.set("recruitSort", "reg_dt")
   params.set("recruitPage", String(opts.page))
   params.set("recruitPageCount", String(PAGE_SIZE))
   return `${SEARCH_URL}?${params.toString()}`
@@ -77,7 +73,6 @@ export async function runSearch(opts: SearchOpts): Promise<number> {
     }
     const page = parseSearchPage(html)
     let cards = page.results
-    if (opts.jobage !== undefined) cards = trimToWindow(cards, koreaDate(opts.jobage))
     if (opts.limit !== undefined) cards = cards.slice(0, opts.limit)
 
     if (opts.format === "table") {

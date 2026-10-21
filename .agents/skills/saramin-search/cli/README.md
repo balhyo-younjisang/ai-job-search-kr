@@ -39,8 +39,8 @@ All errors are written to **stderr** as `{ "error": "...", "code": "..." }` with
 # Experienced backend roles in Bundang
 bun run src/cli.ts search -q "백엔드" -l "성남시 분당구" --career experienced --format table
 
-# New-graduate data roles in Seoul, registered in the last 7 days
-bun run src/cli.ts search -q "데이터 분석" -l "서울" --career new --jobage 7 --format table
+# New-graduate data roles in Seoul
+bun run src/cli.ts search -q "데이터 분석" -l "서울" --career new --format table
 
 # Full detail for one posting
 bun run src/cli.ts detail 55210151 --format plain
@@ -56,7 +56,6 @@ endpoints, parsing anchors, region codes, and the robots.txt maintenance check.
 | `--query` | `-q` | **Required.** Keywords (title / skill / company). |
 | `--location` | `-l` | Province (`서울`, `경기도`) or district (`강남구`, `성남시 분당구`, `부산 중구`); uncoded places (`판교`) join the keyword. |
 | `--career` | | `new` (신입) \| `experienced` (경력). |
-| `--jobage` | | Registered within N days (sorts by registration date). |
 | `--sort` | | `relevance` (default) \| `date`. |
 | `--page` | | 1-indexed page (40 results/page). |
 | `--limit` | `-n` | Cap results emitted. |

@@ -6,7 +6,7 @@ description: >
   specific Incruit posting, including its full text and description images.
   Use for Incruit jobs, 인크루트 채용, 인크루트 공고 검색, or 인크루트 공고 상세 조회.
 context: fork
-enabled: false  # off by default: Incruit's terms could not be reviewed (see "Disabled by default" below)
+enabled: false  # off by default: Incruit's robots.txt shuts out AI crawlers (see "Disabled by default" below)
 allowed-tools: Bash(bun run .agents/skills/incruit-search/cli/src/cli.ts *)
 ---
 
@@ -20,13 +20,16 @@ or runtime dependencies. This searches Incruit directly; Work24's
 
 This skill ships with `enabled: false`, so `/scrape` skips it. The CLI still
 works when run by hand, and `/apply` still accepts Incruit posting URLs you
-paste. It is off because its access terms are **unverified**, not because it
-is known to break them:
+paste. It is off because Incruit signals that it does not want AI-driven
+access, not because the CLI is known to break its terms:
 
-- **Terms not reviewed.** Incruit's terms of service live on the main
-  `www.incruit.com` host, whose `robots.txt` disallows every path for all
-  agents, so they were never fetched. Whether automated access to the search
-  and posting pages is permitted is unknown.
+- **Terms reviewed, no explicit ban on automated access.** The 개인회원 이용약관
+  (applied from 2026-04-30, checked 2026-10-21) has no clause on automated
+  access. 제19조 ④ forbids copying, reproducing, or passing on information from
+  the service without Incruit's prior consent, and ⑤ limits use to job seeking
+  and bans disrupting the service or using it for profit. These are member
+  terms, and the CLI does not log in. Saramin's and JobKorea's terms read the
+  same way.
 - **AI crawlers are explicitly excluded.** The search and posting hosts' robots
   rules fully exclude GPTBot and ClaudeBot and restrict OAI-SearchBot and
   Claude-SearchBot. This CLI sends its own project User-Agent, which falls
@@ -36,9 +39,9 @@ is known to break them:
   redistribution to Incruit's consent and limits employer/recruiter
   information to job seeking.
 
-To enable it, check Incruit's current terms yourself first, then set
-`enabled: true` in this file's frontmatter. You are responsible for that
-decision. If you enable it, do not store or share posting text beyond your own
+To enable it, read Incruit's current terms yourself
+(`https://help.incruit.com/docs/terms_mobile.asp`), then set `enabled: true` in
+this file's frontmatter. You are responsible for that decision. If you enable it, do not store or share posting text beyond your own
 job search. Use Work24's `--source incruit` for postings Incruit syndicates to
 Work24.
 

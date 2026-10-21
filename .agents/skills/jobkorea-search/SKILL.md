@@ -25,7 +25,11 @@ runtime dependencies** - it runs with just `bun`.
 
 This skill reads JobKorea's public web pages on paths its `robots.txt` permits,
 and identifies itself honestly in its User-Agent (project name and contact URL).
-JobKorea has gone to court over third-party crawling of its postings before, so:
+JobKorea's member terms (제18조, checked 2026-10-21) forbid copying,
+reproducing, or passing on information from the service without its prior
+consent, and limit use to job seeking and career management. They have no
+clause on automated access, and the CLI does not log in. JobKorea has gone to
+court over third-party crawling of its postings before, so:
 
 - **Keep volume low** - a handful of searches per session, not a crawl.
 - **No commercial use, no bulk collection, no republishing** of postings.

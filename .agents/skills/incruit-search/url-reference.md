@@ -57,10 +57,29 @@ outside those exclusions. Named crawler groups have additional restrictions,
 including full exclusion for GPTBot/ClaudeBot and `/s_common/` exclusions for
 OAI-SearchBot/Claude-SearchBot. The honest project User-Agent matches wildcard.
 
-The main `www.incruit.com` host excludes all wildcard paths. The CLI never
-requests it, including company links, favicon assets, or terms pages.
-Terms were therefore not retrieved. The public posting's notice says that
-redistribution requires consent and employer/recruiter data is for job seeking.
+The main `www.incruit.com` host excludes all wildcard paths, and
+`m.incruit.com`'s robots.txt disallows its root page for Claude-User. The CLI
+never requests either host, including company links or favicon assets. The public posting's notice says that redistribution requires
+consent and employer/recruiter data is for job seeking.
+
+Robots rules above rechecked with `tools/robots_check.py` on 2026-10-21: the
+three CLI paths are still allowed.
+
+## Terms of service
+
+`https://help.incruit.com/docs/terms_mobile.asp` (개인회원 이용약관, applied from
+2026-04-30; checked 2026-10-21). `help.incruit.com`'s robots.txt allows the page.
+
+- 제19조 ④: members may not copy, reproduce, translate, publish, broadcast, or
+  otherwise use information obtained through the service, or give it to third
+  parties, without Incruit's prior consent.
+- 제19조 ⑤: the service may be used only for job seeking. Banned acts include
+  disrupting stable operation and profit-making use of the site's information.
+- No clause addresses automated access or crawling. These are member terms,
+  and the CLI does not log in.
+
+The skill still ships `enabled: false` because the hosts' robots rules fully
+exclude GPTBot/ClaudeBot (see `SKILL.md`).
 
 ## Test provenance
 

@@ -30,8 +30,10 @@ apply to, so they don't fit this repo's application workflow.
 ## ⚠️ Personal use only
 
 This skill sends the same search query Linkareer's own list page runs against
-its public API, and reads public posting pages - all paths its `robots.txt`
-permits - identifying itself honestly in its User-Agent. Linkareer's terms
+its GraphQL API, and reads public posting pages - all paths its `robots.txt`
+permits - identifying itself honestly in its User-Agent. That API answers
+without login but is **undocumented**: Linkareer has not published it for
+third parties (see `url-reference.md`, checked 2026-10-21). Linkareer's terms
 (제16조) forbid automated access that loads its servers or disrupts the
 service, reverse-engineering the service, and commercial use without consent;
 제39조 also lists accessing the service "by automated programs or macros". So:

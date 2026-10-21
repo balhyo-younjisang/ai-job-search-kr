@@ -33,9 +33,12 @@
 
 - 프로젝트의 주요 대상을 한국 채용 시장으로 확장: `/setup`, `/scrape`, `/add-portal` 안내와 `/apply` 허용 호스트,
   `.claude/settings.json` 권한 목록에 국내 포털 반영
-- 인크루트 Skill을 `enabled: false`로 배포: 이용약관이 있는 `www.incruit.com`은 robots.txt가 모든 경로를
-  막고 있어 약관을 검토하지 못했고, 공고 호스트는 GPTBot·ClaudeBot을 전면 차단합니다. 위험 안내는 Skill 문서와
-  README에 있으며, 사용자가 약관을 확인한 뒤 직접 활성화할 수 있습니다
+- 인크루트 Skill을 `enabled: false`로 배포: 검색·공고 호스트의 robots.txt가 GPTBot·ClaudeBot을 전면
+  차단합니다. 약관에는 자동 접근 조항이 없지만 사전 동의 없는 정보 복제·제3자 제공을 금지합니다. 위험 안내는
+  Skill 문서와 README에 있으며, 사용자가 약관을 확인한 뒤 직접 활성화할 수 있습니다
+- 국내 5개 포털의 이용약관과 robots.txt를 2026-10-21에 확인하고, 시행일과 핵심 조항을 각 Skill의
+  `url-reference.md`에 기록했습니다. README에 포털별 접근 조건 표를 추가했습니다. 링커리어 검색이
+  공개 문서가 없는 사이트 내부 GraphQL API를 쓴다는 점도 명시했습니다
 - 잡코리아·사람인 테스트 fixture를 실제 공고 사본에서 합성 데이터로 교체: 페이지 구조는 유지하고 회사명·제목·ID·
   본문은 모두 가상의 값입니다(각 `tests/fixtures/provenance.md` 참고)
 - 원본 LinkedIn·Freehire 검색 Skill은 그대로 유지

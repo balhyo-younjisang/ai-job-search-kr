@@ -338,8 +338,22 @@ bun run .agents/skills/linkareer-search/cli/src/cli.ts search -q "마케팅" --c
 
 Work24 provider options cover **postings syndicated into Work24**, not all postings on the original platforms. `--source` replaces the default provider selection; include `work` to keep Work24's own postings. For syndicated details, pass the full search result URL so `infoTypeCd` and `infoTypeGroup` survive. Some bodies live in an external iframe, exposed as `descriptionUrl`.
 
+#### Korean portal access terms
+
+Checked against each portal's terms of service and robots.txt on 2026-10-21. Every CLI requests only public paths that robots.txt allows, with no login or API key, and identifies itself with a User-Agent carrying the project name and a contact URL. None of them bypasses a login or CAPTCHA. Terms change, so each skill's `url-reference.md` holds the clauses and how to recheck them.
+
+| Portal | Default | Access | Terms in brief (effective date) |
+| --- | --- | --- | --- |
+| JobKorea | on | public web pages | Member terms 제18조: no copying or passing on information without prior consent; use only for job seeking and career management, not for profit. No clause on automated access (2026-01-29) |
+| Saramin | on | public web pages | Member terms: no copying or passing on information without prior consent; job seeking only, not for profit. No clause on automated access (2026-01-22) |
+| Linkareer | on | the GraphQL API the site's own pages call (**undocumented**) + posting pages | 제16조: no automated programs that load the servers, no reverse-engineering, no commercial use without consent (2026-08-12) |
+| Work24 | on | public web pages | Applies to users without an account too. 제17조: no copying for purposes other than your own use, no passing on to third parties. 제14조의2: automated scraping of personal data, automated login and excessive traffic can be blocked. The official Open API is for business members only (2026-06-04) |
+| Incruit | **off** | public web pages | Member terms 제19조: same as JobKorea. No clause on automated access, but robots.txt fully excludes GPTBot and ClaudeBot (2026-04-30) |
+
+For all of them: use them **for your own job search only**, keep volume low, and do not bulk collect, share, or republish postings. The copying bans for JobKorea, Saramin and Incruit sit in member terms, so it is unclear whether they cover logged-out reads. `/scrape` saving postings locally may still conflict with them, so keep what you save to yourself. Whether to use each portal is your decision and your responsibility.
+
 > [!WARNING]
-> **`incruit-search` ships with `enabled: false`, so `/scrape` skips it.** Its access terms are unverified: the terms of service sit on `www.incruit.com`, whose robots.txt disallows every path, so they were never reviewed; the search and posting hosts fully exclude GPTBot and ClaudeBot; and each posting's notice requires Incruit's consent for redistribution. Check Incruit's current terms yourself before setting `enabled: true` in its [SKILL.md](.agents/skills/incruit-search/SKILL.md) - that decision is yours. Work24's `--source incruit` covers postings Incruit syndicates to Work24 without enabling it.
+> **`incruit-search` ships with `enabled: false`, so `/scrape` skips it.** The search and posting hosts' robots.txt fully excludes GPTBot and ClaudeBot and restricts AI search bots. This CLI sends its own User-Agent, but it is run by an AI agent, so read that as a sign the operator does not welcome AI-driven access. The terms have no clause on automated access, but they ban copying or passing on information without prior consent and limit use to job seeking; each posting's notice also requires Incruit's consent for redistribution. Read [Incruit's terms](https://help.incruit.com/docs/terms_mobile.asp) yourself before setting `enabled: true` in its [SKILL.md](.agents/skills/incruit-search/SKILL.md) - that decision is yours. Work24's `--source incruit` covers postings Incruit syndicates to Work24 without enabling it.
 
 Incruit's `--location` adds keywords rather than applying a dedicated region filter. Its `--jobage` filters only the requested page locally and excludes unknown registration dates; modification dates are kept separately. It can return description image URLs as well as text. HTML structures can change, so use each CLI's `--help` and the skill's `url-reference.md` when diagnosing failures.
 

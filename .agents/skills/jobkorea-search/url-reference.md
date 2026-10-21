@@ -9,7 +9,8 @@ is listed here.
 ### robots.txt
 
 `https://www.jobkorea.co.kr/robots.txt` - **version 3.0, last updated
-2026-08-21** at the time of writing. It sorts agents into groups:
+2026-08-21** at the time of writing (CLI paths rechecked as allowed on
+2026-10-21). It sorts agents into groups:
 
 | Group | Examples | `/Search/`, `/Recruit/GI_Read*` |
 |-------|----------|---------------------------------|
@@ -44,6 +45,25 @@ Mozilla/5.0 (compatible; ai-job-search-kr/1.0; jobkorea-search; +https://github.
   ignored robots.txt, while JobKorea permitted crawlers that identified
   themselves. Honest identification and robots.txt compliance are load-bearing
   here, not decoration.
+
+### Terms of service
+
+`https://m.jobkorea.co.kr/service_jk/Provision_GG.asp` (회원 이용약관, applied
+from 2026-01-29; checked 2026-10-21). The www host returns 404 for this path.
+The operator is named "웍스피어 유한책임회사". One member account covers
+jobkorea.co.kr and albamon.com.
+
+- 제18조 ④: members may not copy, reproduce, translate, publish, broadcast, or
+  otherwise use information obtained through the service, or give it to
+  others, without the company's prior consent.
+- 제18조 ⑤: the service may be used only for sound job seeking and career
+  management. Banned acts include anything that threatens stable operation (7)
+  and profit-making use of the site's information (8).
+- No clause addresses automated access or crawling. These are member terms,
+  and the CLI does not log in.
+
+Hence the personal-use-only warning in `SKILL.md`: low volume, no bulk
+collection, no republishing.
 
 ### Maintenance check
 

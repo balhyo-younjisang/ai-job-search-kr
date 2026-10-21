@@ -322,13 +322,26 @@ LaTeX, [Typst](https://typst.app/) 또는 명령줄에서 PDF로 컴파일할 �
 | [linkedin-search](.agents/skills/linkedin-search/SKILL.md) | LinkedIn 공개 `jobs-guest` 검색. 국가 무관, 위치 필수, 원격 형태와 등록일 지원 | `bun run .agents/skills/linkedin-search/cli/src/cli.ts search -q "data engineer" -l "Seoul, South Korea" --remote hybrid --format table` |
 | [freehire-search](.agents/skills/freehire-search/SKILL.md) | freehire.me 공개 REST API 기반 기술직 통합 검색. 지역·국가·직급·분야·기술·근무 형태 facet 지원 | `bun run .agents/skills/freehire-search/cli/src/cli.ts search -q "backend engineer" --remote remote --region apac --format table` |
 
+#### 국내 포털 접근 조건
+
+2026-10-21에 각 포털의 이용약관과 robots.txt를 확인한 결과입니다. 모든 CLI는 로그인·API 키 없이 robots.txt가 허용하는 공개 경로만 요청하고, 프로젝트 이름과 연락처가 담긴 User-Agent로 자신을 밝힙니다. 로그인 우회나 CAPTCHA 우회는 하지 않습니다. 약관은 바뀔 수 있으므로 자세한 조항과 재확인 방법은 각 스킬의 `url-reference.md`를 보세요.
+
+| 포털 | 기본 상태 | 접근 방식 | 약관 요지 (시행일) |
+| --- | --- | --- | --- |
+| 잡코리아 | 활성 | 공개 웹페이지 | 회원 약관 제18조: 사전 동의 없는 정보 복사·복제·타인 제공 금지, 취업·경력관리 외 목적과 영리 이용 금지. 자동 접근 조항 없음 (2026-01-29) |
+| 사람인 | 활성 | 공개 웹페이지 | 개인 회원 약관: 사전 동의 없는 정보 복제·제공 금지, 구직 외 목적과 영리 이용 금지. 자동 접근 조항 없음 (2026-01-22) |
+| 링커리어 | 활성 | 사이트가 쓰는 GraphQL API(**공개 문서 없음**) + 공고 페이지 | 제16조: 서버에 부하를 주는 자동 접속 프로그램, 역설계, 동의 없는 영리 이용 금지 (2026-08-12) |
+| 고용24 | 활성 | 공개 웹페이지 | 비회원에게도 적용. 제17조: 본인 이용 외 목적의 복제·제3자 제공 금지. 제14조의2: 개인정보 자동 스크래핑·자동 로그인·과도한 트래픽은 접근 제한 대상. 공식 Open API는 기업회원 전용 (2026-06-04) |
+| 인크루트 | **비활성** | 공개 웹페이지 | 회원 약관 제19조: 잡코리아와 같은 수준. 자동 접근 조항은 없지만 robots.txt가 GPTBot·ClaudeBot을 전면 차단 (2026-04-30) |
+
+공통으로 **본인의 구직 목적에만** 쓰고, 검색량을 적게 유지하며, 공고를 대량 수집하거나 다른 사람에게 공유·재배포하지 마세요. 잡코리아·사람인·인크루트의 복제 금지 조항은 회원 약관이라 로그인하지 않는 조회에도 적용되는지 분명하지 않습니다. `/scrape`가 공고를 로컬에 저장하는 것도 이 조항과 충돌할 수 있으니, 저장한 내용은 본인만 보세요. 사용 여부의 판단과 책임은 사용자에게 있습니다.
+
 > [!WARNING]
-> **인크루트 스킬은 기본 비활성화(`enabled: false`) 상태로 제공되며 `/scrape`에서 실행되지 않습니다.** 접근 조건을 확인하지 못했기 때문입니다.
-> - 이용약관이 있는 `www.incruit.com`은 robots.txt가 모든 경로를 막고 있어 약관을 검토하지 못했습니다. 자동 접근 허용 여부를 알 수 없습니다.
-> - 검색·공고 호스트의 robots.txt는 GPTBot·ClaudeBot을 전면 차단하고 AI 검색 봇의 일부 경로 접근을 제한합니다. 이 CLI는 자체 User-Agent를 쓰지만 AI 에이전트가 실행하는 도구입니다.
-> - 공고 안내문에 따르면 재배포에는 인크루트의 동의가 필요하며, 기업·채용담당자 정보는 구직 목적으로만 이용할 수 있습니다.
+> **인크루트 스킬은 기본 비활성화(`enabled: false`) 상태로 제공되며 `/scrape`에서 실행되지 않습니다.**
+> - 검색·공고 호스트의 robots.txt는 GPTBot·ClaudeBot을 전면 차단하고 AI 검색 봇의 일부 경로 접근을 제한합니다. 이 CLI는 자체 User-Agent를 쓰지만 AI 에이전트가 실행하는 도구이므로, 운영사가 AI 접근을 원하지 않는다는 신호로 봅니다.
+> - 약관에는 자동 접근 조항이 없지만, 사전 동의 없는 정보 복제·제3자 제공을 금지하고 구직 목적으로만 이용하도록 합니다. 공고 안내문도 재배포에 인크루트의 동의가 필요하다고 밝힙니다.
 >
-> 사용하려면 인크루트의 최신 약관을 직접 확인한 뒤 [SKILL.md](.agents/skills/incruit-search/SKILL.md) frontmatter를 `enabled: true`로 바꾸세요. 활성화 여부의 판단과 책임은 사용자에게 있습니다. 활성화하지 않아도 고용24의 `--source incruit`로 고용24에 연계된 인크루트 공고를 검색할 수 있습니다.
+> 사용하려면 [인크루트 약관](https://help.incruit.com/docs/terms_mobile.asp)을 직접 확인한 뒤 [SKILL.md](.agents/skills/incruit-search/SKILL.md) frontmatter를 `enabled: true`로 바꾸세요. 활성화 여부의 판단과 책임은 사용자에게 있습니다. 활성화하지 않아도 고용24의 `--source incruit`로 고용24에 연계된 인크루트 공고를 검색할 수 있습니다.
 
 `--source`는 기본 제공처 선택을 대체하므로 고용24 자체 공고도 유지하려면 `work`를 포함하세요. 기본 검색은 고용24 자체 공고만 대상으로 합니다. 고용24의 `--source`와 `--all-sources`는 **고용24에 연계된 공고**를 검색하며 원 플랫폼 전체를 직접 크롤링하지 않습니다. 잡코리아·사람인·인크루트 전체 검색은 각각의 전용 스킬을 사용하세요. 연계 공고의 상세 조회에는 검색 결과의 전체 URL을 전달해 `infoTypeCd`와 `infoTypeGroup`을 보존하세요. 외부 iframe에 본문이 있으면 `descriptionUrl`로 해당 주소를 확인할 수 있습니다. 인크루트의 지역은 별도 지역 코드가 아닌 키워드이고, `--jobage`는 지정한 한 페이지만 검사하므로 결과가 적을 수 있습니다. 등록일을 알 수 없는 공고는 기간 필터에서 제외하고 수정일은 별도로 기록합니다. 상세 조회는 텍스트와 이미지 URL을 제공하며 이미지에만 있는 요건은 이미지를 확인해야 합니다.
 

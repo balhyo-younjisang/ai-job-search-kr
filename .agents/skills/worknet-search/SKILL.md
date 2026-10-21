@@ -15,7 +15,10 @@ allowed-tools: Bash(bun run .agents/skills/worknet-search/cli/src/cli.ts *)
 
 Search public [고용24](https://www.work24.go.kr) job pages with Bun. No login,
 API key, or runtime dependencies are required. Use for personal job searches;
-keep requests bounded to relevant searches and postings. The CLI identifies
+keep requests bounded to relevant searches and postings. Work24's terms apply
+to every user, including those without an account. They allow copying for your
+own use, but ban republishing, passing postings on, commercial use, and
+traffic that disrupts the service (checked 2026-10-21; see `url-reference.md`). The CLI identifies
 this project in its User-Agent and uses Work24 search/detail paths rather than
 the legacy Worknet `/empInfo/` paths. Source structure: [url-reference.md](url-reference.md).
 

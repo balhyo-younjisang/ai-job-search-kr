@@ -13,6 +13,7 @@ on is listed here.
   (`Crawl-delay: 1`). No AI-crawler groups.
 - `https://api.linkareer.com/robots.txt`: **404** (`Cannot GET /robots.txt`). Under
   RFC 9309 no published policy means access is allowed.
+- Both rechecked on 2026-10-21: detail paths still allowed, API robots still 404.
 
 The CLI requests only:
 
@@ -34,13 +35,15 @@ contain `bot`/`scrapy`-style words. GraphQL requests carry no `Origin` or
 
 ### Terms of service
 
-`https://linkareer.com/terms` (시행 2026.08.12):
+`https://linkareer.com/terms` (applied from 2026.08.12; checked 2026-10-21):
 - 제16조 forbids using "자동 접속 프로그램 등" to load the servers or disrupt the
   service, reverse-engineering / copying / imitating the service, commercial use
   without consent, and infringing the company's business model.
 - 제39조 2호 lists accessing the service or posting "by automated programs,
   macros or other mechanical means" (in the context of spam); 제40조 sets
   suspension for violations.
+- 제20조 bans crawling and scraping, but only for 링커리어 STEM's uploaded exam
+  material (기출콘텐츠). The CLI never touches STEM.
 
 Hence the personal-use-only warning in `SKILL.md`, one request per search and
 per detail, and a query built only from field names the site's own pages use
@@ -66,6 +69,13 @@ authentication or an Origin check, switch search to the SSR list page below
 ### Official API
 
 None. Linkareer offers no public or partner API (only "광고 및 제휴 문의").
+
+So `api.linkareer.com/graphql` is **undocumented**: it is the API Linkareer's
+own pages call, and it answers anonymous requests, but Linkareer has not
+published it for third parties. The CLI keeps to what the site's pages already
+request (one `activities` query, fields the pages use, no login, no
+introspection). If Linkareer blocks it, restricts it, or says it is not for
+outside use, switch search to the SSR list page below or set `enabled: false`.
 
 ## Search (GraphQL)
 

@@ -43,10 +43,15 @@ impersonate a browser, or contain `bot`/`scrapy`-style words.
 
 ### Terms of service
 
-`/zf_user/help/terms-of-service` (개인회원 이용약관): members may not copy,
+`/zf_user/help/terms-of-service/person` (개인 회원 약관, revised and applied
+2026-01-22; checked 2026-10-21): members may not copy,
 reproduce, publish, or pass on information obtained through the service without
 Saramin's prior consent, and may not use the service for anything other than
-job seeking. Hence the personal-use-only warning in `SKILL.md`.
+job seeking or for profit. No clause addresses automated access or crawling;
+these are member terms, and the CLI does not log in. Hence the
+personal-use-only warning in `SKILL.md`.
+
+The three CLI paths were rechecked as allowed by robots.txt on 2026-10-21.
 
 ### Maintenance check
 

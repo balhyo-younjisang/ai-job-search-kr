@@ -160,6 +160,34 @@ class Candidates(RankStateCase):
                 )
                 self.assertEqual(out["excluded_by_tracker"], int(excluded))
 
+    def test_tracker_exclusion_sees_through_korean_portal_spelling(self):
+        # /apply records the role as extracted ("백엔드 엔지니어") and the company
+        # as one board spells it; another board's copy of the same posting keeps
+        # brackets, a 신입/경력 qualifier and a different corporate marker.
+        tracker = self.tmp / "tracker.csv"
+        tracker.write_text("date,company,role\n2026-10-21,샘플노트,백엔드 엔지니어\n", encoding="utf-8")
+        cases = (
+            ("(주)샘플노트", "[샘플노트] 백엔드 엔지니어 신입/경력 채용", True),
+            ("㈜샘플노트", "[샘플노트] [신입/경력] 백엔드 엔지니어", True),
+            ("샘플노트", "[샘플노트] 프론트엔드 엔지니어", False),
+            ("샘플노트", "[샘플노트] 백엔드 엔지니어 인턴", False),
+            ("샘플소프트", "백엔드 엔지니어", False),
+        )
+        for company, title, excluded in cases:
+            with self.subTest(company=company, title=title):
+                self.write_state({"candidate": entry(company=company, title=title)})
+                out = self.run_tool("candidates", "--tracker", str(tracker))
+                self.assertEqual(out["excluded_by_tracker"], int(excluded))
+
+    def test_tracker_exclusion_for_latin_titles_is_unchanged(self):
+        # Token matching must not widen upstream behaviour: a Senior posting at a
+        # company you applied to for the plain role stays a candidate.
+        tracker = self.tmp / "tracker.csv"
+        tracker.write_text("date,company,role\n2026-08-01,Acme,SOC Analyst\n", encoding="utf-8")
+        self.write_state({"candidate": entry(company="Acme", title="Senior SOC Analyst")})
+        out = self.run_tool("candidates", "--tracker", str(tracker))
+        self.assertEqual(out["excluded_by_tracker"], 0)
+
     def test_tracker_saved_in_a_legacy_code_page_is_reported_not_a_traceback(self):
         # A spreadsheet's plain "CSV" save on Windows writes cp1252, not UTF-8.
         self.write_state({"a": entry()})

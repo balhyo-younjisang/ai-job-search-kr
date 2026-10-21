@@ -14,7 +14,7 @@ import unittest
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "tools"))
-from job_key import is_canonical, is_legacy_shape, make_key, slugify  # noqa: E402
+from job_key import company_identity, is_canonical, is_legacy_shape, make_key, same_posting, slugify  # noqa: E402
 
 REPO = Path(__file__).resolve().parent.parent
 TOOL = REPO / "tools" / "job_key.py"
@@ -285,6 +285,121 @@ class AuditCLI(unittest.TestCase):
                 self.assertEqual(proc.returncode, 1)
                 self.assertIn("entry url is not a string: acme_soc-analyst", proc.stderr)
                 self.assertNotIn("Traceback", proc.stderr)
+
+
+class CrossPortalDuplicates(unittest.TestCase):
+    """Korean titles key on the portal's own id, so one posting cross-posted to
+    two boards gets two keys, and the boards spell the company and title
+    differently. Observed live on 2026-10-21: Linkareer "샘플노트" /
+    "[샘플노트] [신입/경력] 백엔드 엔지니어" and Saramin "(주)샘플노트" /
+    "[샘플노트] 백엔드 엔지니어 신입/경력 채용" are one posting."""
+
+    def test_company_identity_ignores_korean_corporate_markers(self):
+        same = ["샘플노트", "(주)샘플노트", "㈜샘플노트", "주식회사 샘플노트", "샘플노트(주)", " 샘플노트 "]
+        self.assertEqual({company_identity(c) for c in same}, {"샘플노트"})
+        self.assertEqual(company_identity("㈜KT DS"), company_identity("KT DS"))
+        self.assertEqual(company_identity("(유)퍼솔코리아"), company_identity("퍼솔코리아"))
+
+    def test_company_identity_keeps_latin_names_as_they_were(self):
+        # No Latin suffix stripping: upstream behaviour for "Acme, Inc." is unchanged.
+        self.assertEqual(company_identity("Acme, Inc."), company_identity("ACME_INC"))
+        self.assertNotEqual(company_identity("Acme Inc."), company_identity("Acme"))
+        self.assertEqual(company_identity(""), "")
+
+    def test_the_observed_cross_posting_is_one_posting(self):
+        self.assertTrue(same_posting(
+            {"company": "샘플노트", "title": "[샘플노트] [신입/경력] 백엔드 엔지니어"},
+            {"company": "(주)샘플노트", "title": "[샘플노트] 백엔드 엔지니어 신입/경력 채용"},
+        ))
+
+    def test_spacing_and_noise_words_do_not_split_a_posting(self):
+        self.assertTrue(same_posting(
+            {"company": "예시테크", "title": "백엔드엔지니어 모집"},
+            {"company": "㈜예시테크", "title": "[예시테크] 백엔드 엔지니어 채용"},
+        ))
+
+    def test_different_roles_at_one_company_stay_apart(self):
+        a = {"company": "예시테크", "title": "백엔드 엔지니어 채용"}
+        for other in ("프론트엔드 엔지니어 채용", "시니어 백엔드 엔지니어 채용",
+                      "백엔드 엔지니어 인턴 채용", "백엔드 엔지니어 (계약직) 채용"):
+            with self.subTest(other=other):
+                self.assertFalse(same_posting(a, {"company": "예시테크", "title": other}))
+
+    def test_same_title_at_another_company_is_not_a_duplicate(self):
+        self.assertFalse(same_posting(
+            {"company": "예시테크", "title": "백엔드 엔지니어"},
+            {"company": "샘플소프트", "title": "백엔드 엔지니어"},
+        ))
+
+    def test_a_title_that_is_only_noise_never_matches(self):
+        # "[예시테크] 채용" leaves nothing to compare; two such postings are not
+        # evidence of one posting.
+        self.assertFalse(same_posting(
+            {"company": "예시테크", "title": "[예시테크] 채용"},
+            {"company": "예시테크", "title": "예시테크 모집"},
+        ))
+
+
+class DupesCommand(unittest.TestCase):
+    def run_dupes(self, seen, *extra):
+        import tempfile
+
+        with tempfile.TemporaryDirectory() as tmp:
+            path = Path(tmp) / "seen_jobs.json"
+            path.write_text(json.dumps({"seen": seen}, ensure_ascii=False), encoding="utf-8")
+            proc = subprocess.run(
+                [sys.executable, str(TOOL), "--dupes", str(path), *extra],
+                capture_output=True, text=True, encoding="utf-8",
+            )
+            self.assertEqual(proc.returncode, 0, proc.stderr)
+            return json.loads(proc.stdout), json.loads(path.read_text(encoding="utf-8"))["seen"]
+
+    SEEN = {
+        "company-de4492_356083": {"company": "샘플노트", "title": "[샘플노트] [신입/경력] 백엔드 엔지니어",
+                                  "url": "https://linkareer.com/activity/356083", "status": "new",
+                                  "portal": "linkareer-search", "first_seen": "2026-10-21"},
+        "company-ea1ca7_55400001": {"company": "(주)샘플노트", "title": "[샘플노트] 백엔드 엔지니어 신입/경력 채용",
+                                    "url": "https://www.saramin.co.kr/zf_user/jobs/relay/view?rec_idx=55400001",
+                                    "status": "new", "portal": "saramin-search", "first_seen": "2026-10-21"},
+        "company-111111_50000001": {"company": "샘플노트", "title": "[샘플노트] 프론트엔드 엔지니어",
+                                    "url": "https://www.jobkorea.co.kr/Recruit/GI_Read/50000001", "status": "new",
+                                    "portal": "jobkorea-search", "first_seen": "2026-10-21"},
+    }
+
+    def test_report_only_by_default(self):
+        report, after = self.run_dupes(self.SEEN)
+        self.assertEqual(report["groups"], [{
+            "primary": "company-de4492_356083",
+            "duplicates": ["company-ea1ca7_55400001"],
+            "portals": ["linkareer-search", "saramin-search"],
+        }])
+        self.assertFalse(report["written"])
+        self.assertEqual(after, self.SEEN)
+
+    def test_write_marks_the_copy_and_keeps_it(self):
+        report, after = self.run_dupes(self.SEEN, "--write")
+        self.assertTrue(report["written"])
+        copy = after["company-ea1ca7_55400001"]
+        self.assertEqual(copy["status"], "skipped")
+        self.assertEqual(copy["duplicate_of"], "company-de4492_356083")
+        self.assertEqual(after["company-de4492_356083"]["status"], "new")
+        self.assertEqual(after["company-111111_50000001"]["status"], "new")
+        self.assertEqual(len(after), 3)
+
+    def test_an_already_ranked_entry_is_the_primary_and_is_never_rewritten(self):
+        seen = json.loads(json.dumps(self.SEEN))
+        seen["company-ea1ca7_55400001"]["status"] = "ranked"
+        report, after = self.run_dupes(seen, "--write")
+        self.assertEqual(report["groups"][0]["primary"], "company-ea1ca7_55400001")
+        self.assertEqual(after["company-ea1ca7_55400001"]["status"], "ranked")
+        self.assertNotIn("duplicate_of", after["company-ea1ca7_55400001"])
+        self.assertEqual(after["company-de4492_356083"]["duplicate_of"], "company-ea1ca7_55400001")
+
+    def test_a_second_run_finds_nothing_new(self):
+        _, after = self.run_dupes(self.SEEN, "--write")
+        report, again = self.run_dupes(after, "--write")
+        self.assertEqual(report["groups"], [])
+        self.assertEqual(again, after)
 
 
 if __name__ == "__main__":

@@ -47,6 +47,8 @@ import unicodedata
 from datetime import date, datetime, timedelta, timezone
 from pathlib import Path
 
+from job_key import same_posting
+
 ROOT = Path(__file__).resolve().parent.parent
 STATE = ROOT / "job_scraper" / "seen_jobs.json"
 TRACKER = ROOT / "job_search_tracker.csv"
@@ -142,24 +144,38 @@ def norm(text) -> str:
     )
 
 
-def tracker_pairs(path: Path) -> set[tuple[str, str]]:
-    """company+role pairs already in the tracker - out of scope for ranking."""
+def tracker_rows(path: Path) -> list[tuple[str, str]]:
+    """company+role rows already in the tracker - out of scope for ranking."""
     if not path.is_file():
-        return set()
+        return []
     import csv
 
-    pairs = set()
+    rows = []
     try:
         with path.open(encoding="utf-8-sig", newline="") as fh:
             for row in csv.DictReader(fh):
-                company, role = norm(row.get("company")), norm(row.get("role"))
-                if company:
-                    pairs.add((company, role))
+                company, role = str(row.get("company") or ""), str(row.get("role") or "")
+                if norm(company):
+                    rows.append((company, role))
     except UnicodeDecodeError:
         # A spreadsheet's plain "CSV" save writes the ANSI code page (cp1252 on
         # most Western installs), so any accented company name stops decoding.
         sys.exit(f"{path} is not UTF-8 text - re-save it as CSV UTF-8")
-    return pairs
+    return rows
+
+
+def tracked(entry: dict, rows: list[tuple[str, str]], pairs: set[tuple[str, str]]) -> bool:
+    """Exact company+role match, or the same role at the same company as a
+    portal spells it: Korean boards add corporate markers ((주), ㈜), brackets
+    and 신입/경력 qualifiers to a title that /apply records bare. same_posting
+    ignores Korean markers and noise words only; for Latin titles it adds
+    nothing beyond word order and punctuation ("Senior SOC Analyst" is still
+    not "SOC Analyst")."""
+    if (norm(entry.get("company")), norm(entry.get("title"))) in pairs:
+        return True
+    return any(
+        same_posting({"company": c, "title": r}, entry, drop_qualifiers=True) for c, r in rows
+    )
 
 
 def entry_location_verdict(entry: dict) -> str | None:
@@ -175,7 +191,8 @@ def entry_location_verdict(entry: dict) -> str | None:
 
 def cmd_candidates(args) -> int:
     _, seen = load_state(args.state)
-    excluded = tracker_pairs(args.tracker)
+    rows = tracker_rows(args.tracker)
+    pairs = {(norm(c), norm(r)) for c, r in rows}
 
     selected, skipped_tracker = [], 0
     for key, entry in seen.items():
@@ -185,7 +202,7 @@ def cmd_candidates(args) -> int:
                 continue
         elif status not in ("new", "unreachable"):
             continue
-        if (norm(entry.get("company")), norm(entry.get("title"))) in excluded:
+        if tracked(entry, rows, pairs):
             skipped_tracker += 1
             continue
         if args.focus:

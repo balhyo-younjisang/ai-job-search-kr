@@ -123,6 +123,11 @@ For every candidate:
 - Otherwise, skip if the company+title combo already exists in `job_scraper/seen_jobs.json`
 - Skip if the company+role already appears in `job_search_tracker.csv`
 
+Copies of one posting on *different boards* rarely match on URL or exact
+company+title: each board has its own URL, writes the company its own way
+(`샘플노트` / `(주)샘플노트`) and decorates the title differently. Do not try to
+catch those by eye here; Step 4's `--dupes` pass does it deterministically.
+
 ### Step 2.5: Mass-Posting Detection (within this run)
 
 A distribution pattern worth flagging to the user as a caution signal, not as an accusation against the employer - it describes how a listing is being distributed, not a verdict on whether the company is legitimate. It alone proves nothing is wrong (companies do legitimately hire the same role across several cities); flag it so the user can factor it in when deciding whether to invest time, don't downgrade fit or silently exclude the result because of it.
@@ -163,7 +168,8 @@ It prints one line: the canonical key for that posting. The key must be a pure f
       "fit": "high/medium/low",
       "status": "new/skipped/ranked/expired/unreachable",
       "portal": "<source portal skill, e.g. jobkorea-search>",
-      "source": "cli/websearch"
+      "source": "cli/websearch",
+      "duplicate_of": "<key of the primary entry, set only by --dupes>"
     }
   }
 }
@@ -179,7 +185,24 @@ The `source` field records which mechanism produced the entry: `cli` for Step 1b
 
 `posted_date` is the posting's own publication date, taken from the `date` field Step 2's contract already guarantees on every portal CLI's search output. Step 1b uses that date to scope the run to the last 14 days and then drops it, so nothing downstream can distinguish a posting published yesterday from one published two years ago - `first_seen` is when this scraper first saw the entry, not when the employer posted it. Persisting it makes Step 1b's window auditable after the run and gives `/rank` a freshness signal to weigh, instead of rediscovering the date and recording it in prose that nothing reads. That gap landed for real: a freehire-search posting dated 2024-05-13 was scraped and ranked Strong Fit at position 1 of 133, its own scoring note observing the listing "may be long stale" with nothing able to act on it. `null` means the portal returned no date for that result (the CLIs emit `date: null` when a listing omits it); a missing key means the entry predates this field - **never infer a posting date** from either, and never backfill by guessing.
 
-3. Only present jobs NOT already in the seen list (matched by URL or
+3. Mark cross-board copies of one posting, after the entries are written:
+
+```bash
+python3 tools/job_key.py --dupes job_scraper/seen_jobs.json --write
+```
+
+   It groups entries whose company matches once Korean corporate markers
+   (`(주)`, `㈜`, `주식회사`) are ignored and whose titles carry the same words
+   once the company name and job-ad noise (`채용`, `모집`, `공고`) are dropped.
+   Each copy that is still `new` becomes `"status": "skipped"` with
+   `"duplicate_of": "<primary key>"`. The entry is kept, never deleted, so
+   `/rank` scores the posting once and the copy stays visible. An entry already
+   presented or ranked is always the primary and is never rewritten. It prints
+   the groups it found (`primary`, `duplicates`, `portals`) for Step 5. Matching
+   is deliberately strict (`인턴` vs `정규직`, `신입` vs `경력`, or `시니어` keep two
+   postings apart), so a miss only shows one posting twice.
+
+4. Only present jobs NOT already in the seen list (matched by URL or
    company+title) or tracker.
 
 ### Step 4.5: Generate Referral Contact Links (High & Medium Fit Only)
@@ -252,6 +275,12 @@ health: <portal-name> - broken (0 results for the SKILL.md test query and a broa
 | # | Fit | Title | Company | Location | Deadline | URL |
 |---|-----|-------|---------|----------|----------|-----|
 | 1 | High | ... | ... | ... | ... | [Link](...) |
+
+Present each `--dupes` group from Step 4 as one row, the primary's, with the
+copies' links added to its URL cell (e.g. "[Link](...) · also on 사람인 [Link](...)"),
+so the user sees every board carrying it and can open whichever they prefer. If
+two rows look like one posting the helper missed, say so in the Title cell
+rather than dropping either.
 
 If Step 2.5 flagged a mass-posting pattern, note it in the Title cell (e.g. "Frontend Developer (posted in 6 cities)") rather than burying it. Do the same for a declared-language-insufficient-level flag from the Language Gate (e.g. "Backend Engineer ⚠ fluent English required") - both are signals the user should see at a glance, not just in the detail highlights below.
 

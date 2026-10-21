@@ -24,6 +24,12 @@ Paths disallowed for `*`: `/login/`, `/user/`, `/my/`, `/account/`,
 `/RecrtMng/`, `/corp/`, `/text_co/`, `/Salary/mylist`,
 `/Recruit/JobList/SpaceClick` (and capitalized variants). The CLI touches none of them.
 
+The image hosts behind `descriptionImages` (`file1.jobkorea.co.kr`,
+`file2.jobkorea.co.kr`) publish `User-agent: *` / `Disallow: /` (checked
+2026-10-21). The CLI only reports those URLs and never requests them, and agents
+must not fetch them either. `SKILL.md` describes the user-supplied path for
+reading an image-only description.
+
 ### User-Agent
 
 ```

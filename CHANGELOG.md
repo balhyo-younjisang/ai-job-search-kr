@@ -67,6 +67,9 @@
   `skipped`·`duplicate_of`로 표시하고, 결과 표에는 대표 공고 한 줄에 모든 포털 링크를 함께 보여줍니다
 - 지원 기록 비교(`rank_state.py`)도 같은 기준을 써서, 한 포털에서 지원한 공고의 다른 포털 사본이 다시 후보로
   올라오지 않습니다. 영문 제목은 단어 순서와 문장부호 차이만 무시합니다
+- SETUP.md의 TinyTeX 설치 명령이 Linux에서 `mv: ... are the same file` 오류로 멈추던 문제를 고쳤습니다(설치 파일
+  보관 폴더를 `/tmp` 대신 `/tmp/tinytex-installer`로 지정). Linux용 PATH 안내와 `fancyhdr`·한글 패키지 설치 안내도
+  추가했습니다. 새 `debian:bookworm` 컨테이너에서 README·SETUP 절차대로 설치부터 검색·컴파일까지 재현해 확인했습니다
 
 ### Security
 

@@ -56,13 +56,18 @@ The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs 
 
 Full TeX distributions work out of the box, but minimal distributions need a few extra packages before the stock templates compile.
 
-On macOS, a user-level TinyTeX install avoids a system-wide installer and does not require `sudo`:
+On macOS (and Linux), a user-level TinyTeX install avoids a system-wide installer and does not require `sudo`:
 
 ```bash
 curl -fsSL https://yihui.org/tinytex/install-bin-unix.sh -o /tmp/tinytex-install-bin-unix.sh
-sh /tmp/tinytex-install-bin-unix.sh /tmp --no-path
+mkdir -p /tmp/tinytex-installer
+sh /tmp/tinytex-install-bin-unix.sh /tmp/tinytex-installer --no-path
 export PATH="$HOME/Library/TinyTeX/bin/universal-darwin:$PATH"
 ```
+
+The first argument is a folder to keep the downloaded bundle in. It must not be the folder the script downloads into (`$TMPDIR`, or `/tmp` when that is unset, as on most Linux systems): passing `/tmp` there stops the install with `mv: ... are the same file` before `tlmgr` is set up.
+
+On Linux, TinyTeX installs to `~/.TinyTeX` instead, so the `PATH` line is `export PATH="$(ls -d "$HOME"/.TinyTeX/bin/*/):$PATH"` (append it to `~/.bashrc` to persist it).
 
 The `export` above only lasts for the current terminal window. Persist it, or every new window reports `zsh: command not found: lualatex` (or `xelatex`) even though TinyTeX installed fine:
 
@@ -79,8 +84,10 @@ Then install the template dependencies:
 ```bash
 tlmgr install \
   moderncv fontawesome5 fontawesome6 academicons import luatexbase pgf \
-  titlesec textpos xltxtra xunicode cite realscripts needspace
+  titlesec textpos xltxtra xunicode cite realscripts needspace fancyhdr
 ```
+
+For Korean documents, also `tlmgr install xetexko luatexko cjk-ko` (see "Korean (Hangul) documents" below).
 
 For BasicTeX/MacTeX, make sure the TeX binary directory is on `PATH` first (for example via `/Library/TeX/texbin`), then run the same `tlmgr install ...` command.
 

@@ -65,7 +65,7 @@ The framework encodes career guidance best practices, including structured evalu
 
 ## Prerequisites
 
-- [Claude Code](https://claude.com/claude-code) (CLI) for the documented slash-command workflow; account access and usage costs depend on your environment. Using Codex, Antigravity, Gemini CLI, or another agent? Start at [`AGENTS.md`](AGENTS.md). It points to the canonical profile and workflow definitions in `.claude/` and the portable portal skills in `.agents/skills/`; command invocation depends on the agent runtime.
+- [Claude Code](https://claude.com/claude-code) (CLI) for the documented slash-command workflow; account access and usage costs depend on your environment. Using **Codex**? The same workflows run as `$job-*` skills (see [Running in Codex](#codex)). Using Antigravity, Gemini CLI, or another agent? Start at [`AGENTS.md`](AGENTS.md). It points to the canonical profile and workflow definitions in `.claude/` and the portable portal skills in `.agents/skills/`; command invocation depends on the agent runtime.
 - Python 3.10+
 - [Bun](https://bun.sh) (for job search CLI tools)
 - LaTeX distribution with `lualatex` and `xelatex`: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/), or [MiKTeX](https://miktex.org/). The CV compiles with `lualatex` (pdflatex often fails on modern MiKTeX installs with `fontawesome5` font-expansion errors); the cover letter compiles with `xelatex` because `cover.cls` requires `fontspec`. If using a minimal TeX install such as TinyTeX or BasicTeX, install the extra packages listed in [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex).
@@ -139,6 +139,26 @@ This runs the full workflow: evaluate fit, draft CV + cover letter, review with 
 
 Postings are treated as untrusted input (the workflow follows no instructions embedded in them and fetches no links from their body), but agentic defenses are instruction-level, not a sandbox - on an unfamiliar job board, skim what was fetched and written before you hit send. Details in [SECURITY.md](SECURITY.md).
 
+<a id="codex"></a>
+### Running in Codex
+
+The workflows also run in the [Codex CLI](https://developers.openai.com/codex). Start `codex` in the repository folder and choose to **trust** the project when asked; without trust, the custom agents and command rules in `.codex/` do not load.
+
+| Codex | Claude Code |
+| --- | --- |
+| `$job-setup` | `/setup` |
+| `$job-scrape` | `/scrape` |
+| `$job-rank` | `/rank` |
+| `$job-apply <URL or posting text>` | `/apply` |
+| `$job-interview` | `/interview` |
+| `$job-outcome` | `/outcome` |
+| `$job-upskill` | `/upskill` |
+
+- **How it works:** each `$job-*` skill only tells Codex to read and follow the canonical file in `.claude/`, so both runtimes run the same specification and upstream changes reach Codex unchanged. [`AGENTS.md`](AGENTS.md) says how Codex stands in for Claude-only tools (option prompts, subagents and so on).
+- **Command rules:** `.codex/rules/default.rules` is the Codex counterpart of the `.claude/settings.json` permissions. The portal CLIs and page-fetch tools use the network without a prompt, `git push` asks every time, and upload-shaped commands (`curl -d`, `scp`, `ssh` and the like) are blocked.
+- **Subagents:** the posting fetcher, scorer and reviewer live in `.codex/agents/`. Codex cannot make a subagent read-only, so only their instructions keep them from editing files. Keep the default `workspace-write` sandbox and `on-request` approvals, and never use `danger-full-access` or turn approvals off for postings from sites you do not know. [SECURITY.md](SECURITY.md) has the details.
+- **Commands without a skill:** for `/add-portal`, `/add-template`, `/expand`, `/reset` and `/html-report`, ask Codex to follow `.claude/commands/<name>.md`. `/gmail-sync` and `/notion-sync` need Claude connectors and do not run in Codex.
+
 ## Other commands
 
 `/setup`, `/scrape`, and `/apply` form the core workflow. Ten more commands extend it once your profile is in place:
@@ -199,7 +219,9 @@ ai-job-search-kr/
 │   ├── worknet-search/                # Work24 / 고용24 (default own postings; optional syndicated providers)
 │   ├── incruit-search/                # Incruit / 인크루트 (South Korea, direct HTML search)
 │   ├── linkedin-search/               # LinkedIn public job listings (country-agnostic)
-│   └── freehire-search/               # freehire.me tech job aggregator (multi-market, REST API)
+│   ├── freehire-search/               # freehire.me tech job aggregator (multi-market, REST API)
+│   └── job-*/                         # Codex workflow entry points ($job-apply etc.; not portals)
+├── .codex/                            # Codex custom agents (agents/) and command rules (rules/)
 ├── cv/
 │   └── main_example.tex               # moderncv LaTeX template
 ├── cover_letters/

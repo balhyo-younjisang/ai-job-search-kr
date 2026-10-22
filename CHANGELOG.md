@@ -12,6 +12,27 @@
   [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)의 기록을
   그대로 보존한 것입니다. 업스트림을 병합할 때는 새 항목을 그 아래 업스트림 섹션에 넣으세요.
 
+## [Unreleased]
+
+### Added
+
+- Codex에서 전체 워크플로 실행: `$job-setup`, `$job-scrape`, `$job-rank`, `$job-apply`, `$job-interview`, `$job-outcome`,
+  `$job-upskill` Skill(`.agents/skills/job-*`)이 `.claude/`의 원본 명세를 가리키고, `AGENTS.md`가 Claude Code 전용
+  도구를 Codex에서 대신하는 방법을 안내합니다. 공고 수집·채점·검토 하위 에이전트(`.codex/agents/`)와
+  `settings.json`을 옮긴 명령 규칙(`.codex/rules/default.rules`: 포털 CLI·페이지 수집은 승인 없이 허용, `git push`는
+  확인, 업로드형 명령은 차단)을 추가했습니다. Codex CLI 0.163.0에서 Skill·에이전트·규칙 로드를 확인했습니다
+
+### Changed
+
+- 포털 판정 기준: `.agents/skills/` 아래에서 `cli/` 폴더가 있는 것만 포털로 봅니다(`/scrape`, `/add-portal`,
+  공고 수집·채점 에이전트). `/add-portal`은 새 포털의 Codex 규칙도 함께 추가합니다
+- Claude Code에서 `.codex/**`를 수정할 때 확인을 받습니다(`settings.json`의 `ask`, 보안 검사 필수 항목)
+
+### Security
+
+- Codex 하위 에이전트는 읽기 전용으로 제한할 수 없어, 파일 수정 금지를 지시로만 막습니다. 기본 샌드박스와
+  `on-request` 승인을 유지하라는 안내를 `AGENTS.md`, README, `SECURITY.md`에 적었습니다
+
 ## [0.1.0] - 2026-10-22
 
 업스트림 `v1.7.3` 이후 28개 커밋(`d621ebe`)까지를 기반으로 합니다.

@@ -44,6 +44,15 @@ Every grant the template ships, where it lives, how long it lasts, and what chec
 
 Instruction-level defenses raise the bar; permission-level defenses bound the damage. Neither is a guarantee. If you run this workflow against job boards you do not trust at all, review what the agent fetched and wrote before sending anything out.
 
+## Running in Codex
+
+The Codex layer (`.agents/skills/job-*`, `.codex/`) reuses the same workflows, but not every Claude Code boundary carries over:
+
+- **Subagents are not read-only.** A Codex custom agent inherits the parent session's sandbox and cannot be restricted further, so `posting-fetcher`, `posting-scorer` and `application-reviewer` hold the untrusted posting with the same write access as the main session. Their instructions forbid edits; nothing enforces it. The sandbox (`workspace-write`, the default) and `on-request` approvals are what bound the damage, so do not run these workflows with `danger-full-access` or approvals off.
+- **Command rules cover commands only.** `.codex/rules/default.rules` mirrors the `settings.json` allow list for the commands that need the network, `git push` as a prompt, and the shell deny list as `forbidden` (`tests/test_codex_runtime.py` keeps them in step). It cannot express the `Read` denies (`.env`, `~/.ssh`, ...) or the "ask before editing" list, and a flag fused to its value (`wget --post-file=x`) is not matched - the same tripwire limit as the prefix rules above.
+- **Allow means outside the sandbox.** A Codex `allow` rule runs the command unsandboxed without a prompt, which is why it is limited to the repo's own portal CLIs, `fetch_page.py` and `robots_check.py`; every other tool runs inside the sandbox.
+- **`.codex/` loads only in a trusted project**, and editing it prompts in Claude Code (`Edit(.codex/**)` is a required `ask` rule).
+
 ## Scope notes
 
 - Portal CLI skills make live requests only when you run them; CI never does.

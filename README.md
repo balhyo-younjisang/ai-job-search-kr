@@ -66,7 +66,7 @@ Claude Code를 종합 취업 지원 도우미로 만드는 구조화된 워크�
 <a id="prerequisites"></a>
 ## 준비 사항
 
-- [Claude Code](https://claude.com/claude-code) CLI. Claude 구독이나 Anthropic API를 사용하거나, Codex·Antigravity·Gemini CLI 같은 다른 에이전트 도구를 사용할 수 있습니다. 비용과 무료 사용 가능 여부는 선택한 도구, 구독, API 사용량과 실행 환경에 따라 달라집니다. 다른 에이전트에서는 [`AGENTS.md`](AGENTS.md)부터 읽으세요. 이 파일은 `.claude/`의 표준 워크플로와 프로필을 단일 출처로 가리키는 thin-pointer 지침이며, `.agents/skills/`의 포털 CLI는 이식 가능한 Agent Skills 형식입니다. 아래 슬래시 명령 예시는 Claude Code 기준이며 다른 에이전트에서 호출하는 방식은 해당 실행 환경에 따릅니다.
+- [Claude Code](https://claude.com/claude-code) CLI. Claude 구독이나 Anthropic API를 사용하거나, Codex·Antigravity·Gemini CLI 같은 다른 에이전트 도구를 사용할 수 있습니다. 비용과 무료 사용 가능 여부는 선택한 도구, 구독, API 사용량과 실행 환경에 따라 달라집니다. 다른 에이전트에서는 [`AGENTS.md`](AGENTS.md)부터 읽으세요. 이 파일은 `.claude/`의 표준 워크플로와 프로필을 단일 출처로 가리키는 thin-pointer 지침이며, `.agents/skills/`의 포털 CLI는 이식 가능한 Agent Skills 형식입니다. 아래 슬래시 명령 예시는 Claude Code 기준입니다. **Codex**에서는 같은 흐름을 `$job-*` Skill로 실행할 수 있습니다([Codex에서 사용하기](#codex) 참고). 그 밖의 에이전트에서 호출하는 방식은 해당 실행 환경에 따릅니다.
 - Python 3.10 이상
 - 채용 검색 CLI용 [Bun](https://bun.sh)
 - `lualatex`와 `xelatex`를 제공하는 LaTeX 배포판: [TeX Live](https://tug.org/texlive/), [MacTeX](https://tug.org/mactex/), [TinyTeX](https://yihui.org/tinytex/) 또는 [MiKTeX](https://miktex.org/). 일부 MiKTeX 환경에서는 `pdflatex`가 `fontawesome5` 글꼴 확장 오류를 일으킬 수 있어 CV는 `lualatex`로 컴파일합니다. `fontspec`이 필요한 `cover.cls` 자기소개서는 `xelatex`로 컴파일합니다. TinyTeX나 BasicTeX 같은 최소 설치 환경에서는 [SETUP.md](SETUP.md#minimal-tex-install-tinytexbasictex)의 추가 패키지도 설치하세요.
@@ -133,6 +133,26 @@ claude
 
 채용 공고는 신뢰할 수 없는 입력으로 처리합니다. 워크플로는 공고 본문에 삽입된 지시를 따르거나 본문의 링크를 자동으로 가져오지 않습니다. 다만 이 방어는 샌드박스가 아닌 지침 수준이므로 처음 보는 채용 사이트에서는 제출 전에 가져온 내용과 생성 파일을 확인하세요. 자세한 내용은 [SECURITY.md](SECURITY.md)를 참고하세요.
 
+<a id="codex"></a>
+### Codex에서 사용하기
+
+[Codex CLI](https://developers.openai.com/codex)에서도 같은 흐름을 실행할 수 있습니다. 저장소 폴더에서 `codex`를 실행하고, 처음 물어볼 때 이 프로젝트를 **신뢰(trust)**하도록 선택하세요. 신뢰하지 않으면 아래의 하위 에이전트와 명령 규칙(`.codex/`)이 로드되지 않습니다.
+
+| Codex | Claude Code |
+| --- | --- |
+| `$job-setup` | `/setup` |
+| `$job-scrape` | `/scrape` |
+| `$job-rank` | `/rank` |
+| `$job-apply <URL 또는 공고 전문>` | `/apply` |
+| `$job-interview` | `/interview` |
+| `$job-outcome` | `/outcome` |
+| `$job-upskill` | `/upskill` |
+
+- **작동 방식:** 각 `$job-*` Skill은 `.claude/`의 원본 명세를 읽고 그대로 따르라는 안내만 담고 있습니다. 그래서 두 도구가 같은 명세로 움직이고, 업스트림 변경도 Codex에 그대로 반영됩니다. Claude Code 전용 기능(선택형 질문, 하위 에이전트 등)을 Codex에서 어떻게 대신하는지는 [`AGENTS.md`](AGENTS.md)에 있습니다.
+- **명령 규칙:** `.codex/rules/default.rules`가 `.claude/settings.json`의 권한 목록을 대신합니다. 포털 검색 CLI와 페이지 수집 도구는 승인 없이 네트워크를 쓰고, `git push`는 매번 확인하며, 업로드형 명령(`curl -d`, `scp`, `ssh` 등)은 차단합니다.
+- **하위 에이전트:** 공고 수집·채점·검토 에이전트는 `.codex/agents/`에 있습니다. 다만 Codex는 하위 에이전트만 읽기 전용으로 만드는 기능이 없어, 파일을 고치지 말라는 지시로만 막습니다. 기본 샌드박스(`workspace-write`)와 승인 방식(`on-request`)을 유지하고, 모르는 사이트의 공고에는 `danger-full-access`나 승인 끄기를 쓰지 마세요. 자세한 내용은 [SECURITY.md](SECURITY.md)에 있습니다.
+- **Codex에 없는 명령:** `/add-portal`, `/add-template`, `/expand`, `/reset`, `/html-report`는 "`.claude/commands/<이름>.md`를 따라 해 줘"라고 요청하면 됩니다. `/gmail-sync`, `/notion-sync`는 Claude 커넥터가 필요해 Codex에서는 쓸 수 없습니다.
+
 <a id="other-commands"></a>
 ## 기타 명령
 
@@ -195,7 +215,9 @@ ai-job-search-kr/
 │   ├── worknet-search/                # 고용24(기본 자체 공고, 선택적 연계 제공처)
 │   ├── incruit-search/                # 인크루트(EUC-KR 직접 검색)
 │   ├── linkedin-search/               # LinkedIn 공개 공고(국가 무관)
-│   └── freehire-search/               # freehire.me 기술직 통합 검색
+│   ├── freehire-search/               # freehire.me 기술직 통합 검색
+│   └── job-*/                         # Codex용 워크플로 진입점($job-apply 등, 포털 아님)
+├── .codex/                            # Codex 하위 에이전트(agents/)와 명령 규칙(rules/)
 ├── cv/
 │   └── main_example.tex               # moderncv LaTeX 템플릿
 ├── cover_letters/

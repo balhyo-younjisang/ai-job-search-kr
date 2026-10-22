@@ -106,6 +106,8 @@ REQUIRED_ASK_RULES = [
     "Edit(.claude/commands/*.md)",
     "Edit(.claude/agents/**)",
     "Edit(.github/**)",
+    # Codex's counterpart of settings.json: command rules and custom agents.
+    "Edit(.codex/**)",
     "Edit(tools/security_guards.py)",
     "Bash(git push:*)",
 ]

@@ -120,7 +120,7 @@ Node fields:
 
 | Field | Example | Output |
 |-------|---------|--------|
-| `id` | `"356881"` | `id`, `url` = `https://linkareer.com/activity/{id}` |
+| `id` | `"911014"` | `id`, `url` = `https://linkareer.com/activity/{id}` |
 | `title` | `"(산업기능요원) 백엔드 엔지니어"` | `title` |
 | `organizationName` | `"예시러닝"` | `company` |
 | `createdAt` | `1791961279000` (epoch ms) | `date` (KST `YYYY-MM-DD`) |

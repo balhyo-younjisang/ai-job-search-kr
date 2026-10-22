@@ -290,7 +290,8 @@ class AuditCLI(unittest.TestCase):
 class CrossPortalDuplicates(unittest.TestCase):
     """Korean titles key on the portal's own id, so one posting cross-posted to
     two boards gets two keys, and the boards spell the company and title
-    differently. Observed live on 2026-10-21: Linkareer "샘플노트" /
+    differently. The shape of a real pair observed on 2026-10-21, with the
+    company name replaced by a fictional one: Linkareer "샘플노트" /
     "[샘플노트] [신입/경력] 백엔드 엔지니어" and Saramin "(주)샘플노트" /
     "[샘플노트] 백엔드 엔지니어 신입/경력 채용" are one posting."""
 

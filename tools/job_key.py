@@ -185,7 +185,8 @@ def is_legacy_shape(key: str) -> bool:
 # cross-posted to two boards gets two keys, and the boards spell it differently:
 # Linkareer "샘플노트" / "[샘플노트] [신입/경력] 백엔드 엔지니어" and Saramin
 # "(주)샘플노트" / "[샘플노트] 백엔드 엔지니어 신입/경력 채용" are one posting
-# (observed 2026-10-21). These helpers compare postings rather than keys. They
+# (the shape of a real pair observed 2026-10-21; the company name here is
+# fictional). These helpers compare postings rather than keys. They
 # are deliberately conservative: a false match hides a real posting, a missed
 # match only shows one twice.
 

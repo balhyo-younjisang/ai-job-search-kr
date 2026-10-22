@@ -34,6 +34,7 @@
       "Edit(.claude/commands/*.md)",
       "Edit(.claude/agents/**)",
       "Edit(.github/**)",
+      "Edit(.codex/**)",
       "Edit(tools/security_guards.py)",
       "Bash(git push:*)"
     ],

@@ -20,7 +20,9 @@
   `$job-upskill` Skill(`.agents/skills/job-*`)이 `.claude/`의 원본 명세를 가리키고, `AGENTS.md`가 Claude Code 전용
   도구를 Codex에서 대신하는 방법을 안내합니다. 공고 수집·채점·검토 하위 에이전트(`.codex/agents/`)와
   `settings.json`을 옮긴 명령 규칙(`.codex/rules/default.rules`: 포털 CLI·페이지 수집은 승인 없이 허용, `git push`는
-  확인, 업로드형 명령은 차단)을 추가했습니다. Codex CLI 0.163.0에서 Skill·에이전트·규칙 로드를 확인했습니다
+  확인, 업로드형 명령은 차단)을 추가했습니다. `posting_guard.py`도 허용해, 원본 명세의 `포털 CLI | posting_guard`
+  파이프가 승인 없이 네트워크를 씁니다. Codex CLI 0.163.0에서 Skill·에이전트·규칙 로드와, 가상 프로필로
+  `$job-setup` → `$job-scrape` → `$job-rank` 전체 흐름(`posting-scorer` 에이전트 포함)을 확인했습니다
 
 ### Changed
 

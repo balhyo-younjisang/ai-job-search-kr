@@ -44,7 +44,8 @@ The canonical files are written for Claude Code. When one of them names a Claude
 - **WebFetch / WebSearch:** use Codex's web search (`web_search` in config; `cached` by default, `live` for current pages). For a page fetch, `python3 tools/fetch_page.py '<URL>' --out <temp file> --text` follows the same escalation order and enforces robots.txt.
 - **Read on a PDF** (`/apply` Step 5): run `python3 tools/verify_pdf.py` and `python3 tools/verify_layout.py` as the file says, then render each page with `pdftoppm -png -r 80` into a temp folder and inspect the images with `view_image`.
 - **Session scratchpad (`${SCRATCHPAD}`):** a folder from `mktemp -d`, outside the repository.
-- **`.claude/settings.json` permissions:** Claude Code only. In a trusted project, `.codex/rules/default.rules` mirrors them for Codex: the portal CLIs and the repo's network tools run without a prompt, and the upload-shaped commands the deny list blocks are forbidden.
+- **`.claude/settings.json` permissions:** Claude Code only. In a trusted project, `.codex/rules/default.rules` mirrors them for Codex: the portal CLIs, the repo's network tools and `posting_guard.py` run without a prompt, and the upload-shaped commands the deny list blocks are forbidden.
+- **Run portal CLIs and `fetch_page.py` as plain commands.** No redirection (`> file`), command substitution or variables: Codex then matches the whole line as one script, the allow rule no longer applies, and the command runs in the sandbox without network. Read the output from the command result; when a step needs it in a file, write that file in a separate step (or use `fetch_page.py --out`). Piping into `python3 tools/posting_guard.py`, as the workflow files do, is fine.
 
 Security differences to keep in mind (see [SECURITY.md](SECURITY.md)):
 

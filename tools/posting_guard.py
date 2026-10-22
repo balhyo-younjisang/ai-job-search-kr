@@ -406,7 +406,14 @@ def guard(raw: str, mode: str):
     else:
         text, hidden_text, hidden_blocks = raw, "", []
     text, tf = clean_text(text)
-    hidden_text, _ = clean_text(hidden_text)
+    hidden_text, hidden_tf = clean_text(hidden_text)
+    # Tag characters render as nothing, so a hidden element is the natural
+    # place to carry them: count them toward the verdict like visible ones, and
+    # strip them from hidden_blocks, which callers forward to an agent verbatim.
+    hidden_tags = hidden_tf["invisible_chars"].get("tag", 0)
+    if hidden_tags:
+        tf["invisible_chars"]["tag"] = tf["invisible_chars"].get("tag", 0) + hidden_tags
+    hidden_blocks = [clean_text(block)[0] for block in hidden_blocks]
     findings = {"hidden_blocks": hidden_blocks, **tf, **scan(text, hidden_text)}
     findings["verdict"] = verdict(findings)
     return text, findings

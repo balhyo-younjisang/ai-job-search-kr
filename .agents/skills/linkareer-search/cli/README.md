@@ -65,12 +65,12 @@ query, fields, region ids, and the robots.txt maintenance check.
 
 ```bash
 bun run typecheck
-bun run test        # offline: stubbed fetch + real responses, no requests to Linkareer
+bun run test        # offline: stubbed fetch + synthetic responses, no requests to Linkareer
 bun run test:live   # opt-in live smoke test: one search, one detail
 ```
 
 `bun run test` is what CI runs, and it never contacts the portal: parsers and
-commands are tested against real responses in `tests/fixtures/` (see
+commands are tested against synthetic responses in `tests/fixtures/` (see
 `provenance.md`). `tests/live-smoke.test.ts` is skipped unless
 `LINKAREER_LIVE=1` is set, which `test:live` does - run it by hand after
 changing a parser.

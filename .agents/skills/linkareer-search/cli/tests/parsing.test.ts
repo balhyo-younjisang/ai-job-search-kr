@@ -23,8 +23,8 @@ import { BadLocationError, resolveRegion } from "../src/regions";
 import { normalizeId } from "../src/commands/detail";
 import { buildVariables } from "../src/commands/search";
 
-// Offline parser tests against real Linkareer responses captured 2026-10-20
-// KST (see fixtures/provenance.md).
+// Offline parser tests against synthetic Linkareer responses that keep the
+// structure observed on 2026-10-20 KST (see fixtures/provenance.md).
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name));
 const CAPTURED = new Date("2026-10-19T16:30:00Z"); // 2026-10-20 01:30 KST
 
@@ -32,7 +32,7 @@ async function searchData(): Promise<SearchData> {
   return (await fixture("gql-search-backend-seoul.json").json()).data;
 }
 
-describe("parseSearchResponse (real GraphQL response)", () => {
+describe("parseSearchResponse (synthetic GraphQL response)", () => {
   test("returns every node as a card, with the total", async () => {
     const { cards, total } = parseSearchResponse(await searchData());
     expect(total).toBe(14);
@@ -42,7 +42,7 @@ describe("parseSearchResponse (real GraphQL response)", () => {
   test("maps an ASAP posting: registration date, no deadline", async () => {
     const [first] = parseSearchResponse(await searchData()).cards;
     expect(first.card).toEqual({
-      id: "356881",
+      id: "911014",
       title: "(산업기능요원) 백엔드 엔지니어",
       company: "예시러닝",
       location: "서울 중구",
@@ -53,12 +53,12 @@ describe("parseSearchResponse (real GraphQL response)", () => {
       recruitType: "ASAP",
       jobTypes: ["경력"],
       jobCategory: "백엔드/서버개발",
-      url: "https://linkareer.com/activity/356881",
+      url: "https://linkareer.com/activity/911014",
     });
   });
 
   test("maps a NORMAL posting's close time to a deadline", async () => {
-    const intern = parseSearchResponse(await searchData()).cards.find(({ card }) => card.id === "352865")!.card;
+    const intern = parseSearchResponse(await searchData()).cards.find(({ card }) => card.id === "911010")!.card;
     expect(intern).toMatchObject({ deadline: "2026-11-22", alwaysOpen: false, recruitType: "NORMAL", jobTypes: ["인턴"] });
   });
 
@@ -108,7 +108,7 @@ describe("dates and deadlines", () => {
   test("trimToWindow keeps postings registered on or after the cutoff", async () => {
     const cards = parseSearchResponse(await searchData()).cards.map(({ card }) => card);
     const kept = trimToWindow(cards, "2026-10-12");
-    expect(kept.map((c) => c.id)).toEqual(["356881", "356879", "356083"]);
+    expect(kept.map((c) => c.id)).toEqual(["911014", "911013", "911012"]);
     expect(trimToWindow([{ date: null } as JobCard], "2026-10-12")).toEqual([]);
   });
 });
@@ -166,11 +166,11 @@ describe("buildVariables", () => {
   });
 });
 
-describe("parseDetailPage (real posting pages)", () => {
+describe("parseDetailPage (synthetic posting pages)", () => {
   test("a posting with text and an image", async () => {
-    const job = parseDetailPage(await fixture("detail-text-image-357883.html").text(), "357883", CAPTURED);
+    const job = parseDetailPage(await fixture("detail-text-image.html").text(), "912001", CAPTURED);
     expect(job).toMatchObject({
-      id: "357883",
+      id: "912001",
       title: "[샘플마켓] 디지털 마케팅 체험형 인턴 모집",
       company: "샘플마켓",
       location: "경기 성남시 분당구 예시로 123",
@@ -191,28 +191,28 @@ describe("parseDetailPage (real posting pages)", () => {
   });
 
   test("a closed, image-only posting (no JobPosting JSON-LD) is inactive", async () => {
-    const html = await fixture("detail-closed-337318.html").text();
+    const html = await fixture("detail-closed.html").text();
     expect(parseJsonLd(html)).toBeNull();
-    const job = parseDetailPage(html, "337318", CAPTURED);
+    const job = parseDetailPage(html, "912002", CAPTURED);
     expect(job).toMatchObject({ deadline: "2026-08-02", isActive: false, description: null, salary: "50000000 (YEARLY)" });
     expect(job.descriptionImages[0]).toStartWith("https://");
   });
 
   test("an ASAP posting has no deadline but stays active until its expiry", async () => {
-    const job = parseDetailPage(await fixture("detail-asap-358010.html").text(), "358010", CAPTURED);
+    const job = parseDetailPage(await fixture("detail-asap.html").text(), "912003", CAPTURED);
     expect(job).toMatchObject({ deadline: null, alwaysOpen: true, recruitType: "ASAP", internTypes: ["채용연계형 인턴"], isActive: true });
   });
 
   test("an activity that is not a job posting throws UnsupportedTypeError", async () => {
-    // Synthetic: the 357883 page with activityTypeID set to 1 (대외활동).
-    const html = await fixture("detail-synthetic-type1.html").text();
-    expect(() => parseDetailPage(html, "357883", CAPTURED)).toThrow(UnsupportedTypeError);
+    // The 912001 page with activityTypeID set to 1 (대외활동).
+    const html = await fixture("detail-type1.html").text();
+    expect(() => parseDetailPage(html, "912001", CAPTURED)).toThrow(UnsupportedTypeError);
   });
 
   test("a page without the activity in its Apollo cache throws PageShapeError", async () => {
-    const html = await fixture("detail-text-image-357883.html").text();
+    const html = await fixture("detail-text-image.html").text();
     expect(() => parseDetailPage(html, "111111", CAPTURED)).toThrow(PageShapeError);
-    expect(() => parseDetailPage("<html></html>", "357883", CAPTURED)).toThrow(PageShapeError);
+    expect(() => parseDetailPage("<html></html>", "912001", CAPTURED)).toThrow(PageShapeError);
   });
 
   test("deref resolves references and survives cycles", () => {

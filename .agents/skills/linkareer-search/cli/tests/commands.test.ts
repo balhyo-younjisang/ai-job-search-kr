@@ -3,7 +3,7 @@ import { join } from "path";
 import { runSearch, type SearchOpts } from "../src/commands/search";
 import { runDetail } from "../src/commands/detail";
 
-// End-to-end command tests, offline: fetch is stubbed to serve the real
+// End-to-end command tests, offline: fetch is stubbed to serve the synthetic
 // responses in fixtures/, and stdout/stderr are captured in-process.
 const fixture = (name: string) => Bun.file(join(import.meta.dir, "fixtures", name)).text();
 
@@ -86,7 +86,7 @@ describe("runSearch", () => {
     const io = capture();
 
     expect(await runSearch({ ...baseOpts, limit: 2 })).toBe(0);
-    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["356881", "356879"]);
+    expect(JSON.parse(io.out()).results.map((r: { id: string }) => r.id)).toEqual(["911014", "911013"]);
   });
 
   test("table output shows one row per posting", async () => {
@@ -123,12 +123,12 @@ describe("runSearch", () => {
 
 describe("runDetail", () => {
   test("fetches only the canonical posting page, without following redirects", async () => {
-    const html = await fixture("detail-text-image-357883.html");
+    const html = await fixture("detail-text-image.html");
     const calls = stubFetch(() => new Response(html));
     const io = capture();
 
-    expect(await runDetail({ id: "https://linkareer.com/activity/357883?ref=list", format: "json" })).toBe(0);
-    expect(calls.map((c) => c.url)).toEqual(["https://linkareer.com/activity/357883"]);
+    expect(await runDetail({ id: "https://linkareer.com/activity/912001?ref=list", format: "json" })).toBe(0);
+    expect(calls.map((c) => c.url)).toEqual(["https://linkareer.com/activity/912001"]);
     expect(calls[0].init?.redirect).toBe("manual");
     const job = JSON.parse(io.out());
     expect(job.title).toBe("[샘플마켓] 디지털 마케팅 체험형 인턴 모집");
@@ -136,11 +136,11 @@ describe("runDetail", () => {
   });
 
   test("plain output says when the description is image-only", async () => {
-    const html = await fixture("detail-closed-337318.html");
+    const html = await fixture("detail-closed.html");
     stubFetch(() => new Response(html));
     const io = capture();
 
-    expect(await runDetail({ id: "337318", format: "plain" })).toBe(0);
+    expect(await runDetail({ id: "912002", format: "plain" })).toBe(0);
     const out = io.out();
     expect(out).toStartWith("[가상광고] 퍼포먼스 마케터 신입사원 채용\n(주)가상광고 · 서울 송파구");
     expect(out).toContain("Status: CLOSED / EXPIRED");
@@ -157,11 +157,11 @@ describe("runDetail", () => {
   });
 
   test("a non-job activity is UNSUPPORTED_TYPE", async () => {
-    const html = await fixture("detail-synthetic-type1.html");
+    const html = await fixture("detail-type1.html");
     stubFetch(() => new Response(html));
     const io = capture();
 
-    expect(await runDetail({ id: "357883", format: "json" })).toBe(1);
+    expect(await runDetail({ id: "912001", format: "json" })).toBe(1);
     expect(JSON.parse(io.err()).code).toBe("UNSUPPORTED_TYPE");
   });
 

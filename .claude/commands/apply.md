@@ -111,7 +111,7 @@ Also read the most recent existing CV and cover letter files for concrete struct
 
 ### CV (`cv/main_<company>_<role><CV_EXT>`)
 - In the **CV language from the profile** (the `CV language:` line in CLAUDE.md's Identity section). When the profile does not set one, default to **English**. Never switch language per posting - the CV language is a profile-level choice, so all CVs stay consistent and reusable
-- Follow the moderncv format from `05-cv-templates.md` (banking style; for a Korean CV, the `\koreancvtrue` switch and classic layout described there)
+- Follow the format from `05-cv-templates.md`. With the stock template that is moderncv banking, and for a Korean CV the `\koreancvtrue` switch and classic layout described there. With a custom template (an `ACTIVE-TEMPLATE` block), follow that template's own format instead; the moderncv switch does not apply to it
 - Tailor the profile statement and experience bullets to the specific role
 - Reframe skills and achievements to match job requirements
 - Keep to 2 pages

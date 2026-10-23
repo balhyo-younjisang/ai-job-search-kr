@@ -6,8 +6,16 @@
 %% Compile with: lualatex main_example.tex
 %% (pdflatex often fails on modern MiKTeX with fontawesome5 font-expansion errors.)
 
+% Korean CV (`CV language: Korean` in the profile): uncomment \koreancvtrue
+% below. That one line switches on the Korean block further down (Hangul in
+% the bundled Nanum Gothic, Latin text in the bundled Lato) and the classic
+% layout (name on the left, dates in their own column), which reads better
+% with Hangul than banking. Leave it commented for every other language.
+\newif\ifkoreancv
+% \koreancvtrue
+
 \documentclass[11pt,a4paper,sans]{moderncv}
-\moderncvstyle{banking}
+\ifkoreancv\moderncvstyle{classic}\else\moderncvstyle{banking}\fi
 \moderncvcolor{blue}
 
 % Force the name and section headings to render in moderncv blue (color1).
@@ -71,15 +79,25 @@
 \makeatother
 % END needspace fallback
 
-% Korean CV (`CV language: Korean` in the profile): uncomment the three lines
-% below. moderncv's fonts have no Hangul glyphs, so without them every Hangul
-% character silently drops out of the PDF. luatexko sets Hangul in Nanum Gothic
-% (SIL OFL 1.1), bundled with its OFL.txt in cover_letters/OpenFonts/fonts/;
-% Latin text keeps moderncv's own fonts. Translate the section headings too
+% Korean CV block, switched on by \koreancvtrue at the top. moderncv's fonts
+% have no Hangul glyphs, so without it every Hangul character silently drops
+% out of the PDF. luatexko sets Hangul in Nanum Gothic (SIL OFL 1.1), bundled
+% with its OFL.txt in cover_letters/OpenFonts/fonts/. Latin letters and digits
+% use Lato (also bundled there, for the cover letter), which matches Nanum
+% Gothic in weight better than moderncv's default. Do not set Latin text in
+% Nanum Gothic as well: its narrow word space makes pypdf, and ATS parsers
+% that work the same way, read "Spring Boot" as "SpringBoot". The list markers
+% in front of each entry are dropped: in the classic layout they float beside
+% the date column. Translate the section headings too
 % (05-cv-templates.md, "Section headings must match the CV's language").
-% \usepackage{luatexko}
-% \setmainhangulfont[Path = ../cover_letters/OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold]{NanumGothic-Regular}
-% \setsanshangulfont[Path = ../cover_letters/OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold]{NanumGothic-Regular}
+\ifkoreancv
+  \usepackage{luatexko}
+  \setmainhangulfont[Path = ../cover_letters/OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold]{NanumGothic-Regular}
+  \setsanshangulfont[Path = ../cover_letters/OpenFonts/fonts/nanumgothic/, Extension = .ttf, BoldFont = NanumGothic-Bold]{NanumGothic-Regular}
+  \setmainfont[Path = ../cover_letters/OpenFonts/fonts/lato/, Extension = .ttf, UprightFont = *-Reg, BoldFont = *-Bol, ItalicFont = *-RegIta, BoldItalicFont = *-BolIta]{Lato}
+  \setsansfont[Path = ../cover_letters/OpenFonts/fonts/lato/, Extension = .ttf, UprightFont = *-Reg, BoldFont = *-Bol, ItalicFont = *-RegIta, BoldItalicFont = *-BolIta]{Lato}
+  \AtBeginDocument{\renewcommand*{\labelitemi}{}\setlength{\leftmargini}{0pt}}
+\fi
 
 % personal data
 \name{[First]}{[Last]}

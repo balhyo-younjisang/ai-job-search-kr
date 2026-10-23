@@ -12,6 +12,16 @@
   [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)의 기록을
   그대로 보존한 것입니다. 업스트림을 병합할 때는 새 항목을 그 아래 업스트림 섹션에 넣으세요.
 
+## [Unreleased]
+
+### Changed
+
+- 한국어 CV 디자인: `cv/main_example.tex` 맨 위의 `% \koreancvtrue` 한 줄만 풀면 moderncv classic 레이아웃(이름 왼쪽,
+  날짜 열 분리)과 한글 나눔고딕·영문 Lato 조합으로 바뀝니다. 항목마다 붙던 `○` 표시도 없앴습니다. 지금까지는
+  luatexko 세 줄을 풀어 한글만 나눔고딕으로 바꾸고 영문은 moderncv 기본 글꼴로 남아, 두 글꼴의 굵기와 크기가
+  어긋났습니다. 영문까지 나눔고딕으로 맞추는 방법은 pypdf가 단어 사이 공백을 읽지 못해(`Spring Boot` →
+  `SpringBoot`) ATS 키워드 일치가 깨지므로 쓰지 않습니다. 다른 언어의 CV는 그대로 banking 스타일입니다.
+
 ## [0.1.2] - 2026-10-23
 
 ### Added

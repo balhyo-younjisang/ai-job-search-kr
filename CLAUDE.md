@@ -88,7 +88,7 @@ automatically from your Languages table above - don't duplicate them here. -->
 - [DEALBREAKER_2]
 
 ## Repo Structure
-- `cv/` - LaTeX CV variants (moderncv template, banking style)
+- `cv/` - LaTeX CV variants (moderncv template, banking style; classic for Korean CVs)
 - `cover_letters/` - LaTeX cover letters (custom cover.cls template)
 - `.claude/skills/` - AI skill definitions for the application workflow
 - `.agents/skills/` - Job search CLI tools
@@ -118,7 +118,7 @@ After creating or updating a CV or cover letter, re-read the generated file and 
 - [ ] Nice-to-have requirements are highlighted where there is a match
 
 ### Consistency
-- [ ] CV follows the standard 2-page moderncv/banking format
+- [ ] CV follows the standard 2-page moderncv format (banking style; classic for Korean CVs via `\koreancvtrue`)
 - [ ] Cover letter uses cover.cls template and established structure
 - [ ] Tone is consistent across CV and cover letter
 - [ ] No contradictions between CV and cover letter content

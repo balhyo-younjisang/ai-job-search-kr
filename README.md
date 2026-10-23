@@ -315,7 +315,7 @@ CV와 자기소개서의 모든 주장은 실제 프로필에 근거해야 한�
 <a id="custom-templates"></a>
 ### 사용자 정의 템플릿
 
-기본 CV는 [moderncv](https://ctan.org/pkg/moderncv)의 banking 스타일을 사용합니다. 자기소개서는 Lato와 Raleway 글꼴을 포함한 사용자 정의 `cover.cls`를 사용합니다. 저장소가 기본으로 유지하는 참조 엔진은 LaTeX입니다.
+기본 CV는 [moderncv](https://ctan.org/pkg/moderncv)의 banking 스타일을 사용하고, 한국어 CV는 템플릿 맨 위의 `\koreancvtrue` 한 줄로 classic 스타일과 한글 글꼴(나눔고딕, 영문은 Lato)로 바뀝니다. 자기소개서는 Lato와 Raleway 글꼴을 포함한 사용자 정의 `cover.cls`를 사용합니다. 저장소가 기본으로 유지하는 참조 엔진은 LaTeX입니다.
 
 LaTeX, [Typst](https://typst.app/) 또는 명령줄에서 PDF로 컴파일할 수 있는 다른 템플릿을 사용하려면 다음을 실행하세요.
 

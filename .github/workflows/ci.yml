@@ -216,16 +216,15 @@ jobs:
             grep -m5 'Missing character' cover_example_ko.log
             exit 1
           fi
-      - name: Compile Korean CV variant (lualatex, luatexko block uncommented)
-        # No tracked Korean CV: the stock example with its commented Korean
-        # block switched on and one heading and one line in Hangul.
+      - name: Compile Korean CV variant (lualatex, \koreancvtrue switched on)
+        # No tracked Korean CV: the stock example with its one-line Korean
+        # switch turned on and one heading and one line in Hangul.
         run: |
           cd cv
-          sed -e 's/^% \\usepackage{luatexko}/\\usepackage{luatexko}/' \
-              -e 's/^% \\set\(main\|sans\)hangulfont/\\set\1hangulfont/' \
+          sed -e 's/^% \\koreancvtrue/\\koreancvtrue/' \
               -e 's/\\section{Education}/\\section{학력}\n\\cvitem{요약}{결제 API 응답 시간을 줄였습니다.}/' \
               main_example.tex > main_example_ko.tex
-          grep -q '^\\usepackage{luatexko}' main_example_ko.tex
+          grep -q '^\\koreancvtrue' main_example_ko.tex
           lualatex -interaction=nonstopmode -halt-on-error main_example_ko.tex
           test -f main_example_ko.pdf
           if grep -q '^!' main_example_ko.log || grep -q 'Missing character' main_example_ko.log; then

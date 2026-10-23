@@ -1,5 +1,5 @@
 ---
-framework_version: 1.5.2
+framework_version: 1.6.0
 ---
 
 # CV Templates and Tailoring Guide
@@ -258,7 +258,7 @@ Add `\needspace{5\baselineskip}` immediately before the problematic `\cventry`:
 \needspace{5\baselineskip}
 \item{\cventry{YEAR-YEAR}{Role Title}{Organization}{Location}{}{...}}
 ```
-Include `\usepackage{needspace}` in the preamble.
+`cv/main_example.tex` already provides `\needspace`: its preamble loads the needspace package when the TeX install has it and otherwise defines an equivalent fallback (minimal installs such as TinyTeX lack the package). Do not add `\usepackage{needspace}` yourself; on an install without the package that line fails with "File `needspace.sty' not found". A tailored CV built from an older copy of the template without this block needs the block copied in (between `% BEGIN needspace fallback` and `% END needspace fallback`).
 
 **Caveat - use `\needspace` before entries, never before `\section` headings.** A section-level `\needspace` pushes the entire section (heading plus content) to the next page whenever the request does not fit, stranding empty space above and typically *adding* a page instead of saving one. Apply it only to the individual `\cventry` that actually orphans, and only after a compile shows the orphan.
 

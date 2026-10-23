@@ -249,6 +249,7 @@ ai-job-search-kr/
 │   ├── upstream_triage.py             # 업스트림 커밋 검토 우선순위 분류
 │   ├── verify_layout.py               # PDF 레이아웃 측정
 │   ├── verify_pdf.py                  # pypdf 우선, pdftotext 대체 PDF 검사
+│   ├── verify_quotes.py               # 회사 인용문이 저장된 페이지에 있는지 검사
 │   └── README_SALARY_TOOL.md          # 급여 도구 설정 안내
 ├── job_scraper/                       # 검색 상태와 결과
 ├── gmail_sync/                        # 처리한 이메일 ID와 마지막 동기화 날짜

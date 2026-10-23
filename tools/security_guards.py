@@ -90,6 +90,10 @@ ALLOWED_PERMISSIONS = {
     # Reads a file or stdin, writes only to an explicit --out, never fetches.
     "Bash(python tools/posting_guard.py:*)",
     "Bash(python3 tools/posting_guard.py:*)",
+    # The company-quote check (/apply Step 3 and Step 4 0b). Reads files saved
+    # by fetch_page.py, prints FOUND/NOT FOUND, writes nothing, never fetches.
+    "Bash(python tools/verify_quotes.py:*)",
+    "Bash(python3 tools/verify_quotes.py:*)",
 }
 
 # Rules that must stay in .claude/settings.json permissions.ask. An ask rule

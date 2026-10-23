@@ -1,5 +1,5 @@
 ---
-framework_version: 1.1.7
+framework_version: 1.2.0
 ---
 
 # Web Research and Fetching
@@ -98,6 +98,7 @@ When a posting arrives from an aggregator, search the employer's careers site fo
 `03-writing-style.md` rule 5 requires every company-specific claim in a cover letter to be independently verified. This file is how that verification gets done. The bar:
 
 - The claim traces to a page you actually fetched from the company's own domain, or to consistent reporting you fetched from an independent source.
+- **Check the quote mechanically.** Save the page with `python3 tools/fetch_page.py '<url>'` (it prints `saved=<path>`; use it only on `HTTP 200`), then run `python3 tools/verify_quotes.py --page <path> --quote '<verbatim text>'`. Only `FOUND` verifies a claim. A WebFetch answer is a small model's summary of the page: it can skip a whole section or reword it, so it neither confirms a quote nor proves one invented. Quote one block (heading, paragraph, list item) at a time.
 - Search-result **snippets are a lead, not a source.** A snippet is enough to justify fetching the page; it is not enough to put a fact in a letter. If the page will not yield to steps 1 to 3, drop the claim rather than citing the snippet.
 - Prefer specific verified facts (legal entity name, office cities, anniversary year, client segments, cross-jurisdiction arrangements) over generic praise. They are what make a letter read as researched.
 

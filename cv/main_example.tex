@@ -49,6 +49,28 @@
 \usepackage[scale=0.80]{geometry}
 \usepackage{import}
 
+% \needspace{5\baselineskip} before a \cventry keeps its title with its bullets
+% (05-cv-templates.md, "entry title on page 1, bullets orphaned to page 2").
+% Minimal TeX installs such as TinyTeX may lack the needspace package, so when
+% it is missing a small definition with the same effect takes over: if less
+% than the requested space is left on the page, start a new page.
+% BEGIN needspace fallback
+\makeatletter
+\newcommand\cv@needspace[1]{%
+  \par
+  \begingroup
+    \setlength\dimen@{#1}%
+    \dimen@ii\pagegoal
+    \advance\dimen@ii-\pagetotal
+    \ifdim\dimen@>\dimen@ii
+      \ifdim\dimen@ii>\z@\vfil\fi
+      \break
+    \fi
+  \endgroup}
+\IfFileExists{needspace.sty}{\usepackage{needspace}}{\let\needspace\cv@needspace}
+\makeatother
+% END needspace fallback
+
 % Korean CV (`CV language: Korean` in the profile): uncomment the three lines
 % below. moderncv's fonts have no Hangul glyphs, so without them every Hangul
 % character silently drops out of the PDF. luatexko sets Hangul in Nanum Gothic

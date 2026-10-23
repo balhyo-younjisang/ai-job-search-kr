@@ -313,7 +313,7 @@ This re-runs the search configuration interview: which roles to target, which sk
 
 ### Custom templates
 
-The CV uses [moderncv](https://ctan.org/pkg/moderncv) (banking style). The cover letter uses a custom `cover.cls` with Lato/Raleway fonts. Both are LaTeX — the reference engine this repo ships and maintains.
+The CV uses [moderncv](https://ctan.org/pkg/moderncv) (banking style; a Korean CV switches to the classic style with Nanum Gothic and Lato through the single `\koreancvtrue` line at the top of the template). The cover letter uses a custom `cover.cls` with Lato/Raleway fonts. Both are LaTeX — the reference engine this repo ships and maintains.
 
 To use your own template instead — LaTeX, [Typst](https://typst.app/), or any other toolchain that compiles to PDF from the command line — run:
 

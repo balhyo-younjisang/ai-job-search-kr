@@ -29,6 +29,8 @@ PAGE = """<!doctype html><html><head><title>예시회사</title>
 <p>예시회사는 KT · KTDS와 함께 엔터프라이즈 AICC부터 자사 솔루션까지 제공합니다.</p>
 <ul><li>문서 파싱 솔루션</li><li>코드 보안 플랫폼</li></ul>
 <p>우리는 고객 신&#8203;뢰를 가장 중요하게 생각합니다.</p>
+<p>We are nowhere near done with the Atlas platform.</p>
+<p title=">Our new product is Atlas">Other text about the company.</p>
 </body></html>"""
 
 
@@ -105,6 +107,20 @@ class VerifyQuotes(unittest.TestCase):
         # Two list items, or a heading and the paragraph after it, are not one sentence.
         self.assertEqual(self.run_tool("문서 파싱 솔루션 코드 보안 플랫폼")[0], 1)
         self.assertEqual(self.run_tool("디지털 전환을 이끕니다 예시회사는 KT")[0], 1)
+
+    def test_latin_words_do_not_merge(self):
+        # Removing every space would make "now here" equal "nowhere".
+        self.assertEqual(self.run_tool("We are now here near done")[0], 1)
+        self.assertEqual(self.run_tool("We are nowhere near done")[0], 0)
+
+    def test_latin_quote_must_end_on_a_word_boundary(self):
+        self.assertEqual(self.run_tool("We are now")[0], 1)
+        self.assertEqual(self.run_tool("with the Atlas platform.")[0], 0)
+
+    def test_attribute_values_never_count(self):
+        # A '>' inside a quoted attribute used to end the tag early for a regex.
+        self.assertEqual(self.run_tool("Our new product is Atlas")[0], 1)
+        self.assertEqual(self.run_tool("Other text about the company")[0], 0)
 
     def test_zero_width_characters_are_ignored(self):
         self.assertEqual(self.run_tool("고객 신뢰를 가장 중요하게")[0], 0)

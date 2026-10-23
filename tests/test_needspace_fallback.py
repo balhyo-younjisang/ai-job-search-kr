@@ -78,7 +78,11 @@ class FallbackBehaviour(unittest.TestCase):
 
     @unittest.skipUnless(shutil.which("kpsewhich"), "kpsewhich not installed")
     def test_fallback_matches_the_package(self):
-        found = subprocess.run(["kpsewhich", "needspace.sty"], capture_output=True, text=True)
+        try:
+            found = subprocess.run(["kpsewhich", "needspace.sty"], capture_output=True, text=True,
+                                   timeout=60)
+        except subprocess.TimeoutExpired:
+            self.skipTest("kpsewhich timed out")
         if not found.stdout.strip():
             self.skipTest("needspace package not installed")
         for lines in (2, 10):

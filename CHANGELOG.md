@@ -12,7 +12,7 @@
   [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)의 기록을
   그대로 보존한 것입니다. 업스트림을 병합할 때는 새 항목을 그 아래 업스트림 섹션에 넣으세요.
 
-## [Unreleased]
+## [0.1.2] - 2026-10-23
 
 ### Added
 

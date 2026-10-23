@@ -12,6 +12,26 @@
   [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search)의 기록을
   그대로 보존한 것입니다. 업스트림을 병합할 때는 새 항목을 그 아래 업스트림 섹션에 넣으세요.
 
+## [Unreleased]
+
+### Added
+
+- 회사 인용문 검사 `tools/verify_quotes.py`: `fetch_page.py`가 저장한 페이지 본문에 인용문이 그대로 있는지
+  확인합니다. HTML 파서로 본문만 읽고(속성값·스크립트 제외), 태그·한글 띄어쓰기·가운뎃점 차이는 무시하되
+  영문 단어 사이 공백과 단어 경계는 지키며(`now here` ≠ `nowhere`), 네트워크를 쓰지 않습니다.
+  `/apply`의 검토 에이전트는 회사 관련 사실마다 원문 인용과 URL을 붙이고 이 검사를 통과한 것만 제안하며,
+  오케스트레이터는 Step 4에서 같은 검사를 다시 돌린 뒤에만 커버레터에 넣습니다. WebFetch 요약은 인용의
+  진위를 판단하는 근거로 쓰지 않습니다. 실제 실행에서 WebFetch 요약이 홈페이지 한 섹션을 빠뜨려, 검토
+  에이전트의 정확한 인용을 틀렸다고 판단한 일이 계기입니다. 인용문은 한 블록(제목·문단·목록 항목) 안에서만
+  일치로 보고, 시스템 임시 폴더와 `/tmp` 밖의 파일은 읽지 않습니다.
+
+### Fixed
+
+- `needspace` 패키지가 없는 TeX 환경(TinyTeX 등)에서 CV 컴파일 실패: `cv/main_example.tex`가 패키지가 있으면
+  불러오고, 없으면 같은 동작(남은 공간이 모자라면 다음 쪽으로 넘김)의 `\needspace`를 직접 정의합니다. 안내 문서는
+  더 이상 `\usepackage{needspace}`를 직접 넣으라고 하지 않습니다.
+- `SECURITY.md`의 허용 목록 표에 빠져 있던 `posting_guard`, `scrape_state`를 추가했습니다.
+
 ## [0.1.1] - 2026-10-22
 
 ### Added

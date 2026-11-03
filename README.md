@@ -9,10 +9,10 @@
 *내 컴퓨터에서 실행하는 취업 지원 워크플로.*
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="업스트림 MadsLorentzen/ai-job-search의 Trendshift 순위" width="250" height="55"/></a>
+  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="업스트림 ai-job-search-dev/ai-job-search의 Trendshift 순위" width="250" height="55"/></a>
 </p>
 
-[![업스트림 CI](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)
+[![업스트림 CI](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml)
 
 [Claude Code](https://claude.com/claude-code)를 기반으로 만든 AI 취업 지원 프레임워크입니다. 저장소를 복제하고 프로필을 채우면 AI 에이전트가 채용 공고 적합도를 평가하고, CV와 자기소개서를 맞춤 작성하며, 면접 준비를 돕습니다. 이 한국 포크에는 국내 채용 포털 검색 스킬 5개와 범용 검색 스킬 2개가 포함되어 있습니다. 위 배지는 이 포크가 아닌 업스트림 프로젝트의 순위와 CI 상태를 나타냅니다.
 
@@ -84,7 +84,7 @@ git clone "<YOUR_REPOSITORY_URL>" ai-job-search-kr
 cd ai-job-search-kr
 ```
 
-`<YOUR_REPOSITORY_URL>`을 현재 한국 포크나 개인 비공개 복사본의 URL로 바꾸세요. 원본 업스트림에 기여할 목적이라면 `gh repo fork MadsLorentzen/ai-job-search --clone`을 사용할 수 있습니다. 업스트림을 새로 복제한 저장소에는 이 한국 포크의 추가 포털이 포함되어 있지 않습니다.
+`<YOUR_REPOSITORY_URL>`을 현재 한국 포크나 개인 비공개 복사본의 URL로 바꾸세요. 원본 업스트림에 기여할 목적이라면 `gh repo fork ai-job-search-dev/ai-job-search --clone`을 사용할 수 있습니다. 업스트림을 새로 복제한 저장소에는 이 한국 포크의 추가 포털이 포함되어 있지 않습니다.
 
 > [!IMPORTANT]
 > `/setup`은 이름, 연락처, 경력, 희망 급여 같은 개인정보를 **Git 추적 대상 파일**에 기록합니다. 공개 저장소나 공개 포크에서 그대로 실행한 뒤 푸시하지 마세요. 개인 구직용이라면 먼저 비공개 저장소를 만들고 원본을 `upstream`으로 연결하는 방식을 권장합니다. [SETUP.md 8절](SETUP.md#8-pulling-upstream-updates-into-your-fork)에 설정 방법이 있으며 업데이트 도구도 같은 방식으로 사용할 수 있습니다. 공개 저장소의 포크는 비공개로 만들 수 없으므로 공개 포크는 기여용으로만 사용하세요.
@@ -95,7 +95,7 @@ cd ai-job-search-kr
 python3 tools/install_portal_clis.py   # Windows: python tools\install_portal_clis.py
 ```
 
-이 명령은 `.agents/skills/*/cli/` 아래의 모든 포털 CLI를 자동 발견해 `bun install`을 실행합니다. `/add-portal`로 만든 포털이나 다른 포크에서 복사한 포털도 별도 등록 없이 포함됩니다. `package.json`에 설치 시점 생명주기 스크립트가 선언된 CLI는 실행하지 않고 건너뛴 사실을 보고합니다. `--dry-run`으로 설치 대상을 미리 확인할 수 있습니다.
+이 명령은 `.agents/skills/*/cli/` 아래의 모든 포털 CLI를 자동 발견해 `bun install`을 실행합니다. `/add-portal`로 만든 포털이나 다른 포크에서 복사한 포털도 별도 등록 없이 포함됩니다. 모든 설치는 `--ignore-scripts`로 실행하며, `package.json`에 설치 시점 생명주기 스크립트·`trustedDependencies`·`workspaces`가 선언됐거나 옆에 `bunfig.toml`·`.npmrc`가 있는 CLI는 실행하지 않고 건너뛴 사실을 보고합니다. `--dry-run`으로 설치 대상을 미리 확인할 수 있습니다.
 
 현재 포함된 7개 포털 CLI는 모두 런타임 의존성이 없어 설치 없이 `bun`으로 실행할 수 있습니다. `bun install`은 테스트와 타입 검사에 쓰는 TypeScript 개발 의존성만 설치합니다.
 
@@ -385,14 +385,14 @@ bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --all
 
 포털 URL을 주면 검색 URL 패턴, 결과 구조, robots.txt와 접근 규칙을 조사하고 기존 스킬과 같은 구조·명령·출력 계약으로 CLI를 생성한 뒤 제한적인 라이브 검색을 시험합니다. 인증이 필요한 포털은 거절하고, 이용약관에 제한이 있으면 생성된 스킬에 개인 사용 전용 경고를 표시합니다.
 
-한국 밖의 시장에서는 `linkedin-search`와 `freehire-search`를 출발점으로 사용할 수 있습니다. LinkedIn 자동 접근은 이용약관 제한이 있으므로 개인 용도로 요청량을 낮게 유지하세요. freehire.me는 API 키 없이 구조화된 기술직 결과를 제공하며 `FREEHIRE_API_URL`로 자체 호스팅 인스턴스를 지정할 수 있습니다. [freehire 백엔드](https://github.com/strelov1/freehire)는 MIT 라이선스로 공개되어 있습니다. 시장이나 언어에 맞춘 포크를 관리한다면 [커뮤니티 포크·응용 사례](https://github.com/MadsLorentzen/ai-job-search/discussions/78)에 공유할 수 있습니다.
+한국 밖의 시장에서는 `linkedin-search`와 `freehire-search`를 출발점으로 사용할 수 있습니다. LinkedIn 자동 접근은 이용약관 제한이 있으므로 개인 용도로 요청량을 낮게 유지하세요. freehire.me는 API 키 없이 구조화된 기술직 결과를 제공하며 `FREEHIRE_API_URL`로 자체 호스팅 인스턴스를 지정할 수 있습니다. [freehire 백엔드](https://github.com/strelov1/freehire)는 MIT 라이선스로 공개되어 있습니다. 시장이나 언어에 맞춘 포크를 관리한다면 [커뮤니티 포크·응용 사례](https://github.com/ai-job-search-dev/ai-job-search/discussions/78)에 공유할 수 있습니다.
 
 <a id="extending-the-framework-portals-templates-criteria-and-borrowing-from-other-forks"></a>
 ### 프레임워크 확장: 포털, 템플릿, 평가 기준과 다른 포크 활용
 
 프레임워크에는 세 가지 확장 지점이 있으며 업스트림 코드를 수정하지 않고 사용할 수 있습니다.
 
-1. **포털 스킬:** `.agents/skills/` 아래의 각 `*-search` 폴더는 `search`·`detail` CLI, `--format json|table|plain`, `SKILL.md`의 `enabled:` 값, 자체 테스트를 가진 독립 모듈입니다. `/scrape`가 계약을 만족하는 스킬을 자동 발견하며 `/add-portal`로 새 스킬을 만들 수 있습니다. 다른 포크의 스킬은 [커뮤니티 포털 목록](https://github.com/MadsLorentzen/ai-job-search/discussions/78)에서 찾을 수 있습니다.
+1. **포털 스킬:** `.agents/skills/` 아래의 각 `*-search` 폴더는 `search`·`detail` CLI, `--format json|table|plain`, `SKILL.md`의 `enabled:` 값, 자체 테스트를 가진 독립 모듈입니다. `/scrape`가 계약을 만족하는 스킬을 자동 발견하며 `/add-portal`로 새 스킬을 만들 수 있습니다. 다른 포크의 스킬은 [커뮤니티 포털 목록](https://github.com/ai-job-search-dev/ai-job-search/discussions/78)에서 찾을 수 있습니다.
 2. **문서 템플릿:** `/add-template`은 명령줄에서 PDF로 컴파일할 수 있는 CV 또는 자기소개서 도구 체인을 등록합니다.
 3. **평가 기준:** 프로필의 제외 조건과 선호 조건은 자유 형식입니다. 육아휴직 조건, 최소 급여, 온콜 제외 같은 요구를 프로필 한 줄로 기록할 수 있으며 `/rank`와 `/apply`가 그 내용을 실제 평가에 반영합니다. 언어는 구조화된 전용 규칙이 있습니다. `/setup`이 직접 묻거나 CV·LinkedIn 자료에서 파악한 업무 언어와 수준을 `Languages` 표에 기록하고, 공고가 선언하지 않은 언어를 필수로 요구하면 제외합니다. 선언한 언어에서 더 높은 수준을 요구하는 경우에는 자동 제외하지 않고 사용자가 판단할 수 있도록 표시합니다. 예를 들어 본인이 B1/B2 수준으로 기록한 언어에 공고가 유창함을 요구한다면 조용히 제외하는 대신 그 차이를 드러냅니다.
 
@@ -405,7 +405,7 @@ bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --all
 
 현재 저장소에 포함된 CLI만 `.claude/settings.json`에 명시적으로 허용되어 있습니다. 복사한 임의 스킬은 자동으로 사전 승인되지 않으며, 실행 권한과 보안 검사 설정을 검토한 뒤 사용해야 합니다. 수동 복사를 요구하는 이유도 사용자가 코드와 권한을 직접 확인하도록 하기 위해서입니다.
 
-국가별 급여 데이터베이스나 현지 임금표 같은 시장 특화 데이터도 같은 원칙을 따릅니다. 각 시장 포크에서 관리하고 [커뮤니티 논의 #78](https://github.com/MadsLorentzen/ai-job-search/discussions/78)을 통해 공유할 수 있습니다.
+국가별 급여 데이터베이스나 현지 임금표 같은 시장 특화 데이터도 같은 원칙을 따릅니다. 각 시장 포크에서 관리하고 [커뮤니티 논의 #78](https://github.com/ai-job-search-dev/ai-job-search/discussions/78)을 통해 공유할 수 있습니다.
 
 <a id="salary-benchmarking"></a>
 ### 급여 벤치마킹
@@ -428,7 +428,7 @@ bun run .agents/skills/worknet-search/cli/src/cli.ts search -q "개발자" --all
 <a id="staying-up-to-date"></a>
 ### 최신 상태 유지
 
-검증되지 않은 `master`를 바로 병합하기보다 태그가 붙은 업스트림 [릴리스](https://github.com/MadsLorentzen/ai-job-search/releases)를 기준으로 업데이트하세요. 각 체크포인트의 변경 사항은 [CHANGELOG.md](CHANGELOG.md)에 설명되어 있습니다. `python3 tools/check_upstream_updates.py`는 병합 전에 개인화 파일에 미치는 영향을 보여 주고, `python3 tools/upstream_triage.py`는 뒤처진 커밋을 검토 권장과 건너뛰기 후보로 분류합니다. 주간 워크플로로 이 분류를 누적 이슈에 게시할 수도 있습니다. 전체 절차는 [SETUP.md 8절](SETUP.md#8-pulling-upstream-updates-into-your-fork)을 참고하세요.
+검증되지 않은 `master`를 바로 병합하기보다 태그가 붙은 업스트림 [릴리스](https://github.com/ai-job-search-dev/ai-job-search/releases)를 기준으로 업데이트하세요. 각 릴리스는 CI를 통과한 주간 체크포인트이며, 변경 사항은 릴리스 페이지에 정리되어 있습니다(업스트림 CHANGELOG.md는 1.7.4에서 동결됐습니다). `python3 tools/check_upstream_updates.py`는 병합 전에 개인화 파일에 미치는 영향을 보여 주고, `python3 tools/upstream_triage.py`는 뒤처진 커밋을 검토 권장과 건너뛰기 후보로 분류합니다. 주간 워크플로로 이 분류를 누적 이슈에 게시할 수도 있습니다. 전체 절차는 [SETUP.md 8절](SETUP.md#8-pulling-upstream-updates-into-your-fork)을 참고하세요.
 
 <a id="tips-for-better-results"></a>
 ## 더 나은 결과를 위한 팁

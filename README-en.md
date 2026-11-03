@@ -9,12 +9,12 @@
 *The job search that runs on your machine.*
 
 <p align="center">
-  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="Upstream MadsLorentzen/ai-job-search | Trendshift" width="250" height="55"/></a>
+  <a href="https://trendshift.io/repositories/43622?utm_source=trendshift-badge&amp;utm_medium=badge&amp;utm_campaign=badge-trendshift-43622" target="_blank" rel="noopener noreferrer"><img src="https://trendshift.io/api/badge/trendshift/repositories/43622/daily" alt="Upstream ai-job-search-dev/ai-job-search | Trendshift" width="250" height="55"/></a>
 </p>
 
-[![Upstream CI](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/MadsLorentzen/ai-job-search/actions/workflows/ci.yml)
+[![Upstream CI](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml/badge.svg)](https://github.com/ai-job-search-dev/ai-job-search/actions/workflows/ci.yml)
 
-A Korean-market adaptation of [MadsLorentzen/ai-job-search](https://github.com/MadsLorentzen/ai-job-search), an AI-powered job application framework built on [Claude Code](https://claude.com/claude-code). Fill in your profile to evaluate job postings, tailor your CV, write cover letters, and prepare for interviews. This repository includes five Korean portal skills plus LinkedIn and freehire.me. The badges above describe the upstream project.
+A Korean-market adaptation of [ai-job-search-dev/ai-job-search](https://github.com/ai-job-search-dev/ai-job-search), an AI-powered job application framework built on [Claude Code](https://claude.com/claude-code). Fill in your profile to evaluate job postings, tailor your CV, write cover letters, and prepare for interviews. This repository includes five Korean portal skills plus LinkedIn and freehire.me. The badges above describe the upstream project.
 
 > Note: This is an independent open-source project and is not affiliated with, endorsed by, sponsored by, or maintained by Anthropic. Anthropic and Claude Code are referenced only to describe the toolchain this workflow uses.
 >
@@ -84,7 +84,7 @@ git clone "<YOUR_REPOSITORY_URL>" ai-job-search-kr
 cd ai-job-search-kr
 ```
 
-To contribute to the upstream framework instead, use `gh repo fork MadsLorentzen/ai-job-search --clone`. A fresh upstream checkout does not include this adaptation's Korean portal additions.
+To contribute to the upstream framework instead, use `gh repo fork ai-job-search-dev/ai-job-search --clone`. A fresh upstream checkout does not include this adaptation's Korean portal additions.
 
 > [!IMPORTANT]
 > **A fork of a public repository is public** — GitHub does not allow private forks of
@@ -101,7 +101,7 @@ To contribute to the upstream framework instead, use `gh repo fork MadsLorentzen
 python3 tools/install_portal_clis.py   # Windows: python tools\install_portal_clis.py
 ```
 
-It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` - discovered, not listed, so a portal you add with `/add-portal` or copy from another fork is included on a fresh clone. A CLI whose `package.json` declares an install-time lifecycle script is skipped and reported rather than run. `--dry-run` shows what it would install.
+It runs `bun install` in every portal CLI under `.agents/skills/*/cli/` - discovered, not listed, so a portal you add with `/add-portal` or copy from another fork is included on a fresh clone. Every install runs with `--ignore-scripts`, and a CLI whose `package.json` declares an install-time lifecycle script, `trustedDependencies` or `workspaces`, or that has a `bunfig.toml` or `.npmrc` beside it, is skipped and reported rather than run. `--dry-run` shows what it would install.
 
 All seven bundled portal CLIs have zero runtime dependencies and run with plain `bun`; `bun install` pulls only development dependencies for TypeScript checks. Use the helper to prepare all CLIs consistently.
 
@@ -391,7 +391,7 @@ The `jobkorea-search`, `saramin-search`, `linkareer-search`, `worknet-search` an
 
 Give it your local job board's URL. The command investigates the portal (search-URL pattern, result-page structure, robots.txt/access rules), scaffolds a CLI skill with the same structure, commands, and output contract as the shipped ones, and test-runs a live query before registering anything. Auth-walled portals are declined, and portals with restrictive terms get a prominent personal-use-only warning in the generated skill. The generated skill is market-specific and lives in your fork; the generator itself is the universal part.
 
-Maintaining a fork adapted to your market or language? Add it to the [Community forks & adaptations](https://github.com/MadsLorentzen/ai-job-search/discussions/78) thread so others can find it.
+Maintaining a fork adapted to your market or language? Add it to the [Community forks & adaptations](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) thread so others can find it.
 
 For **country-agnostic** starting points outside Korea, the repo ships two portal skills alongside the Korean ones:
 
@@ -402,11 +402,11 @@ For **country-agnostic** starting points outside Korea, the repo ships two porta
 
 Everything above adds up to an extension model, so here it is stated plainly. The framework has three extension points, and none of them require touching upstream:
 
-1. **Portal skills** - the module system for job boards. Every `*-search` skill is a self-contained folder under `.agents/skills/` with the same contract (a `search`/`detail` CLI, `--format json|table|plain` output, an `enabled:` flag in its `SKILL.md`, its own tests). `/scrape` auto-discovers any installed skill that follows the contract - nothing to register, nothing to wire up. `/add-portal` generates new ones; the [community portal index](https://github.com/MadsLorentzen/ai-job-search/discussions/78) catalogs the ones other forks have built.
+1. **Portal skills** - the module system for job boards. Every `*-search` skill is a self-contained folder under `.agents/skills/` with the same contract (a `search`/`detail` CLI, `--format json|table|plain` output, an `enabled:` flag in its `SKILL.md`, its own tests). `/scrape` auto-discovers any installed skill that follows the contract - nothing to register, nothing to wire up. `/add-portal` generates new ones; the [community portal index](https://github.com/ai-job-search-dev/ai-job-search/discussions/78) catalogs the ones other forks have built.
 2. **Document templates** - `/add-template` registers any CV or cover-letter toolchain that compiles to PDF from the command line, LaTeX or otherwise.
 3. **Evaluation criteria** - deal-breakers and preferences in your profile are free-form, and the evaluation rubric scores against whatever you put there. "Strong parental-leave terms", "minimum salary X per my union's scale", "no on-call" - each is one profile line, no code, and it carries real weight in `/rank` and `/apply` fit evaluations. Language is the one deal-breaker type with dedicated, structured handling: `/setup` captures every language you work in and your level (asked directly, or inferred from your CV/LinkedIn export) into a `Languages` table, and the Language Gate (`04-job-evaluation.md`) hard-rejects a posting that requires a language you haven't declared at all, while flagging - not auto-rejecting - one that asks for a higher level than you declared in a language you do work in, so a borderline case (a strict "fluent" bar against your own B1/B2, say) gets your judgment instead of a silent drop.
 
-**Borrowing a portal skill from another fork** is the intended way to get a board that upstream doesn't ship: find it in the [portal index](https://github.com/MadsLorentzen/ai-job-search/discussions/78), open that fork, and copy the one folder into your own `.agents/skills/`. Before you run it:
+**Borrowing a portal skill from another fork** is the intended way to get a board that upstream doesn't ship: find it in the [portal index](https://github.com/ai-job-search-dev/ai-job-search/discussions/78), open that fork, and copy the one folder into your own `.agents/skills/`. Before you run it:
 
 - **Read the code.** All of it - these CLIs run pre-approved on your machine (`.claude/settings.json` allowlists them) against your career data. Check that the only network calls go to the job board it claims to search, that `package.json` has no runtime dependencies and no lifecycle scripts (`postinstall` etc.), and that nothing reads or writes outside its own folder.
 - **Run its tests offline** (`bun test` in the skill's `cli/` directory) - a well-built skill's tests pass with no network access.
@@ -414,7 +414,7 @@ Everything above adds up to an extension model, so here it is stated plainly. Th
 
 The copy step is manual on purpose. The bundled portal CLIs have explicit allowlist entries in `.claude/settings.json`; a copied skill needs its own reviewed permission entry there and in `tools/security_guards.py`. Those settings allow the listed CLIs to run without asking each time - so an installer that fetched them from third-party repos for you would skip the one check that matters: you, reading the code first. There isn't one, and that's a security decision rather than a missing feature.
 
-Market-specific *data sources* (a national salary database, local award-rate tables) follow the same pattern as portals: they belong in a market fork, shared via [#78](https://github.com/MadsLorentzen/ai-job-search/discussions/78), not upstream.
+Market-specific *data sources* (a national salary database, local award-rate tables) follow the same pattern as portals: they belong in a market fork, shared via [#78](https://github.com/ai-job-search-dev/ai-job-search/discussions/78), not upstream.
 
 ### Salary benchmarking
 
@@ -434,7 +434,7 @@ To wipe your profile data and start fresh:
 
 ### Staying up to date
 
-Upstream moves fast. Rather than pulling raw `master` and hoping, update your fork to a tagged [upstream release](https://github.com/MadsLorentzen/ai-job-search/releases) - a vetted checkpoint described in [CHANGELOG.md](CHANGELOG.md). `python3 tools/check_upstream_updates.py` previews exactly which of your personalized files an update touches before you merge, and `python3 tools/upstream_triage.py` sorts the commits you're behind into "worth reviewing" vs "probably skip" (a weekly workflow can post this to a rolling issue). Full walkthrough in [SETUP.md, section 8](SETUP.md#8-pulling-upstream-updates-into-your-fork).
+Upstream moves fast. Rather than pulling raw `master` and hoping, update your fork to a tagged [upstream release](https://github.com/ai-job-search-dev/ai-job-search/releases) - a weekly checkpoint that passed CI, with its changes listed on the release page (the upstream CHANGELOG.md is frozen at 1.7.4). `python3 tools/check_upstream_updates.py` previews exactly which of your personalized files an update touches before you merge, and `python3 tools/upstream_triage.py` sorts the commits you're behind into "worth reviewing" vs "probably skip" (a weekly workflow can post this to a rolling issue). Full walkthrough in [SETUP.md, section 8](SETUP.md#8-pulling-upstream-updates-into-your-fork).
 
 ## Tips for better results
 
